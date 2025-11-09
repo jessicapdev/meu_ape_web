@@ -4,16 +4,23 @@
             Apê na web
         </div>
         <div class="perfil-container">
+            	<button
+                    appearance="secondary-destructive"
+                    iconStart="@tui.heart"
+                    size="s"
+                    tuiIconButton
+                    type="button"
+                    [style.border-radius.%]="100"
+                >
+                    user
+                </button>
             <div class="icon-user">
-                <lucide-icon [img]="User" class="brain-icon" [matMenuTriggerFor]="menu"></lucide-icon>
+                <lucide-icon [img]="User" class="brain-icon"></lucide-icon>
             </div>
             <div class="icon-search">
                 <lucide-icon [img]="Search" class="brain-icon"></lucide-icon>
             </div>
-            <mat-menu #menu="matMenu">
-                <button mat-menu-item>Meu perfil</button>
-                <button mat-menu-item>Imóveis salvos</button>
-            </mat-menu>
+            
         </div>
     </div>
 </div>

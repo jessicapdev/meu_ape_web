@@ -2,13 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MustMatch } from '../../../asset/utils/must-match.validator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { UsuarioService } from '../../../shared/service/usuario.service';
 import { Usuario } from '../../../shared/models/usuario';
 
@@ -19,13 +13,7 @@ import { Usuario } from '../../../shared/models/usuario';
   standalone: true,
   imports: [
     CommonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatProgressSpinnerModule,
-    MatIconModule
+    ReactiveFormsModule
   ]
 })
 export class CadastroUsuarioComponent implements OnInit {
