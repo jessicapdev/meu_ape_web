@@ -1,4 +1,19 @@
 .title-home{
-  padding: 10px;
+  padding: 20px 0px;
   font-size: xx-large;
+  color: var(--tui-text-action)
 }
+
+.filtro-in-line{
+  display: flex;
+  gap: 0.5rem
+}
+
+.filtro-item{
+  flex-grow: 1;
+}
+
+.content-home{
+  padding: 1rem;
+}
+

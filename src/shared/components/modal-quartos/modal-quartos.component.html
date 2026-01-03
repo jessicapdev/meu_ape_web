@@ -1,0 +1,45 @@
+<ng-template
+let-observer
+[tuiDialogOptions]="{label: 'Teste', size: 'm'}"
+[(tuiDialog)]="open"
+>
+    <div class="modal-container">
+        <div class="chips-container">
+            <tui-chip
+                *tuiRepeatTimes="let option of quartosOptions"
+                class="quarto-chip"
+                size="m"
+            >
+                {{ option }}
+                <input
+                appearance="whiteblock"
+                tuiChip
+                type="checkbox"
+                [(ngModel)]="selectedQuartos"
+                /> 
+            </tui-chip>
+        </div>
+        
+        <div class="modal-actions">
+            <button
+                tuiButton
+                type="button"
+                appearance="secondary"
+                size="m"
+                (click)="limparFiltro()"
+            >
+                Limpar filtro
+            </button>
+            
+            <button
+                tuiButton
+                type="button"
+                appearance="primary"
+                size="m"
+                (click)="aplicar()"
+            >
+                Aplicar
+            </button>
+        </div>
+    </div>
+</ng-template>

@@ -1,3 +1,40 @@
-<div class="title-home">
-  Apartamentos na planta à venda
+<div class="content-home">
+  <form [formGroup]="incialSearchForm" (ngSubmit)="onSubmit()">
+    <div class="filtro-in-line">
+      <tui-textfield class="filtro-item">
+      <label tuiLabel>Bairro, cidade ou empreendimento</label>
+      <input
+          placeholder="Onde deseja morar?"
+          tuiTextfield
+          formControlName="local"
+        />
+      </tui-textfield>
+        <button
+          appearance="outline"
+          tuiButton
+          type="button"
+          (click)="openQuartos()"
+        >
+          Quartos
+        </button>
+        <button
+          appearance="outline"
+          tuiButton
+          type="button"
+          (click)="openStatus = true"
+        >
+          Status
+        </button>
+        <button
+          appearance="outline"
+          tuiButton
+          type="button"
+          (click)="openPreco = true"
+        >
+          Preço
+        </button>
+    </div>
+  </form>
 </div>
+
+<app-modal-quartos [open]="showModalQuartos"></app-modal-quartos>

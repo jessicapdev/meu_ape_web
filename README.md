@@ -1,59 +1,108 @@
 # PortalMeuApe
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.10.
+Componente modal para seleção de quartos utilizando Taiga UI 4.60.0 e Angular 19.2.15.
 
-## Development server
+## 📦 Instalação
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### 1. Instalar dependências necessárias
 
 ```bash
-ng generate component component-name
+npm install @taiga-ui/core@4.60.0 @taiga-ui/kit@4.60.0 @taiga-ui/cdk@4.60.0
+npm install @tinkoff/ng-polymorpheus
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### 2. Configurar estilos
 
+Adicione os estilos do Taiga UI no seu `angular.json`:
+
+```json
+{
+  "projects": {
+    "your-project": {
+      "architect": {
+        "build": {
+          "options": {
+            "styles": [
+              "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
+              "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
+              "src/styles.scss"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+```
+## Modal Quartos
+
+### 🚀 Uso
+
+### 1. Importar o serviço
+
+```typescript
+import { QuartosModalService } from './quartos-modal.service';
+
+export class MeuComponente {
+  constructor(private quartosModalService: QuartosModalService) {}
+}
+```
+
+### 2. Abrir o modal
+
+```typescript
+// Abrir modal sem seleção inicial
+this.quartosModalService.open().subscribe(result => {
+  console.log('Quartos selecionados:', result.quartos);
+});
+
+// Abrir modal com seleção inicial
+const quartosInicial = ['1', '2'];
+this.quartosModalService.open(quartosInicial).subscribe(result => {
+  this.quartosSelecionados = result.quartos;
+});
+```
+
+### 3. Estrutura do resultado
+
+```typescript
+interface QuartosModalResult {
+  quartos: string[]; // Array com os quartos selecionados
+}
+```
+
+### Funcionalidades
+- ✅ Seleção múltipla de quartos
+- ✅ Visualização clara dos itens selecionados
+- ✅ Botão "Limpar filtro" para remover todas as seleções
+- ✅ Botão "Aplicar" para confirmar a seleção
+- ✅ Fechamento do modal ao clicar fora
+- ✅ Animações suaves
+
+## 🔧 Solução de Problemas
+
+### Erro: "Cannot find module '@taiga-ui/core'"
+Verifique se as dependências estão instaladas corretamente:
 ```bash
-ng generate --help
+npm install @taiga-ui/core@4.60.0 @taiga-ui/kit@4.60.0
 ```
 
-## Building
+### Erro: "No provider for TuiDialogService"
+Certifique-se de importar `TuiDialogModule` no módulo:
+```typescript
+imports: [TuiDialogModule]
+```
 
-To build the project run:
-
+### Erro: "Cannot find module '@tinkoff/ng-polymorpheus'"
+Instale a dependência:
 ```bash
-ng build
+npm install @tinkoff/ng-polymorpheus
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 📄 Licença
 
-## Running unit tests
+Este componente segue as diretrizes do Taiga UI e pode ser utilizado em projetos comerciais e open source.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## 🤝 Contribuição
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Sinta-se à vontade para contribuir com melhorias, correções de bugs ou novos recursos!

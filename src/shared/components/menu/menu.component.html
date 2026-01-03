@@ -1,12 +1,11 @@
 <div class="navbar-container">
     <div class="flex-container">
-        <div class="navbar-logo">
-            Apê na web
-        </div>
+            <div class="title-home">Meu apê na web</div>
         <div class="perfil-container">
-            	<button
-                    appearance="secondary-destructive"
-                    iconStart="@tui.heart"
+            <div class="user-button">
+                <button
+                    appearance="secondary"
+                    iconStart="@tui.user"
                     size="s"
                     tuiIconButton
                     type="button"
@@ -14,13 +13,17 @@
                 >
                     user
                 </button>
-            <div class="icon-user">
-                <lucide-icon [img]="User" class="brain-icon"></lucide-icon>
             </div>
-            <div class="icon-search">
-                <lucide-icon [img]="Search" class="brain-icon"></lucide-icon>
-            </div>
-            
+            <button
+                appearance="secondary"
+                iconStart="@tui.search"
+                size="s"
+                tuiIconButton
+                type="button"
+                [style.border-radius.%]="100"
+            >
+                search
+            </button>
         </div>
     </div>
 </div>
