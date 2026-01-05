@@ -1,0 +1,49 @@
+.modal-container {
+    margin-top: 12px;
+    text-align: center;
+}
+
+.modal-actions{
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    background: #fff;
+    gap: 16px; 
+}
+
+.checkbox-options {
+    margin: 0.2rem;
+}
+
+.filtrar-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.filtrar-field {
+    width: 100%;
+}
+
+.card{
+    border: 1px solid rgba(27, 31, 59, .2);
+    margin-top: 0.5rem;
+}
+
+.banheiro-options{
+    margin: 0.2rem;
+    place-content: center;
+}
+
+.checkbox-list {
+    padding: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.content-list{
+    height: 200px;
+}

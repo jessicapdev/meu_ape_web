@@ -1,0 +1,47 @@
+<div class="modal-container">
+    <section class="modal-content">
+        <form [formGroup]="precoForm" class="price-form">
+            <tui-textfield  class="price-field">
+                <label tuiLabel>Preço Mínimo</label>
+                <input
+                    placeholder="100 000"
+                    tuiInputNumber
+                    [min]="0"
+                    [prefix]="'BRL' | tuiCurrency"
+                    formControlName="inicial"
+                />
+            </tui-textfield>
+            <tui-textfield  class="price-field">
+                <label tuiLabel>Preço Máximo</label>
+                <input
+                    placeholder="10 000 000"
+                    tuiInputNumber
+                    [min]="0"
+                    [prefix]="'BRL' | tuiCurrency"
+                    formControlName="final"
+                />
+            </tui-textfield>
+        </form>
+    </section>
+    <div class="modal-actions">
+        <button
+            tuiButton
+            type="button"
+            appearance="flat"
+            size="m"
+            (click)="limparFiltro()"
+        >
+            Limpar filtro
+        </button>
+        
+        <button
+            tuiButton
+            type="button"
+            appearance="primary"
+            size="m"
+            (click)="aplicar()"
+        >
+            Aplicar
+        </button>
+    </div>
+</div>

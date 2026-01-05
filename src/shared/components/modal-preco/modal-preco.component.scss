@@ -6,6 +6,10 @@
     padding: 1rem;
 }
 
+.modal-content{
+    display: flex;
+}
+
 .modal-actions{
     margin-top: 1.5rem;
     display: flex;
@@ -14,6 +18,18 @@
     background: #fff;
     gap: 16px; 
 }
+
 .checkbox-options {
     margin: 0.2rem;
+}
+
+.price-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.price-field {
+    width: 100%;
 }

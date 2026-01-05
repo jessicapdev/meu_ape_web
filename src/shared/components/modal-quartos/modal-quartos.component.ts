@@ -1,7 +1,8 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, NO_ERRORS_SCHEMA, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TuiDialog } from '@taiga-ui/core';
+import { TuiButton } from '@taiga-ui/core';
+import { TuiChip } from '@taiga-ui/kit';
 
 @Component({
   selector: 'app-modal-quartos',
@@ -9,31 +10,45 @@ import { TuiDialog } from '@taiga-ui/core';
   imports: [
     CommonModule,
     FormsModule,
-    TuiDialog
+    TuiChip,
+    TuiButton
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,
     NO_ERRORS_SCHEMA
   ],
   templateUrl: './modal-quartos.component.html',
-  styleUrl: './modal-quartos.component.scss'
+  styleUrl: './modal-quartos.component.scss',
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ModalQuartosComponent {
+  @Output() updateQuartos = new EventEmitter<any>();
 
-  @Input() open = false;
-  quartosOptions = ['Studio', '1', '2', '3', '4', '5+'];
-  selectedQuartos: string[] = [];
+  protected listQuartos: any;
+  protected quartosOptions = [
+    { label: 'Studio', checked: false },
+    { label: '1', checked: false },
+    { label: '2', checked: false },
+    { label: '3', checked: false },
+    { label: '4', checked: false },
+    { label: '5+', checked: false },
+  ];
 
   constructor() {}
 
-  isSelected(option: string): boolean {
-    return this.selectedQuartos.includes(option);
+  limparFiltro(): void {
+    this.quartosOptions.map(quarto =>{
+      quarto.checked = false;
+    })
   }
 
-  limparFiltro(): void {
-    this.selectedQuartos = [];
+  get selectedQuartos(): any {
+    return this.quartosOptions.filter(quarto => quarto.checked);
   }
 
   aplicar(): void {
+    this.listQuartos = this.selectedQuartos;
+    this.updateQuartos.emit(this.listQuartos);
   }
+
 }
