@@ -1,0 +1,287 @@
+<!-- fale-conosco.component.html -->
+<div class="fale-conosco-container">
+  <div class="header-section">
+    <h1 class="titulo">Fale Conosco</h1>
+    <p class="subtitulo">Estamos aqui para ajudar você</p>
+  </div>
+
+  <div class="content-wrapper">
+    <!-- Formulário de Contato -->
+    <div class="form-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <tui-icon icon="@tui.message-circle" />
+          Envie sua mensagem
+        </h2>
+        <p class="section-subtitle">Preencha o formulário abaixo e entraremos em contato</p>
+      </div>
+
+      <form [formGroup]="contatoForm" (ngSubmit)="onSubmit()" class="contato-form" *ngIf="!enviado">
+        <div class="form-row">
+          <tui-textfield
+            iconStart="@tui.user"
+            iconEnd="@tui.check"
+            class="form-field"
+          >
+            <label tuiLabel>Nome completo</label>
+            <input
+              type="text"
+              placeholder="Seu nome"
+              tuiTextfield
+              formControlName="nome"
+            />
+            <tui-icon tuiTooltip="Digite seu nome completo" />
+          </tui-textfield>
+          <span class="error-message" *ngIf="contatoForm.get('nome')?.errors?.['required'] && contatoForm.get('nome')?.touched">
+            Nome é obrigatório
+          </span>
+        </div>
+
+        <div class="form-row">
+          <tui-textfield
+            iconStart="@tui.mail"
+            iconEnd="@tui.check"
+            class="form-field"
+          >
+            <label tuiLabel>Email</label>
+            <input
+              type="email"
+              placeholder="seu@email.com"
+              tuiTextfield
+              formControlName="email"
+            />
+            <tui-icon tuiTooltip="Digite um email válido" />
+          </tui-textfield>
+          <span class="error-message" *ngIf="contatoForm.get('email')?.errors?.['required'] && contatoForm.get('email')?.touched">
+            Email é obrigatório
+          </span>
+          <span class="error-message" *ngIf="contatoForm.get('email')?.errors?.['email'] && contatoForm.get('email')?.touched">
+            Email inválido
+          </span>
+        </div>
+
+        <div class="form-row">
+          <tui-textfield
+            iconStart="@tui.phone"
+            iconEnd="@tui.check"
+            class="form-field"
+          >
+            <label tuiLabel>Telefone</label>
+            <input
+              type="tel"
+              placeholder="(00) 00000-0000"
+              tuiTextfield
+              formControlName="telefone"
+            />
+            <tui-icon tuiTooltip="DDD + número" />
+          </tui-textfield>
+          <span class="error-message" *ngIf="contatoForm.get('telefone')?.errors?.['required'] && contatoForm.get('telefone')?.touched">
+            Telefone é obrigatório
+          </span>
+        </div>
+
+        <div class="form-row">
+          <tui-textfield
+            iconStart="@tui.tag"
+            iconEnd="@tui.check"
+            class="form-field"
+          >
+            <label tuiLabel>Assunto</label>
+            <input
+              type="text"
+              placeholder="Assunto da mensagem"
+              tuiTextfield
+              formControlName="assunto"
+            />
+            <tui-icon tuiTooltip="Resuma o assunto" />
+          </tui-textfield>
+          <span class="error-message" *ngIf="contatoForm.get('assunto')?.errors?.['required'] && contatoForm.get('assunto')?.touched">
+            Assunto é obrigatório
+          </span>
+        </div>
+
+        <div class="form-row">
+          <tui-textfield
+            iconStart="@tui.message-square"
+            class="form-field textarea-field"
+          >
+            <label tuiLabel>Mensagem</label>
+            <textarea
+              tuiTextfield
+              formControlName="mensagem"
+              placeholder="Digite sua mensagem aqui..."
+              rows="5"
+            ></textarea>
+            <tui-icon tuiTooltip="Descreva detalhadamente" />
+          </tui-textfield>
+          <span class="error-message" *ngIf="contatoForm.get('mensagem')?.errors?.['required'] && contatoForm.get('mensagem')?.touched">
+            Mensagem é obrigatória
+          </span>
+          <span class="error-message" *ngIf="contatoForm.get('mensagem')?.errors?.['minlength'] && contatoForm.get('mensagem')?.touched">
+            Mínimo 10 caracteres
+          </span>
+        </div>
+
+        <div class="action-buttons">
+          <button 
+            type="button"
+            tuiButton
+            size="m"
+            appearance="secondary"
+            (click)="contatoForm.reset()"
+          >
+            <tui-icon icon="@tui.refresh" />
+            Limpar
+          </button>
+          
+          <button 
+            type="submit"
+            tuiButton
+            size="m"
+            appearance="primary"
+            [disabled]="!contatoForm.valid || enviando"
+            [loading]="enviando"
+          >
+            <tui-icon icon="@tui.send" />
+            Enviar Mensagem
+          </button>
+        </div>
+      </form>
+
+      <!-- Mensagem de sucesso -->
+      <div class="sucesso-mensagem" *ngIf="enviado">
+        <div class="sucesso-icon">
+          <tui-icon icon="@tui.check-circle" />
+        </div>
+        <h3>Mensagem enviada com sucesso!</h3>
+        <p>Entraremos em contato em breve.</p>
+        <button 
+          tuiButton
+          size="m"
+          appearance="primary"
+          (click)="novoContato()"
+        >
+          <tui-icon icon="@tui.plus" />
+          Nova Mensagem
+        </button>
+      </div>
+    </div>
+
+    <!-- Informações de Contato -->
+    <div class="info-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <tui-icon icon="@tui.map-pin" />
+          Nossos Contatos
+        </h2>
+        <p class="section-subtitle">Várias formas de entrar em contato</p>
+      </div>
+
+      <div class="contato-cards">
+        <!-- Telefone -->
+        <div class="contato-card">
+          <div class="card-icon">
+            <tui-icon icon="@tui.phone" />
+          </div>
+          <div class="card-content">
+            <h3>Telefone</h3>
+            <p>{{ empresa.telefone }}</p>
+            <button 
+              tuiButton
+              size="s"
+              appearance="flat"
+              (click)="copiarTexto(empresa.telefone)"
+            >
+              <tui-icon icon="@tui.copy" />
+              Copiar
+            </button>
+          </div>
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="contato-card whatsapp">
+          <div class="card-icon">
+            <tui-icon icon="@tui.brand-whatsapp" />
+          </div>
+          <div class="card-content">
+            <h3>WhatsApp</h3>
+            <p>{{ empresa.whatsapp }}</p>
+            <button 
+              tuiButton
+              size="s"
+              appearance="primary"
+              (click)="abrirWhatsApp()"
+            >
+              <tui-icon icon="@tui.message-circle" />
+              Iniciar Conversa
+            </button>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="contato-card email">
+          <div class="card-icon">
+            <tui-icon icon="@tui.mail" />
+          </div>
+          <div class="card-content">
+            <h3>Email</h3>
+            <p>{{ empresa.email }}</p>
+            <button 
+              tuiButton
+              size="s"
+              appearance="flat"
+              (click)="copiarTexto(empresa.email)"
+            >
+              <tui-icon icon="@tui.copy" />
+              Copiar
+            </button>
+          </div>
+        </div>
+
+        <!-- Endereço -->
+        <div class="contato-card endereco">
+          <div class="card-icon">
+            <tui-icon icon="@tui.map-pin" />
+          </div>
+          <div class="card-content">
+            <h3>Endereço</h3>
+            <p>{{ empresa.endereco }}</p>
+            <p class="horario">{{ empresa.horario }}</p>
+            <button 
+              tuiButton
+              size="s"
+              appearance="flat"
+              (click)="abrirGoogleMaps()"
+            >
+              <tui-icon icon="@tui.external-link" />
+              Ver no Mapa
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Redes Sociais -->
+      <div class="redes-sociais">
+        <h3>Redes Sociais</h3>
+        <div class="social-links">
+          <a href="#" class="social-link facebook">
+            <tui-icon icon="@tui.brand-facebook" />
+            Facebook
+          </a>
+          <a href="#" class="social-link instagram">
+            <tui-icon icon="@tui.brand-instagram" />
+            Instagram
+          </a>
+          <a href="#" class="social-link twitter">
+            <tui-icon icon="@tui.brand-twitter" />
+            Twitter
+          </a>
+          <a href="#" class="social-link linkedin">
+            <tui-icon icon="@tui.brand-linkedin" />
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

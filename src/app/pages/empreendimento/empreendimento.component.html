@@ -1,0 +1,307 @@
+<tui-root>
+  <div class="empreendimento-page">
+    <div class="imagem-container">
+        <a routerLink="/fotos">
+            <img [src]="empreendimento.imagens.banner" [alt]="empreendimento.titulo">
+        </a>
+    </div>
+
+    <!-- Informações principais -->
+    <div class="container">
+        <div class="main-info">
+            <div class="banner-overlay">
+                <h2 tuiTitle="l">
+                    {{ empreendimento.titulo }}
+                </h2>
+                <div class="banner-status">
+                    <tui-badge appearance="primary">
+                        {{ empreendimento.status }}
+                    </tui-badge>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="info-empreendimento">
+                <div class="sub-title">{{ empreendimento.bairro }}, {{ empreendimento.cidade }}</div>     
+                <div class="text-secundary">{{ empreendimento.descricao }}</div>
+            </div>
+            <div class="features">
+                <div class="features-section">
+                    <div class="feature-item">
+                        <tui-icon icon="@tui.home"
+                        [style.font-size.rem]="2"
+                        [style.color]="'var(--tui-text-action)'"/>
+                        <div class="text-bold">
+                            {{ empreendimento.quartos }}
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <tui-icon icon="@tui.bed"
+                        [style.font-size.rem]="2"
+                        [style.color]="'var(--tui-text-action)'"/>
+                        <div class="text-bold">
+                            {{ empreendimento.quartos }}
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <tui-icon icon="@tui.car"
+                        [style.font-size.rem]="2"
+                        [style.color]="'var(--tui-text-action)'"/>
+                        <div class="text-bold">
+                            {{ empreendimento.vagas }} vaga
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <tui-icon icon="@tui.shower-head"
+                        [style.font-size.rem]="2"
+                        [style.color]="'var(--tui-text-action)'"/>
+                        <div class="text-bold">
+                            {{ empreendimento.banheiros }} banheiro
+                        </div>
+                    </div>
+                </div>
+                <div class="price-section border-item">
+                    <div class="price-label">Venda a partir de:</div>
+                    <div class="price-value">{{ 'BRL' | tuiCurrency }} {{ empreendimento.valorInicial }}</div>
+                    <div class="button-action">
+                        <button tuiButton size="l" class="contact-btn" (click)="abrirContato()">
+                            Entrar em contato
+                        </button>
+                        <button tuiButton size="l" class="contact-btn" 
+                        appearance="outline"
+                        tuiAppearanceMode="checked"
+                        (click)="agendarVisita()">
+                            Agendar Visita
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="hr-divider">
+
+        <!-- Informações do condomínio -->
+        <div class="card-island">
+            <h2 tuiTitle="l" style="align-items: center;">Condomínio</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div style="display: flex; align-items: center;">
+                        <tui-icon icon="@tui.building"
+                        [style.font-size.rem]="2"
+                        [style.color]="'var(--tui-text-action)'"/>
+                        <strong style="padding-left: 10px;">1 Torre</strong>
+                    </div>
+                    <span class="text-secundary">Térreo + 18 Andares</span>
+                </div>
+                <div class="info-item">
+                    <div style="display: flex; align-items: center;">
+                        <tui-icon icon="@tui.house"
+                        [style.font-size.rem]="2"
+                        [style.color]="'var(--tui-text-action)'"/>
+                        <strong style="padding-left: 10px;">185</strong>
+                    </div>
+                    <span class="text-secundary">residências</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status da construção -->
+        <div class="tui-island card-variant">
+            <div style="margin-bottom: 1rem;">
+                <span class="title-section">Status empreendimento</span>
+            </div>
+            
+            <div class="timeline-container">
+                <div class="step">
+                    <div class="step__number">
+                    <span>1</span>
+                    </div>
+                    <div class="step__line step__line--filled"></div>
+                    <div class="step__content">
+                    <span class="title">Breve Lançamento</span>
+                    <span class="date" style="color: transparent;">-</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step__number">
+                    <span>2</span>
+                    </div>
+                    <div class="step__line step__line--filled"></div>
+                    <div class="step__content">
+                    <span class="title">Lançamento</span>
+                    <span class="date">Maio 2021</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step__number">
+                    <span>3</span>
+                    </div>
+                    <div class="step__line step__line--filled"></div>
+                    <div class="step__content">
+                    <span class="title">Em Construção</span>
+                    <span class="date" style="color: transparent;">-</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step__number">
+                    <span>4</span>
+                    </div>
+                    <div class="step__content">
+                    <span class="title">Pronto</span>
+                    <span class="date">Dezembro 2023</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Áreas de lazer -->
+        <div class="card-island">
+            <h2 tuiTitle="l" style="align-items: center;">Áreas de Convívio e Lazer</h2>
+            <div class="lazer-grid">
+                <div *ngFor="let area of empreendimento.areasLazer" class="lazer-item">
+                    <ul class="tui-list tui-list_large text">
+                        <li class="tui-list__item">{{ area.nome }}</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="hr-divider">
+            <h2 tuiTitle="l" style="align-items: center; margin-bottom: 15px;">Galeria de Fotos</h2>
+            <div tuiCarouselButtons class="wrapper">
+                <button
+                iconStart="@tui.chevron-left"
+                tuiIconButton
+                type="button"
+                (click)="carousel.prev()">
+                    Voltar
+                </button>
+                <tui-carousel
+                #carousel
+                class="carousel">
+                    <div *tuiItem class="item">
+                        <img [src]="empreendimento.imagens.banner" [alt]="empreendimento.titulo">
+                    </div>
+                    <div *tuiItem class="item">
+                        <img [src]="empreendimento.imagens.banner" [alt]="empreendimento.titulo">
+                    </div>
+                </tui-carousel>
+                <button
+                iconStart="@tui.chevron-right"
+                tuiIconButton
+                type="button"
+                (click)="carousel.next()">
+                    Próximo
+                </button>
+            </div>
+        </div>
+        
+
+        <!-- Plantas -->
+        <div class="card-island">
+            <h2 tuiTitle="l" style="align-items: center;">Apartamentos</h2>
+            <div class="table-apartamentos">
+                <table
+                tuiTable
+                size="m">
+                    <thead>
+                        <tr>
+                            <th tuiTh>A partir de</th>
+                            <th tuiTh>Área</th>
+                            <th tuiTh>Quartos</th>
+                            <th tuiTh>Suítes</th>
+                            <th tuiTh>Banheiros</th>
+                            <th tuiTh>Vagas</th>
+                            <th tuiTh></th>
+                        </tr>
+                    </thead>
+                    <tbody tuiTbody>
+                        <tr *ngFor="let apto of empreendimento.apartamentos">
+                            <td tuiTd>
+                                <span class="preco" *ngIf="apto.preco; else preco">
+                                    {{ apto.preco | number:'1.2-2' }}
+                                </span>
+                                <ng-template #preco>-</ng-template>
+                            </td>
+                            <td tuiTd>{{ apto.area }}</td>
+                            <td tuiTd>{{ apto.quartos }}</td>
+                            <td tuiTd>{{ apto.suites }}</td>
+                            <td tuiTd>{{ apto.banheiros }}</td>
+                            <td tuiTd>{{ apto.vagas }}</td>
+                            <td tuiTd>
+                                <button tuiButton size="s" (click)="abrirContato()">
+                                    saber mais
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 tuiTitle="l" style="align-items: center; margin-bottom: 15px;">Plantas</h2>
+            <div tuiCarouselButtons class="wrapper">
+                <button
+                iconStart="@tui.chevron-left"
+                tuiIconButton
+                type="button"
+                (click)="carousel.prev()">
+                    Voltar
+                </button>
+                <tui-carousel
+                #carousel
+                class="carousel">
+                    <div *tuiItem class="item">
+                        <img [src]="empreendimento.imagens.banner" [alt]="empreendimento.titulo">
+                    </div>
+                    <div *tuiItem class="item">
+                        <img [src]="empreendimento.imagens.banner" [alt]="empreendimento.titulo">
+                    </div>
+                </tui-carousel>
+                <button
+                iconStart="@tui.chevron-right"
+                tuiIconButton
+                type="button"
+                (click)="carousel.next()">
+                    Próximo
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Diferenciais -->
+        <div class="card-island">
+            <h2 tuiTitle="l" style="align-items: center; padding-bottom: 2rem;">Diferenciais do empreendimento</h2>
+            <div class="lazer-grid">
+                <div *ngFor="let diferencial of empreendimento.diferenciais" class="lazer-item">
+                    <ul class="tui-list tui-list_large text">
+                        <li class="tui-list__item">{{ diferencial.nome }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <hr class="hr-divider">
+
+        <!-- Localização -->
+        <div class="card-island">
+            <div>
+                <h2 tuiTitle="l" style="align-items: center;">Localização</h2>
+                <p class="text-secundary" style="place-self: center;">Rua Dr. Carlos Afranio da Cunha Matos, Pirituba, São Paulo - SP</p>
+            </div>
+            <div class="image-container">
+                <!-- Imagem com redirecionamento -->
+                <a 
+                    [href]="getGoogleMapsUrl()" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="image-link"
+                >
+                    <!-- Imagem com fallback do Taiga UI -->
+                    <div class="image-wrapper">
+                        <img [src]="empreendimento.imagens.map" [alt]="empreendimento.titulo">
+                        <div class="overlay">
+                            <span>Ver no Google Maps</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+  </div>
+</tui-root>

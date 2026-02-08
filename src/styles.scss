@@ -1,6 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
-
 html, body { height: 100%; }
 body { margin: 0; 
     font-family: Helvetica, Arial, sans-serif;
+}
+
+.sub-title{
+    font-size: 24px;
+}
+
+.title-section{
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.text{
+    font-size: 16px;
+}
+
+.text-secundary{
+    font-size: 16px;
+    color: var(--tui-text-secondary);
+}
+
+.text-bold{
+    font-size: 16px;
+    font-weight: 700;
 }

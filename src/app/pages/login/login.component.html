@@ -1,0 +1,125 @@
+<!-- login.component.html -->
+<div class="login-container">
+  <div class="login-card">
+    <div class="header-section">
+      <h1 class="titulo">Login</h1>
+    </div>
+
+    <form [formGroup]="loginForm" class="login-form">
+      <div class="form-section">
+        <div class="form-row">
+          <tui-textfield
+            class="form-field"
+          >
+            <label tuiLabel>Email</label>
+            <input
+              type="email"
+              placeholder="seu@email.com"
+              tuiTextfield
+              formControlName="email"
+            />
+            <tui-icon icon="@tui.mail" />
+          </tui-textfield>
+          <span class="error-message" *ngIf="loginForm.get('email')?.errors?.['required'] && loginForm.get('email')?.touched">
+            Email é obrigatório
+          </span>
+          <span class="error-message" *ngIf="loginForm.get('email')?.errors?.['email'] && loginForm.get('email')?.touched">
+            Email inválido
+          </span>
+        </div>
+
+        <div class="form-row">
+          <tui-textfield
+            class="form-field"
+          >
+            <label tuiLabel>Senha</label>
+            <input
+              type="password"
+              placeholder="Mínimo 6 caracteres"
+              tuiTextfield
+              formControlName="senha"
+            />
+            <tui-icon tuiPassword/>
+          </tui-textfield>
+          <span class="error-message" *ngIf="loginForm.get('senha')?.errors?.['required'] && loginForm.get('senha')?.touched">
+            Senha é obrigatória
+          </span>
+          <span class="error-message" *ngIf="loginForm.get('senha')?.errors?.['minlength'] && loginForm.get('senha')?.touched">
+            Mínimo 6 caracteres
+          </span>
+        </div>
+
+        <div class="form-row checkbox-row">
+          <label class="checkbox-container">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="lembrarMe"
+              [ngModelOptions]="{standalone: true}"
+              (change)="toggleLembrarMe()"
+            />
+            <span class="checkmark"></span>
+            Lembrar-me
+          </label>
+          
+          <a class="esqueci-senha-link" (click)="navigateToEsqueciSenha()">
+            Esqueci minha senha
+          </a>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button 
+          type="submit"
+          tuiButton
+          size="m"
+          appearance="primary"
+          [disabled]="!loginForm.valid"
+          class="login-button"
+          [loading]="loading"
+          (click)="onLogin()"
+        >
+          <tui-icon icon="@tui.log-in" />
+          Entrar
+        </button>
+        <tui-error [error]="computedError"/>
+      </div>
+    </form>
+
+    <!-- <div class="divider">
+      <span class="divider-text">ou</span>
+    </div>
+
+    <div class="social-login">
+      <button 
+        type="button"
+        tuiButton
+        size="m"
+        appearance="flat"
+        class="social-button google"
+      >
+        <tui-icon icon="@tui.brand-google" />
+        Entrar com Google
+      </button>
+      
+      <button 
+        type="button"
+        tuiButton
+        size="m"
+        appearance="flat"
+        class="social-button facebook"
+      >
+        <tui-icon icon="@tui.brand-facebook" />
+        Entrar com Facebook
+      </button>
+    </div> -->
+
+    <div class="footer-section">
+      <p class="footer-text">
+        Ainda não tem uma conta? 
+        <a class="esqueci-senha-link" (click)="navigateToCadastro()">
+          Cadastre-se
+        </a>
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,108 +1,115 @@
-<div class="content-home">
-  <form [formGroup]="incialSearchForm" (ngSubmit)="onSubmit()">
-    <div class="filtro-in-line">
-      <tui-textfield class="filtro-item">
-        <label tuiLabel>Bairro, cidade ou empreendimento</label>
-        <input
-          placeholder="Onde deseja morar?"
-          tuiTextfield
-          formControlName="local"
-        />
-      </tui-textfield>
-      <button
-        tuiButton
-        tuiChevron
-        [(tuiDropdownOpen)]="openDropQuartos"
-        type="button"
-        [tuiDropdown]="contentQuartos"
-      >
-        Quartos
-      </button>
-      <button
-        tuiButton
-        tuiChevron
-        [(tuiDropdownOpen)]="openDropPreco"
-        type="button"
-        [tuiDropdown]="contentPreco"
-      >
-        Preço
-      </button>
-      <button
-        tuiButton
-        tuiChevron
-        [(tuiDropdownOpen)]="openDropStatus"
-        type="button"
-        [tuiDropdown]="contentStatus"
-      >
-        Status
-      </button>
-      <button tuiButton appearance="primary" type="button"
-      (click)="openFiltrar()">
-        <tui-icon icon="@tui.sliders-horizontal"
-        [style.height.rem]="1"/>
-        Filtrar
-      </button>
-    </div>
-  </form>
-</div>
-
-<!-- empreendimentos.component.html -->
-<div class="empreendimentos-container">
-  <div class="cards-grid">
-    <div *ngFor="let empreendimento of empreendimentos" 
-    class="card" (click)="navegarParaDetalhe(empreendimento)">
-      <div class="card-image">
-        <img 
-          [src]="empreendimento.imagem" 
-          [alt]="empreendimento.titulo"
-          class="imagem-empreendimento"
+<div class="body-container">
+  <div class="content-home">
+    <form [formGroup]="incialSearchForm" (ngSubmit)="onSubmit()">
+      <div class="filtro-in-line">
+        <tui-textfield class="filtro-item">
+          <label tuiLabel>Bairro, cidade ou empreendimento</label>
+          <input
+            placeholder="Onde deseja morar?"
+            tuiTextfield
+            formControlName="local"
+          />
+        </tui-textfield>
+        <button
+          tuiButton
+          tuiChevron
+          [(tuiDropdownOpen)]="openDropQuartos"
+          type="button"
+          [tuiDropdown]="contentQuartos"
         >
+          Quartos
+        </button>
+        <button
+          tuiButton
+          tuiChevron
+          [(tuiDropdownOpen)]="openDropPreco"
+          type="button"
+          [tuiDropdown]="contentPreco"
+        >
+          Preço
+        </button>
+        <button
+          tuiButton
+          tuiChevron
+          [(tuiDropdownOpen)]="openDropStatus"
+          type="button"
+          [tuiDropdown]="contentStatus"
+        >
+          Status
+        </button>
+        <button tuiButton appearance="primary" type="button"
+        (click)="openFiltrar()">
+          <tui-icon icon="@tui.sliders-horizontal"
+          [style.height.rem]="1"/>
+          Filtrar
+        </button>
       </div>
-      <div class="card-content">
-        <tui-badge appearance="primary">
-          {{ empreendimento.status }}
-        </tui-badge>
+    </form>
+  </div>
 
-        <div class="header-title">
-          {{ empreendimento.titulo }}
+  <!-- empreendimentos.component.html -->
+  <div class="empreendimentos-container">
+    <div class="cards-grid">
+      <div *ngFor="let empreendimento of empreendimentos" 
+      class="card" (click)="navegarParaDetalhe(empreendimento)">
+        <div class="card-image">
+          <img 
+            [src]="empreendimento.imagem" 
+            [alt]="empreendimento.titulo"
+            class="imagem-empreendimento"
+          >
         </div>
-        
-        <p class="localizacao">
-          {{ empreendimento.cidade }} - {{ empreendimento.Bairro }}
-        </p>
-        
-        <div class="detalhes">
-          <div class="detalhe-item">
-            <tui-icon icon="@tui.ruler-dimension-line"
-            [style.color]="'var(--tui-text-action)'"/>
-            <span>{{ empreendimento.metragem }}</span>
+        <div class="card-content">
+          <tui-badge appearance="primary">
+            {{ empreendimento.status }}
+          </tui-badge>
+
+          <div class="header-title">
+            {{ empreendimento.titulo }}
           </div>
-          <div class="detalhe-item">
-            <tui-icon icon="@tui.shower-head"
-            [style.color]="'var(--tui-text-action)'"/>
-            <span>{{ empreendimento.banheiros }}</span>
+          
+          <p class="localizacao">
+            {{ empreendimento.cidade }} - {{ empreendimento.Bairro }}
+          </p>
+          
+          <div class="detalhes">
+            <div class="detalhe-item">
+              <tui-icon icon="@tui.ruler-dimension-line"
+              [style.color]="'var(--tui-text-action)'"/>
+              <span>{{ empreendimento.metragem }}</span>
+            </div>
+            <div class="detalhe-item">
+              <tui-icon icon="@tui.shower-head"
+              [style.color]="'var(--tui-text-action)'"/>
+              <span>{{ empreendimento.banheiros }}</span>
+            </div>
+            <div class="detalhe-item">
+              <tui-icon icon="@tui.bed"
+              [style.color]="'var(--tui-text-action)'"/>
+              <span>{{ empreendimento.quartos }}</span>
+            </div>
+            <div class="detalhe-item">
+              <tui-icon icon="@tui.car"
+              [style.color]="'var(--tui-text-action)'"/>
+              <span>{{ empreendimento.vagas }}</span>
+            </div>
           </div>
-          <div class="detalhe-item">
-            <tui-icon icon="@tui.bed"
-            [style.color]="'var(--tui-text-action)'"/>
-            <span>{{ empreendimento.quartos }}</span>
+          
+          <div class="valor">
+            <span class="valor-label">A partir de</span>
+            <span class="valor-preco">{{ formatarValor(empreendimento.valorInicial) }}</span>
           </div>
-          <div class="detalhe-item">
-            <tui-icon icon="@tui.car"
-            [style.color]="'var(--tui-text-action)'"/>
-            <span>{{ empreendimento.vagas }}</span>
-          </div>
-        </div>
-        
-        <div class="valor">
-          <span class="valor-label">A partir de</span>
-          <span class="valor-preco">{{ formatarValor(empreendimento.valorInicial) }}</span>
         </div>
       </div>
     </div>
   </div>
-</div>
 
+  <tui-pagination
+      [index]="index"
+      [length]="length"
+      (indexChange)="goToPage($event)"
+  />
+</div>
 <ng-template #contentQuartos>
   <app-modal-quartos (updateQuartos)="updateQuartos($event)"></app-modal-quartos>
 </ng-template>

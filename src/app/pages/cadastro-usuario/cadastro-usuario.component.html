@@ -1,0 +1,149 @@
+<!-- cadastro.component.html -->
+<div class="cadastro-container">
+  <div class="cadastro-card">
+    <div class="header-section">
+      <h1 class="titulo">Crie sua conta</h1>
+    </div>
+
+    <form [formGroup]="cadastroForm" (ngSubmit)="onSubmit()" class="cadastro-form">
+      <div class="form-section">
+        <h3 class="section-title">Dados de acesso</h3>
+        
+        <div class="form-row">
+          <tui-textfield
+            class="form-field"
+          >
+            <label tuiLabel>Nome completo</label>
+            <input
+              type="text"
+              placeholder="digite seu nome completo"
+              tuiTextfield
+              formControlName="nome"
+            />
+          </tui-textfield>
+          <span class="error-message" *ngIf="cadastroForm.get('nome')?.errors?.['required'] && cadastroForm.get('nome')?.touched">
+            Nome é obrigatório
+          </span>
+          <span class="error-message" *ngIf="cadastroForm.get('nome')?.errors?.['nome'] && cadastroForm.get('nome')?.touched">
+            Nome inválido
+          </span>
+        </div>
+
+        <div class="form-row">
+          <tui-textfield
+            class="form-field"
+          >
+            <label tuiLabel>Email</label>
+            <input
+              type="email"
+              placeholder="seu@email.com"
+              tuiTextfield
+              formControlName="email"
+            />
+            <tui-icon icon="@tui.mail" />
+          </tui-textfield>
+          <span class="error-message" *ngIf="cadastroForm.get('email')?.errors?.['required'] && cadastroForm.get('email')?.touched">
+            Email é obrigatório
+          </span>
+          <span class="error-message" *ngIf="cadastroForm.get('email')?.errors?.['email'] && cadastroForm.get('email')?.touched">
+            Email inválido
+          </span>
+        </div>
+
+        <div class="form-row">
+          <tui-textfield
+            class="form-field"
+          >
+            <label tuiLabel>Telefone</label>
+            <input
+              autocomplete="tel"
+              mask="+55 (##) #####-####"
+              tuiInputPhone
+              [attr.pattern]="pattern"
+              formControlName="telefone"
+            />
+          </tui-textfield>
+          <span class="error-message" *ngIf="cadastroForm.get('telefone')?.errors?.['required'] && cadastroForm.get('telefone')?.touched">
+            Telefone é obrigatório
+          </span>
+          <span class="error-message" *ngIf="cadastroForm.get('telefone')?.errors?.['telefone'] && cadastroForm.get('telefone')?.touched">
+            Telefone inválido
+          </span>
+        </div>
+
+        <div class="form-row">
+          <tui-textfield
+            class="form-field"
+          >
+            <label tuiLabel>Senha</label>
+            <input
+              type="password"
+              placeholder="Mínimo 6 caracteres"
+              tuiTextfield
+              formControlName="senha"
+            />
+            <tui-icon tuiPassword/>
+          </tui-textfield>
+          <span class="error-message" *ngIf="cadastroForm.get('senha')?.errors?.['required'] && cadastroForm.get('senha')?.touched">
+            Senha é obrigatória
+          </span>
+          <span class="error-message" *ngIf="cadastroForm.get('senha')?.errors?.['minlength'] && cadastroForm.get('senha')?.touched">
+            Mínimo 6 caracteres
+          </span>
+        </div>
+
+        <div class="form-row">
+            <tui-textfield
+            class="form-field">
+                <label tuiLabel>Senha</label>
+                <input
+                type="password"
+                placeholder="Mínimo 6 caracteres"
+                tuiTextfield
+                formControlName="confirmarSenha"/>
+                <tui-icon tuiPassword/>
+          </tui-textfield>
+          <span class="error-message" *ngIf="cadastroForm.get('confirmarSenha')?.errors?.['required'] && cadastroForm.get('confirmarSenha')?.touched">
+            Confirmação de senha é obrigatória
+          </span>
+          <span class="error-message" *ngIf="!senhasCoincidem() && cadastroForm.get('confirmarSenha')?.touched && cadastroForm.get('confirmarSenha')?.value">
+            As senhas não coincidem
+          </span>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button 
+          type="button"
+          tuiButton
+          size="m"
+          appearance="secondary"
+          (click)="navigateToLogin()"
+        >
+          <tui-icon icon="@tui.arrow-left" />
+          Voltar para Login
+        </button>
+        
+        <button 
+          type="submit"
+          tuiButton
+          size="m"
+          appearance="primary"
+          [disabled]="!cadastroForm.valid || !senhasCoincidem()"
+        >
+          <tui-icon icon="@tui.user-plus" />
+          Criar Conta
+        </button>
+      </div>
+    </form>
+
+    <div class="footer-section">
+      <p class="footer-text">
+        Já tem uma conta? 
+        <a routerLink="/login" class="link">
+          Faça login
+        </a>
+      </p>
+    </div>
+  </div>
+</div>

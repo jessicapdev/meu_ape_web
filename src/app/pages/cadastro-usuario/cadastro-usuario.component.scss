@@ -1,0 +1,131 @@
+// cadastro.component.less
+.cadastro-container {
+  min-height: 63vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 2rem;
+}
+
+.cadastro-card {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.titulo {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.subtitulo {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+.cadastro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-section {
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 1.5rem 0;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+  }
+}
+
+.form-row {
+  margin-bottom: 1.5rem;
+}
+
+.form-field {
+  width: 100%;
+}
+
+.toggle-visibility {
+  margin-left: 0.5rem;
+  min-width: auto !important;
+  padding: 0.25rem !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.error-message {
+  display: block;
+  font-size: 0.75rem;
+  color: #ff4444;
+  margin-top: 0.25rem;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.footer-section {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.footer-text {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
+}
+
+.link {
+  color: #007bff;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .cadastro-container {
+    padding: 1rem;
+  }
+  
+  .cadastro-card {
+    padding: 1.5rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+  }
+}

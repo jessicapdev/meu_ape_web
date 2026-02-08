@@ -6,7 +6,7 @@ import { ModalQuartosComponent } from '../../../shared/components/modal-quartos/
 import { ModalStatusComponent } from '../../../shared/components/modal-status/modal-status.component';
 import { ModalPrecoComponent } from '../../../shared/components/modal-preco/modal-preco.component';
 import { ModalFiltrarComponent } from '../../../shared/components/modal-filtrar/modal-filtrar.component';
-import { TuiBadge, TuiCarousel, TuiChevron } from '@taiga-ui/kit';
+import { TuiBadge, TuiCarousel, TuiChevron, TuiPagination } from '@taiga-ui/kit';
 import { TuiActiveZone } from '@taiga-ui/cdk/directives/active-zone';
 import { Router } from '@angular/router';
 
@@ -41,6 +41,7 @@ interface Empreendimento {
     TuiActiveZone,
     TuiCarousel,
     TuiBadge,
+    TuiPagination,
     TuiDropdownDirective,
     ModalQuartosComponent,
     ModalStatusComponent,
@@ -61,12 +62,13 @@ export class HomeComponent  {
   protected openDropStatus = false;
   protected openDropPreco = false;
   protected openDropFiltrar = false;
+  protected length = 20;
+  protected index = 0;
 
   protected incialSearchForm = new FormGroup({
     local: new FormControl('')
   })
 
-  index = 0;
   empreendimentos: Empreendimento[] = [
     {
       titulo: "Residencial Vitória",
@@ -78,7 +80,7 @@ export class HomeComponent  {
       quartos: "studio a 2",
       vagas: 1,
       valorInicial: 143970.00,
-      imagem: "https://www.allflex.global/br/wp-content/uploads/sites/11/2023/10/ALICATE.png?resize=220,120%20220w,%20https://www.allflex.global/br/wp-content/uploads/sites/11/2023/10/ALICATE.png?resize=720,393%20720w"
+      imagem: "assets/img/empre_02.png"
     },
     {
       titulo: "Residencial Vitória",
@@ -90,7 +92,7 @@ export class HomeComponent  {
       quartos: "studio a 2",
       vagas: 1,
       valorInicial: 143970.00,
-      imagem: "../../../asset/img/empre_01.jpg"
+      imagem: "assets/img/empre_01.jpg"
     },
     {
       titulo: "Residencial Vitória",
@@ -102,7 +104,7 @@ export class HomeComponent  {
       quartos: "studio a 2",
       vagas: 1,
       valorInicial: 143970.00,
-      imagem: "asset/img/empre_01.jpg"
+      imagem: "assets/img/empre_03.png"
     },
     {
       titulo: "Residencial Vitória",
@@ -114,7 +116,7 @@ export class HomeComponent  {
       quartos: "studio a 2",
       vagas: 1,
       valorInicial: 143970.00,
-      imagem: "asset/img/empre_01.jpg"
+      imagem: "assets/img/empre_04.png"
     },
     {
       titulo: "Residencial Vitória",
@@ -126,7 +128,7 @@ export class HomeComponent  {
       quartos: "studio a 2",
       vagas: 1,
       valorInicial: 143970.00,
-      imagem: "asset/img/empre_01.jpg"
+      imagem: "assets/img/empre_03.png"
     },
     {
       titulo: "Residencial Vitória",
@@ -138,7 +140,7 @@ export class HomeComponent  {
       quartos: "studio a 2",
       vagas: 1,
       valorInicial: 143970.00,
-      imagem: "asset/img/empre_01.jpg"
+      imagem: "assets/img/empre_02.png"
     },
     {
       titulo: "Residencial Vitória",
@@ -150,7 +152,7 @@ export class HomeComponent  {
       quartos: "studio a 2",
       vagas: 1,
       valorInicial: 143970.00,
-      imagem: "asset/img/empre_01.jpg"
+      imagem: "assets/img/empre_03.png"
     }
   ];
 
@@ -183,8 +185,12 @@ export class HomeComponent  {
     this.filtrarDialog.showModal();
   }
 
-   navegarParaDetalhe(empreendimento: Empreendimento): void {
-    this.router.navigate(['/empreendimento', empreendimento.titulo.toLowerCase().replace(/\s+/g, '-')]);
+  navegarParaDetalhe(empreendimento: Empreendimento): void {
+    this.router.navigate(['/empreendimento']);
+  }
+
+  goToPage(index: number): void {
+    this.index = index;
   }
 
 }

@@ -34,16 +34,17 @@
     border-bottom: 1px solid rgb(177, 177, 177);
 }
 
-.title-menu{
-    color: var(--tui-text-primary);
-}
-
 .user-button{
     padding-right: 5px;
 }
 
 .title-home{
-  padding: 20px 0px;
+  padding: 10px 0px;
   font-size: xx-large;
-  color: var(--tui-text-action)
+  color: var(--tui-text-action);
+  font-weight: 700;
+}
+
+.menu-perfil{
+    min-width: 120px;
 }

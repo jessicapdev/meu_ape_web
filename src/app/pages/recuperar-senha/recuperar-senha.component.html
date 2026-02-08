@@ -1,0 +1,109 @@
+<!-- esqueci-senha.component.html -->
+<div class="esqueci-senha-container">
+  <div class="esqueci-senha-card">
+    <div *ngIf="!emailEnviado">
+      <div class="content-section">
+        <div class="icon-container">
+          <tui-icon icon="@tui.lock-keyhole-open" class="lock-icon" />
+        </div>
+      
+        <h2 class="titulo-instrucao">Esqueceu sua senha?</h2>
+        <p class="texto-instrucao">
+          Não se preocupe! Digite seu email abaixo e enviaremos instruções para redefinir sua senha.
+        </p>
+      </div>
+      <form [formGroup]="esqueciSenhaForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <tui-textfield
+            class="form-field"
+          >
+            <label tuiLabel>Email</label>
+            <input
+              type="email"
+              placeholder="seu@email.com"
+              tuiTextfield
+              formControlName="email"
+            />
+            <tui-icon icon="@tui.mail" />
+          </tui-textfield>
+          <span class="error-message" *ngIf="esqueciSenhaForm.get('email')?.errors?.['required'] && esqueciSenhaForm.get('email')?.touched">
+            Email é obrigatório
+          </span>
+          <span class="error-message" *ngIf="esqueciSenhaForm.get('email')?.errors?.['email'] && esqueciSenhaForm.get('email')?.touched">
+            Email inválido
+          </span>
+        </div>
+
+        <div class="action-buttons">
+          <button 
+            type="button"
+            tuiButton
+            size="m"
+            appearance="secondary"
+            (click)="navigateToLogin()"
+          >
+            <tui-icon icon="@tui.arrow-left" />
+            Voltar para Login
+          </button>
+          
+          <button 
+            type="submit"
+            tuiButton
+            size="m"
+            appearance="primary"
+            [disabled]="!esqueciSenhaForm.valid || carregando"
+            [loading]="carregando"
+          >
+            <tui-icon icon="@tui.send" />
+            Enviar Instruções
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="sucesso-section" *ngIf="emailEnviado">
+      <div class="icon-container sucesso">
+        <tui-icon icon="@tui.check-circle" class="sucesso-icon" />
+      </div>
+      
+      <h2 class="titulo-sucesso">Email enviado!</h2>
+      <p class="texto-sucesso">
+        Verifique sua caixa de entrada em <strong>{{ esqueciSenhaForm.get('email')?.value }}</strong> 
+        e siga as instruções para redefinir sua senha.
+      </p>
+      
+      <div class="dicas">
+        <h4 class="dica-titulo">Não recebeu o email?</h4>
+        <ul class="dica-lista">
+          <li>Verifique a pasta de spam ou lixeira</li>
+          <li>Aguarde alguns minutos</li>
+          <li>Certifique-se de que o email está correto</li>
+        </ul>
+      </div>
+
+      <div class="action-buttons">
+        <button 
+          type="button"
+          tuiButton
+          size="m"
+          appearance="flat"
+          (click)="reenviarEmail()"
+        >
+          <tui-icon icon="@tui.refresh" />
+          Reenviar Email
+        </button>
+        
+        <button 
+          type="button"
+          tuiButton
+          size="m"
+          appearance="primary"
+          (click)="navigateToLogin()"
+        >
+          <tui-icon icon="@tui.log-in" />
+          Voltar para Login
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

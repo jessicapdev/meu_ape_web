@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
 
-  apiUrl: 'https://nn4all.com.br/api/v1.0'
+  apiUrl: 'http://localhost:8080'
 
 };
 

@@ -1,6 +1,6 @@
 <div class="navbar-container">
     <div class="flex-container">
-            <div class="title-home">Meu apê na web</div>
+            <span (click)="navegarParaHome()" class="title-home icon-user">Meu apê na web</span>
         <div class="perfil-container">
             <div class="user-button">
                 <button
@@ -10,9 +10,28 @@
                     tuiIconButton
                     type="button"
                     [style.border-radius.%]="100"
+                    tuiChevron
+                    [(tuiDropdownOpen)]="openDropPerfil"
+                    [tuiDropdown]="contentPerfil"
                 >
                     user
                 </button>
+                <ng-template #contentPerfil>
+                    <tui-data-list role="menu">
+                        <tui-opt-group>
+                            <div class="menu-perfil"
+                                (click)="navegarParaPerfil()" 
+                                tuiOption>
+                                Meu perfil
+                            </div>
+                            <div class="menu-perfil"
+                                (click)="logout()" 
+                                tuiOption>
+                                Sair
+                            </div>
+                        </tui-opt-group>
+                    </tui-data-list>
+                </ng-template>
             </div>
             <button
                 appearance="secondary"

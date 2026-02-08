@@ -1,0 +1,179 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.footer-container {
+  background-color: var(--tui-base-01);
+  padding: 20px 0 0px;
+  color: var(--tui-text-02);
+  font-family: var(--tui-font-text);
+  margin-top: auto; /* Para fixar no final se usar flex */
+  border-top: 1px solid rgb(177, 177, 177);
+}
+
+.footer-content {
+  margin: 0 auto;
+}
+
+/* Seção Superior */
+.footer-top {
+    padding: 0 20rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}
+
+.footer-column {
+  .footer-title {
+    color: var(--tui-text-01);
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding-bottom: 8px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background-color: var(--tui-primary);
+    }
+  }
+
+  .footer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-item {
+    margin-bottom: 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .footer-link {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--tui-text-02);
+      transition: all 0.2s ease;
+
+      &[tuiLink]:hover {
+        color: var(--tui-primary);
+        transform: translateX(5px);
+      }
+
+      .bullet {
+        color: var(--tui-text-03);
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+/* Linha Divisória */
+.footer-divider {
+  height: 1px;
+  background-color: var(--tui-base-03);
+  margin: 10px 0;
+  width: 100%;
+}
+
+/* Seção Inferior */
+.footer-bottom {
+    background-color: rgb(230, 230, 230);
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--tui-base-03);
+    padding-bottom: 2rem;
+
+  .policy-links {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .policy-link[tuiLink] {
+      color: var(--tui-text-02);
+      font-size: 14px;
+
+      &:hover {
+        color: var(--tui-primary);
+        text-decoration: underline;
+      }
+    }
+
+    .link-separator {
+      color: var(--tui-text-03);
+      font-size: 14px;
+    }
+  }
+
+  .company-info {
+    .copyright,
+    .cnpj-address {
+      margin: 0;
+      font-size: 12px;
+      color: var(--tui-text-03);
+      line-height: 1.6;
+    }
+
+    .cnpj-address {
+      margin-top: 4px;
+      font-size: 11px;
+      opacity: 0.8;
+    }
+  }
+}
+
+/* Responsividade para telas muito pequenas */
+@media (max-width: 480px) {
+  .footer-content {
+    padding: 0 16px;
+  }
+
+  .footer-top {
+    gap: 25px;
+    margin-bottom: 30px;
+  }
+
+  .footer-column {
+    .footer-title {
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    .footer-link {
+      font-size: 13px;
+    }
+  }
+
+  .footer-divider {
+    margin: 30px 0;
+  }
+
+  .policy-links {
+    flex-direction: column;
+    gap: 4px;
+
+    .link-separator {
+      display: none;
+    }
+  }
+}

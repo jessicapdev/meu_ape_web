@@ -1,0 +1,110 @@
+<!-- profile.component.html - versão corrigida -->
+<div class="profile-container">
+    <app-sidebar></app-sidebar>
+    
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+    
+    <!-- Seção de Imagem de Perfil -->
+    <div class="profile-image-section">
+        <h1 class="profile-title">Perfil</h1>
+      <h3>Imagem de perfil</h3>
+      
+      <div class="image-upload-container">
+        <div class="image-preview" *ngIf="imagePreview">
+          <img [src]="imagePreview" alt="Preview" class="preview-img">
+        </div>
+        
+        <div class="upload-controls">
+          <input 
+            type="file" 
+            id="profileImage" 
+            accept=".jpg,.png"
+            (change)="onFileSelected($event)"
+            class="file-input"
+            #fileInput
+          >
+          
+          <div class="button-group">
+            <button 
+              type="button"
+              tuiButton
+              size="m"
+              appearance="primary"
+              (click)="fileInput.click()"
+            >
+              Escolher arquivo
+            </button>
+            
+            <button 
+              *ngIf="imagePreview"
+              type="button"
+              tuiButton
+              size="m"
+              appearance="secondary"
+              (click)="removeImage()"
+            >
+              Remover
+            </button>
+          </div>
+          
+          <p class="file-info">JPG ou PNG. Tamanho máximo de 800K.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção de Dados Pessoais -->
+    <div class="personal-data-section">
+    <h3>Dados pessoais</h3>
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+            <tui-textfield>
+                <label tuiLabel>Nome completo</label>
+                <input
+                    placeholder="digite seu nome completo aqui..."
+                    tuiTextfield
+                    formControlName="nomeCompleto"
+                />
+            </tui-textfield>
+        </div>
+        <div class="form-row">
+            <tui-textfield>
+                <label tuiLabel>Email</label>
+                <input
+                    inputmode="email"
+                    placeholder="digite seu email aqui..."
+                    tuiTextfield
+                    type="email"
+                    formControlName="email"
+                />
+                 <tui-icon icon="@tui.mail" />
+            </tui-textfield>
+        </div>
+
+        <div class="form-row">
+            	<tui-textfield>
+                <label tuiLabel>Telefone</label>
+                <input
+                    autocomplete="tel"
+                    mask="+55 (##) #####-####"
+                    tuiInputPhone
+                    formControlName="telefone"
+                    [attr.pattern]="pattern"
+                />
+            </tui-textfield>
+        </div>
+        
+
+        <!-- Botões de Ação -->
+        <div class="action-buttons">
+            <button 
+                type="submit"
+                tuiButton
+                size="m"
+                appearance="primary"
+                [disabled]="!profileForm.valid"
+            >
+                Salvar alterações
+            </button>
+        </div>
+    </form>
+</div>
