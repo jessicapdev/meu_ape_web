@@ -19,7 +19,6 @@ export class AuthenticationService {
     private http: HttpClient,
     private jwtHelper: JwtHelperService
   ) {
-    // CORREÇÃO: Tratamento seguro do localStorage
     const user = this.getUserFromStorage();
     this.currentUserSubject = new BehaviorSubject<Usuario | null>(user);
     this.currentUser = this.currentUserSubject.asObservable();
