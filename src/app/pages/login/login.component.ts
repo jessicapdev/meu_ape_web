@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TuiButton, TuiError, TuiIcon, TuiTextfield } from '@taiga-ui/core';
 import { TuiButtonLoading, TuiPassword } from '@taiga-ui/kit';
-import { AuthenticationService } from '../../core/services/authentication.service';
+import { AuthenticationService } from '../../core/authentication.service';
 import { first } from 'rxjs';
 import { TuiValidationError } from '@taiga-ui/cdk';
 
@@ -87,7 +87,7 @@ export class LoginComponent implements OnInit {
       next: () => {
         this.loginError = false;
         this.loading = false;
-        this.router.navigate([this.returnUrl]);
+        this.router.navigate(['home']);
       },
       error: error => {
         this.loginError = true;

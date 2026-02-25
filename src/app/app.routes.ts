@@ -7,7 +7,7 @@ import { PerfilComponent } from './pages/perfil/perfil.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RecuperarSenhaComponent } from './pages/recuperar-senha/recuperar-senha.component';
 import { FaleConoscoComponent } from './pages/fale-conosco/fale-conosco.component';
-import { AuthGuard } from './core/services/auth-guard.service';
+import { AuthGuard } from './core/auth-guard.service';
 
 export const routes: Routes = [
     { 

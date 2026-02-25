@@ -4,4 +4,5 @@ export class Usuario{
     foto?: string;
     senha?: string;
     token?: string;
+    refreshToken?: string;
 }
