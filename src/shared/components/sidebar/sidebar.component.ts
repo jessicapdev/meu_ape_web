@@ -24,30 +24,22 @@ export class SidebarComponent {
   @Output() menuItemClicked = new EventEmitter<void>();
 
   menuItems = [
-    // {
-    //   label: 'Favoritos',
-    //   icon: '@tui.star',
-    //   route: '/favoritos',
-    // },
-    // {
-    //   label: 'Visualizados',
-    //   icon: '@tui.eye',
-    //   route: '/visualizados',
-    // },
-    // {
-    //   label: 'Contatados',
-    //   icon: '@tui.notebook-tabs',
-    //   route: '/contatados',
-    // },
-    {
+     {
       label: 'Perfil',
       icon: '@tui.user',
-      route: '/perfil'
+    },
+    {
+      label: 'Mensagens Recebidas',
+      icon: '@tui.notebook-tabs',
+    },
+    {
+      label: 'Empreendimentos',
+      icon: '@tui.building',
     }
   ];
 
-  onMenuItemClick(): void {
-    this.menuItemClicked.emit();
+  onMenuItemClick(item: any): void {
+    this.menuItemClicked.emit(item);
   }
 
 }

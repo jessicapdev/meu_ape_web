@@ -1,7 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
-html, body { height: 100%; }
-body { margin: 0; 
-    font-family: Helvetica, Arial, sans-serif;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .sub-title{
@@ -25,4 +36,61 @@ body { margin: 0;
 .text-bold{
     font-size: 16px;
     font-weight: 700;
+}
+
+.error-message,
+.success-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; 
+    font-size: .85rem;
+    margin-top: 0.25rem;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.error-message {
+    color: #ff4444;
+    border: 1px #ff4444 solid;
+    background-color: rgba(255, 68, 68, 0.05);
+}
+
+.success-message {
+    color: #108d10;
+    border: 1px #108d10 solid;
+    background-color: rgba(16, 141, 16, 0.05);
+}
+
+/* Estilização do ícone Taiga */
+tui-icon {
+    width: 1.2rem;
+    height: 1.2rem;
+    flex-shrink: 0;
+}
+
+.error-message-input 
+.success-message-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; 
+    font-size: .85rem;
+    margin-top: 0.25rem;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.error-message-input {
+    color: #ff4444;
+}
+
+.success-message-input {
+    color: #108d10;
+}
+
+app-root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh; /* fallback para mobile */
 }

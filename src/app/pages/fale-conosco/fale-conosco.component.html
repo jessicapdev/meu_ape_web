@@ -32,7 +32,7 @@
             />
             <tui-icon tuiTooltip="Digite seu nome completo" />
           </tui-textfield>
-          <span class="error-message" *ngIf="contatoForm.get('nome')?.errors?.['required'] && contatoForm.get('nome')?.touched">
+          <span class="error-message-input" *ngIf="contatoForm.get('nome')?.errors?.['required'] && contatoForm.get('nome')?.touched">
             Nome é obrigatório
           </span>
         </div>
@@ -52,10 +52,10 @@
             />
             <tui-icon tuiTooltip="Digite um email válido" />
           </tui-textfield>
-          <span class="error-message" *ngIf="contatoForm.get('email')?.errors?.['required'] && contatoForm.get('email')?.touched">
+          <span class="error-message-input" *ngIf="contatoForm.get('email')?.errors?.['required'] && contatoForm.get('email')?.touched">
             Email é obrigatório
           </span>
-          <span class="error-message" *ngIf="contatoForm.get('email')?.errors?.['email'] && contatoForm.get('email')?.touched">
+          <span class="error-message-input" *ngIf="contatoForm.get('email')?.errors?.['email'] && contatoForm.get('email')?.touched">
             Email inválido
           </span>
         </div>
@@ -75,7 +75,7 @@
             />
             <tui-icon tuiTooltip="DDD + número" />
           </tui-textfield>
-          <span class="error-message" *ngIf="contatoForm.get('telefone')?.errors?.['required'] && contatoForm.get('telefone')?.touched">
+          <span class="error-message-input" *ngIf="contatoForm.get('telefone')?.errors?.['required'] && contatoForm.get('telefone')?.touched">
             Telefone é obrigatório
           </span>
         </div>
@@ -95,29 +95,27 @@
             />
             <tui-icon tuiTooltip="Resuma o assunto" />
           </tui-textfield>
-          <span class="error-message" *ngIf="contatoForm.get('assunto')?.errors?.['required'] && contatoForm.get('assunto')?.touched">
+          <span class="error-message-input" *ngIf="contatoForm.get('assunto')?.errors?.['required'] && contatoForm.get('assunto')?.touched">
             Assunto é obrigatório
           </span>
         </div>
 
         <div class="form-row">
-          <tui-textfield
-            iconStart="@tui.message-square"
-            class="form-field textarea-field"
-          >
-            <label tuiLabel>Mensagem</label>
-            <textarea
-              tuiTextfield
-              formControlName="mensagem"
-              placeholder="Digite sua mensagem aqui..."
-              rows="5"
-            ></textarea>
-            <tui-icon tuiTooltip="Descreva detalhadamente" />
-          </tui-textfield>
-          <span class="error-message" *ngIf="contatoForm.get('mensagem')?.errors?.['required'] && contatoForm.get('mensagem')?.touched">
+          <label tuiLabel>
+            Mensagem
+            <tui-textfield>
+              <textarea
+                placeholder="Digite sua mensagem aqui..."
+                formControlName="mensagem"
+                tuiTextarea
+              ></textarea>
+            </tui-textfield>
+          </label>
+        
+          <span class="error-message-input" *ngIf="contatoForm.get('mensagem')?.errors?.['required'] && contatoForm.get('mensagem')?.touched">
             Mensagem é obrigatória
           </span>
-          <span class="error-message" *ngIf="contatoForm.get('mensagem')?.errors?.['minlength'] && contatoForm.get('mensagem')?.touched">
+          <span class="error-message-input" *ngIf="contatoForm.get('mensagem')?.errors?.['minlength'] && contatoForm.get('mensagem')?.touched">
             Mínimo 10 caracteres
           </span>
         </div>
@@ -130,7 +128,7 @@
             appearance="secondary"
             (click)="contatoForm.reset()"
           >
-            <tui-icon icon="@tui.refresh" />
+            <tui-icon icon="@tui.trash" />
             Limpar
           </button>
           
@@ -164,6 +162,10 @@
           <tui-icon icon="@tui.plus" />
           Nova Mensagem
         </button>
+      </div>
+
+      <div style="margin: 1rem 0;">
+        <app-alert-message type="error" [message]="error.message" [show]="error.show"/>
       </div>
     </div>
 
@@ -201,7 +203,7 @@
         <!-- WhatsApp -->
         <div class="contato-card whatsapp">
           <div class="card-icon">
-            <tui-icon icon="@tui.brand-whatsapp" />
+            <tui-icon icon="@tui.message-circle" />
           </div>
           <div class="card-content">
             <h3>WhatsApp</h3>
@@ -212,14 +214,13 @@
               appearance="primary"
               (click)="abrirWhatsApp()"
             >
-              <tui-icon icon="@tui.message-circle" />
               Iniciar Conversa
             </button>
           </div>
         </div>
 
         <!-- Email -->
-        <div class="contato-card email">
+        <!-- <div class="contato-card email">
           <div class="card-icon">
             <tui-icon icon="@tui.mail" />
           </div>
@@ -236,10 +237,10 @@
               Copiar
             </button>
           </div>
-        </div>
+        </div> -->
 
         <!-- Endereço -->
-        <div class="contato-card endereco">
+        <!-- <div class="contato-card endereco">
           <div class="card-icon">
             <tui-icon icon="@tui.map-pin" />
           </div>
@@ -257,29 +258,25 @@
               Ver no Mapa
             </button>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!-- Redes Sociais -->
       <div class="redes-sociais">
         <h3>Redes Sociais</h3>
         <div class="social-links">
-          <a href="#" class="social-link facebook">
-            <tui-icon icon="@tui.brand-facebook" />
+          <!-- <a href="#" class="social-link facebook">
+            <tui-icon icon="@tui.facebook" />
             Facebook
-          </a>
-          <a href="#" class="social-link instagram">
-            <tui-icon icon="@tui.brand-instagram" />
+          </a> -->
+          <a href="https://www.instagram.com/vivi.corretoradeimoveis" class="social-link instagram">
+            <tui-icon icon="@tui.instagram" />
             Instagram
           </a>
-          <a href="#" class="social-link twitter">
-            <tui-icon icon="@tui.brand-twitter" />
+          <!-- <a href="#" class="social-link twitter">
+            <tui-icon icon="@tui.twitter" />
             Twitter
-          </a>
-          <a href="#" class="social-link linkedin">
-            <tui-icon icon="@tui.brand-linkedin" />
-            LinkedIn
-          </a>
+          </a> -->
         </div>
       </div>
     </div>

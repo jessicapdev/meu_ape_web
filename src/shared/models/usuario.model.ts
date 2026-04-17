@@ -3,6 +3,7 @@ export class Usuario{
     email?: string;
     foto?: string;
     senha?: string;
+    telefone?: string;
     token?: string;
     refreshToken?: string;
 }

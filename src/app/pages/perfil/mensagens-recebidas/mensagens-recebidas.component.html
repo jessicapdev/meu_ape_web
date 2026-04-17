@@ -1,0 +1,119 @@
+<div class="mensagens-recebidas">
+  <div class="page-header">
+    <div class="page-title">
+      <span class="badge">{{ contatos.length }} mensagem{{ contatos.length === 1 ? '' : 'ens' }}</span>
+    </div>
+
+    <div class="page-actions">
+      <label class="checkbox-label">
+        <input
+          tuiCheckbox
+          size="m"
+          [ngModel]="allSelected"
+          (ngModelChange)="toggleSelectAll($event)"
+          type="checkbox"
+        />
+        Selecionar todos
+      </label>
+    </div>
+  </div>
+
+  <div class="table-wrapper" *ngIf="!loading; else loadingTemplate">
+    <table cdk-table [dataSource]="contatos" class="mensagens-table">
+      <ng-container cdkColumnDef="select">
+        <th cdk-header-cell *cdkHeaderCellDef></th>
+        <td cdk-cell *cdkCellDef="let contato">
+          <input
+            tuiCheckbox
+            size="m"
+            type="checkbox"
+            [ngModel]="isSelected(contato)"
+            (ngModelChange)="toggleSelection(contato, $event)"
+          />
+        </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="nome">
+        <th cdk-header-cell *cdkHeaderCellDef>Nome</th>
+        <td cdk-cell *cdkCellDef="let contato">{{ contato.nome }}</td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="assunto">
+        <th cdk-header-cell *cdkHeaderCellDef>Assunto</th>
+        <td cdk-cell *cdkCellDef="let contato">{{ contato.assunto }}</td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="dataRecebimento">
+        <th cdk-header-cell *cdkHeaderCellDef>Data recebida</th>
+        <td cdk-cell *cdkCellDef="let contato">{{ formatDate(contato.dataRecebimento) }}</td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="status">
+        <th cdk-header-cell *cdkHeaderCellDef>Status</th>
+        <td cdk-cell *cdkCellDef="let contato">
+          <span [class]="contato.lido ? 'status-badge status-badge--lido' : 'status-badge status-badge--nao-lido'">
+            {{ contato.lido ? 'Lido' : 'Não lido' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="action">
+        <th cdk-header-cell *cdkHeaderCellDef>Ação</th>
+        <td cdk-cell *cdkCellDef="let contato">
+          <button tuiButton appearance="primary" size="s" type="button" (click)="openMensagem(contato)">
+            Ler
+          </button>
+        </td>
+      </ng-container>
+
+      <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <div class="empty-state" *ngIf="!contatos.length">
+      Nenhuma mensagem recebida.
+    </div>
+  </div>
+
+  <ng-template #loadingTemplate>
+    <div class="loading-state">Carregando mensagens...</div>
+  </ng-template>
+
+  <div class="modal-backdrop" *ngIf="showDetailModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Detalhes da mensagem</h3>
+        <button tuiButton appearance="secondary" size="s" type="button" (click)="closeModal()">Fechar</button>
+      </div>
+
+      <dl class="modal-content">
+        <dt>Nome</dt>
+        <dd>{{ selectedContact?.nome }}</dd>
+
+        <dt>Email</dt>
+        <dd>{{ selectedContact?.email }}</dd>
+
+        <dt>Telefone</dt>
+        <dd>{{ selectedContact?.telefone }}</dd>
+
+        <dt>Assunto</dt>
+        <dd>{{ selectedContact?.assunto }}</dd>
+
+        <dt>Mensagem</dt>
+        <dd>{{ selectedContact?.mensagem }}</dd>
+
+        <dt>Data</dt>
+        <dd>{{ formatDate(selectedContact?.dataRecebimento) }}</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="buttons-action">
+    <button tuiButton appearance="primary" type="button" [disabled]="!hasSelection()" (click)="markSelectedAsLido(true)">
+      Marcar como lido
+    </button>
+    <button tuiButton appearance="secondary" type="button" [disabled]="!hasSelection()" (click)="markSelectedAsLido(false)">
+      Marcar como não lido
+    </button>
+  </div>
+</div>

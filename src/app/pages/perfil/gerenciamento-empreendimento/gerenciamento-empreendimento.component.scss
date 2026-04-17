@@ -1,0 +1,223 @@
+.gerenciamento-container {
+  padding: 16px;
+}
+
+// Header
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3f51b5;
+  font-weight: 700;
+}
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
+// Tabela
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+.empreendimentos-table {
+  width: 100%;
+  min-width: 780px;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.empreendimentos-table th,
+.empreendimentos-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.empreendimentos-table th {
+  font-size: 0.85rem;
+  color: #5f5f6c;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  background: #f6f7ff;
+  font-weight: 700;
+}
+
+.empreendimentos-table tr:hover {
+  background: rgba(79, 103, 251, 0.06);
+}
+
+// Status Badges
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+
+  &--em-construção {
+    background: #fff2e1;
+    color: #b34e00;
+  }
+
+  &--pronto {
+    background: #e7f6ea;
+    color: #237a3f;
+  }
+
+  &--lançamento {
+    background: #e7edff;
+    color: #1e40af;
+  }
+}
+
+// Empty State
+.empty-state,
+.loading-state {
+  padding: 40px 18px;
+  text-align: center;
+  color: #5f5f6c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .empty-icon {
+    font-size: 3rem;
+    opacity: 0.4;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  tui-loader {
+    margin-bottom: 1rem;
+  }
+}
+
+// Paginação
+.pagination-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+  flex-wrap: wrap;
+}
+
+.page-info {
+  font-size: 0.95rem;
+  color: #5f5f6c;
+  min-width: 200px;
+  text-align: center;
+
+  strong {
+    font-weight: 700;
+    color: #1d1d23;
+  }
+}
+
+// Botões de ação em massa
+.buttons-action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  button[tuiButton] {
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .gerenciamento-container {
+    padding: 12px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .page-actions {
+    width: 100%;
+  }
+
+  .checkbox-label {
+    width: 100%;
+  }
+
+  .empreendimentos-table {
+    min-width: 100%;
+    font-size: 0.9rem;
+
+    th,
+    td {
+      padding: 10px 8px;
+    }
+  }
+
+  .pagination-section {
+    flex-direction: column;
+    gap: 12px;
+
+    .page-info {
+      width: 100%;
+    }
+  }
+
+  .buttons-action {
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+
+
+.button-action {
+  margin: 5px;
+}

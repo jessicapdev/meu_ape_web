@@ -11,6 +11,7 @@ export interface Imagem {
 
 
 export interface DetalheEmpreendimento {
+  id?: string;
   titulo: string;
   status: string;
   cidade: string;

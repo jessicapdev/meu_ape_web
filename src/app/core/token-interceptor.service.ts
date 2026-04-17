@@ -98,7 +98,6 @@ export class TokenInterceptor implements HttpInterceptor {
       );
     }
 
-    // Outros erros: propaga
     return throwError(() => error);
   }
 

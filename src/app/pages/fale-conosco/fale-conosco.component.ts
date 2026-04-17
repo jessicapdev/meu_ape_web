@@ -3,16 +3,20 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TuiButton, TuiIcon, TuiTextfield } from '@taiga-ui/core';
-import { TuiButtonLoading } from '@taiga-ui/kit';
+import { TuiButtonLoading, TuiTextarea } from '@taiga-ui/kit';
+import { ContatoService } from '../../../shared/service/contato.service';
+import { AlertMessageComponent } from '../../../shared/components/alert-message/alert-message.component';
 
 @Component({
   selector: 'app-fale-conosco',
   standalone: true,
   imports: [
     CommonModule,
+    AlertMessageComponent,
     ReactiveFormsModule,
     TuiButton,
     TuiTextfield,
+    TuiTextarea,
     TuiIcon,
     TuiButtonLoading
   ],
@@ -20,21 +24,24 @@ import { TuiButtonLoading } from '@taiga-ui/kit';
   styleUrls: ['./fale-conosco.component.scss']
 })
 export class FaleConoscoComponent implements OnInit {
+  error: { show: boolean, message: string } = { show: false, message: '' };
   contatoForm: FormGroup;
   enviando = false;
   enviado = false;
 
-  // Dados da empresa
   empresa = {
     nome: 'Minha Empresa LTDA',
-    telefone: '(11) 4002-8922',
-    whatsapp: '(11) 9 9344-98823',
+    telefone: '(11) 9 4010-60342',
+    whatsapp: '(11) 9 4010-60342',
     email: 'contato@minhaempresa.com.br',
     endereco: 'Rua Exemplo, 123 - São Paulo/SP',
     horario: 'Seg a Sex: 09h às 18h'
   };
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private contatoService: ContatoService
+  ) {
     this.contatoForm = this.fb.group({
       nome: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -49,12 +56,17 @@ export class FaleConoscoComponent implements OnInit {
   onSubmit(): void {
     if (this.contatoForm.valid) {
       this.enviando = true;
-      
-      setTimeout(() => {
-        this.enviando = false;
-        this.enviado = true;
-        console.log('Formulário enviado:', this.contatoForm.value);
-      }, 2000);
+      this.contatoService.enviarContato(this.contatoForm.value).subscribe({
+        next: () => {
+          this.enviando = false;
+          this.enviado = true;
+        },
+        error: () => {
+          this.enviando = false;
+          this.error.show = true;
+          this.error.message = 'Erro ao tentar enviar mensagem. Tente novamente mais tarde.';
+        }
+      })
     }
   }
 
@@ -70,7 +82,7 @@ export class FaleConoscoComponent implements OnInit {
   }
 
   abrirWhatsApp(): void {
-    window.open(`https://wa.me/5511934498823`, '_blank');
+    window.open(`https://wa.me/55119401060342`, '_blank');
   }
 
   abrirGoogleMaps(): void {

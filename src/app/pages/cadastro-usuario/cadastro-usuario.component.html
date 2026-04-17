@@ -21,10 +21,10 @@
               formControlName="nome"
             />
           </tui-textfield>
-          <span class="error-message" *ngIf="cadastroForm.get('nome')?.errors?.['required'] && cadastroForm.get('nome')?.touched">
+          <span class="error-message-input" *ngIf="cadastroForm.get('nome')?.errors?.['required'] && cadastroForm.get('nome')?.touched">
             Nome é obrigatório
           </span>
-          <span class="error-message" *ngIf="cadastroForm.get('nome')?.errors?.['nome'] && cadastroForm.get('nome')?.touched">
+          <span class="error-message-input" *ngIf="cadastroForm.get('nome')?.errors?.['nome'] && cadastroForm.get('nome')?.touched">
             Nome inválido
           </span>
         </div>
@@ -42,10 +42,10 @@
             />
             <tui-icon icon="@tui.mail" />
           </tui-textfield>
-          <span class="error-message" *ngIf="cadastroForm.get('email')?.errors?.['required'] && cadastroForm.get('email')?.touched">
+          <span class="error-message-input" *ngIf="cadastroForm.get('email')?.errors?.['required'] && cadastroForm.get('email')?.touched">
             Email é obrigatório
           </span>
-          <span class="error-message" *ngIf="cadastroForm.get('email')?.errors?.['email'] && cadastroForm.get('email')?.touched">
+          <span class="error-message-input" *ngIf="cadastroForm.get('email')?.errors?.['email'] && cadastroForm.get('email')?.touched">
             Email inválido
           </span>
         </div>
@@ -63,10 +63,10 @@
               formControlName="telefone"
             />
           </tui-textfield>
-          <span class="error-message" *ngIf="cadastroForm.get('telefone')?.errors?.['required'] && cadastroForm.get('telefone')?.touched">
+          <span class="error-message-input" *ngIf="cadastroForm.get('telefone')?.errors?.['required'] && cadastroForm.get('telefone')?.touched">
             Telefone é obrigatório
           </span>
-          <span class="error-message" *ngIf="cadastroForm.get('telefone')?.errors?.['telefone'] && cadastroForm.get('telefone')?.touched">
+          <span class="error-message-input" *ngIf="cadastroForm.get('telefone')?.errors?.['telefone'] && cadastroForm.get('telefone')?.touched">
             Telefone inválido
           </span>
         </div>
@@ -84,10 +84,10 @@
             />
             <tui-icon tuiPassword/>
           </tui-textfield>
-          <span class="error-message" *ngIf="cadastroForm.get('senha')?.errors?.['required'] && cadastroForm.get('senha')?.touched">
+          <span class="error-message-input" *ngIf="cadastroForm.get('senha')?.errors?.['required'] && cadastroForm.get('senha')?.touched">
             Senha é obrigatória
           </span>
-          <span class="error-message" *ngIf="cadastroForm.get('senha')?.errors?.['minlength'] && cadastroForm.get('senha')?.touched">
+          <span class="error-message-input" *ngIf="cadastroForm.get('senha')?.errors?.['minlength'] && cadastroForm.get('senha')?.touched">
             Mínimo 6 caracteres
           </span>
         </div>
@@ -103,10 +103,10 @@
                 formControlName="confirmarSenha"/>
                 <tui-icon tuiPassword/>
           </tui-textfield>
-          <span class="error-message" *ngIf="cadastroForm.get('confirmarSenha')?.errors?.['required'] && cadastroForm.get('confirmarSenha')?.touched">
+          <span class="error-message-input" *ngIf="cadastroForm.get('confirmarSenha')?.errors?.['required'] && cadastroForm.get('confirmarSenha')?.touched">
             Confirmação de senha é obrigatória
           </span>
-          <span class="error-message" *ngIf="!senhasCoincidem() && cadastroForm.get('confirmarSenha')?.touched && cadastroForm.get('confirmarSenha')?.value">
+          <span class="error-message-input" *ngIf="!senhasCoincidem() && cadastroForm.get('confirmarSenha')?.touched && cadastroForm.get('confirmarSenha')?.value">
             As senhas não coincidem
           </span>
         </div>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TuiButton, TuiDropdown, TuiDropdownDirective, TuiDropdownOpen, TuiIcon, TuiTextfield } from '@taiga-ui/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -9,19 +9,9 @@ import { ModalFiltrarComponent } from '../../../shared/components/modal-filtrar/
 import { TuiBadge, TuiCarousel, TuiChevron, TuiPagination } from '@taiga-ui/kit';
 import { TuiActiveZone } from '@taiga-ui/cdk/directives/active-zone';
 import { Router } from '@angular/router';
-
-interface Empreendimento {
-  titulo: string;
-  status: string;
-  cidade: string;
-  Bairro: string;
-  metragem: string;
-  banheiros: number;
-  quartos: string;
-  vagas: number;
-  valorInicial: number;
-  imagem: string;
-}
+import { Empreendimento } from '../../../shared/models/empreendimento.model';
+import { EmpreendimentoService } from '../../../shared/service/empreendimento.service';
+import { EmpreendimentoFiltro } from '../../../shared/models/empreendimento-filtro.model';
 
 @Component({
   selector: 'app-home',
@@ -54,7 +44,7 @@ interface Empreendimento {
   ],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class HomeComponent  {
+export class HomeComponent implements OnInit{
   @ViewChild('filtrarDialog', { static: true })
   filtrarDialog!: ModalFiltrarComponent;
 
@@ -62,111 +52,73 @@ export class HomeComponent  {
   protected openDropStatus = false;
   protected openDropPreco = false;
   protected openDropFiltrar = false;
-  protected length = 20;
+  protected length = 0;
   protected index = 0;
-
+  protected pageSize = 8;
+  protected empreendimentos: Empreendimento[] = [];
+  protected filtro: EmpreendimentoFiltro = {
+    page: 0,
+    size: 8,
+    tiposImoveis: [],
+    diferenciais: []
+  };
   protected incialSearchForm = new FormGroup({
     local: new FormControl('')
   })
 
-  empreendimentos: Empreendimento[] = [
-    {
-      titulo: "Residencial Vitória",
-      status: "Pronto para morar",
-      cidade: "São Paulo",
-      Bairro: "Piriruba",
-      metragem: "17 a 104m²",
-      banheiros: 1,
-      quartos: "studio a 2",
-      vagas: 1,
-      valorInicial: 143970.00,
-      imagem: "assets/img/empre_02.png"
-    },
-    {
-      titulo: "Residencial Vitória",
-      status: "Em construção",
-      cidade: "São Paulo",
-      Bairro: "Piriruba",
-      metragem: "17 a 104m²",
-      banheiros: 1,
-      quartos: "studio a 2",
-      vagas: 1,
-      valorInicial: 143970.00,
-      imagem: "assets/img/empre_01.jpg"
-    },
-    {
-      titulo: "Residencial Vitória",
-      status: "Lançamento",
-      cidade: "São Paulo",
-      Bairro: "Piriruba",
-      metragem: "17 a 104m²",
-      banheiros: 1,
-      quartos: "studio a 2",
-      vagas: 1,
-      valorInicial: 143970.00,
-      imagem: "assets/img/empre_03.png"
-    },
-    {
-      titulo: "Residencial Vitória",
-      status: "Em construção",
-      cidade: "São Paulo",
-      Bairro: "Piriruba",
-      metragem: "17 a 104m²",
-      banheiros: 1,
-      quartos: "studio a 2",
-      vagas: 1,
-      valorInicial: 143970.00,
-      imagem: "assets/img/empre_04.png"
-    },
-    {
-      titulo: "Residencial Vitória",
-      status: "Em construção",
-      cidade: "São Paulo",
-      Bairro: "Piriruba",
-      metragem: "17 a 104m²",
-      banheiros: 1,
-      quartos: "studio a 2",
-      vagas: 1,
-      valorInicial: 143970.00,
-      imagem: "assets/img/empre_03.png"
-    },
-    {
-      titulo: "Residencial Vitória",
-      status: "Lançamento",
-      cidade: "São Paulo",
-      Bairro: "Piriruba",
-      metragem: "17 a 104m²",
-      banheiros: 1,
-      quartos: "studio a 2",
-      vagas: 1,
-      valorInicial: 143970.00,
-      imagem: "assets/img/empre_02.png"
-    },
-    {
-      titulo: "Residencial Vitória",
-      status: "Lançamento",
-      cidade: "São Paulo",
-      Bairro: "Piriruba",
-      metragem: "17 a 104m²",
-      banheiros: 1,
-      quartos: "studio a 2",
-      vagas: 1,
-      valorInicial: 143970.00,
-      imagem: "assets/img/empre_03.png"
-    }
-  ];
+  constructor(
+    private router: Router,
+    private service: EmpreendimentoService 
+  ) {}
 
-  constructor(private router: Router) {}
+  ngOnInit(): void {
+    this.getEmpreendimentos()
+  }
 
   onSubmit(){
     console.log(this.incialSearchForm.value);
   }
+
+  getEmpreendimentos(): Empreendimento[] {
+    this.service.buscarComFiltros(this.filtro).subscribe({
+      next: (data: any) => {
+        this.empreendimentos = data.content;
+        this.length = Math.ceil(data.totalElements/this.pageSize) || 1;
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
+    return this.empreendimentos;
+  }
+
 
   formatarValor(valor: number): string {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL'
     }).format(valor);
+  }
+
+  formatarQuartos(quartos: string[]): string {
+    const lista = quartos.map(q => parseInt(q, 10));
+    const primeiro = lista[0];
+    const ultimo = lista[lista.length - 1];
+    const primeiroStr = primeiro === 0 ? 'studio' : primeiro.toString();
+    const ultimoStr = ultimo >= 5 ? '4+' : ultimo.toString();
+    return `${primeiroStr} - ${ultimoStr}`;
+  }
+
+  formatarBanheiros(banheiros: number[]): string {
+    const primeiro = banheiros[0];
+    const ultimo = banheiros[banheiros.length - 1];
+    return `${primeiro} - ${ultimo}`;
+  }
+
+  formatarVagas(vagas: number[]): string {
+    const primeiro = vagas[0];
+    const ultimo = vagas[vagas.length - 1];
+    return `${primeiro} - ${ultimo}`;
   }
 
   updateQuartos(event: any){
@@ -191,6 +143,8 @@ export class HomeComponent  {
 
   goToPage(index: number): void {
     this.index = index;
+    this.filtro.page = index;
+    this.getEmpreendimentos();
   }
 
 }

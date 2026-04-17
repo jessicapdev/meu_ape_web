@@ -20,10 +20,10 @@
             />
             <tui-icon icon="@tui.mail" />
           </tui-textfield>
-          <span class="error-message" *ngIf="loginForm.get('email')?.errors?.['required'] && loginForm.get('email')?.touched">
+          <span class="error-message-input" *ngIf="loginForm.get('email')?.errors?.['required'] && loginForm.get('email')?.touched">
             Email é obrigatório
           </span>
-          <span class="error-message" *ngIf="loginForm.get('email')?.errors?.['email'] && loginForm.get('email')?.touched">
+          <span class="error-message-input" *ngIf="loginForm.get('email')?.errors?.['email'] && loginForm.get('email')?.touched">
             Email inválido
           </span>
         </div>
@@ -41,10 +41,10 @@
             />
             <tui-icon tuiPassword/>
           </tui-textfield>
-          <span class="error-message" *ngIf="loginForm.get('senha')?.errors?.['required'] && loginForm.get('senha')?.touched">
+          <span class="error-message-input" *ngIf="loginForm.get('senha')?.errors?.['required'] && loginForm.get('senha')?.touched">
             Senha é obrigatória
           </span>
-          <span class="error-message" *ngIf="loginForm.get('senha')?.errors?.['minlength'] && loginForm.get('senha')?.touched">
+          <span class="error-message-input" *ngIf="loginForm.get('senha')?.errors?.['minlength'] && loginForm.get('senha')?.touched">
             Mínimo 6 caracteres
           </span>
         </div>

@@ -8,6 +8,8 @@ import { RouterLink } from '@angular/router';
 import { TuiTable, TuiTableControl} from '@taiga-ui/addon-table';
 import { TuiCard } from '@taiga-ui/layout';
 import { TuiItem } from '@taiga-ui/cdk/directives/item';
+import { Empreendimento } from '../../../shared/models/empreendimento.model';
+import { EmpreendimentoService } from '../../../shared/service/empreendimento.service';
 
 @Component({
   selector: 'app-empreendimento',
@@ -39,93 +41,27 @@ export class EmpreendimentoComponent {
   altText: string = 'Imagem do local do endereço';
   endereco: string = 'Av. Paulista, 1000, São Paulo - SP, Brasil';
 
-  empreendimento = {
-    titulo: "Residencial Vitória",
-    status: "Pronto para morar",
-    cidade: "São Paulo",
-    bairro: "Piriruba",
-    metragem: "17 a 104m²",
-    banheiros: 1,
-    quartos: "studio a 2",
-    vagas: 1,
-    valorInicial: "143.970,00",
-    imagens: {
-      banner: "assets/img/empre_03.png",
-      map: "assets/img/maps.png",
-      plantas: [],
-      galeria: []
-     },
-    apartamentos: [
-      {
-        tipo: "Studio",
-        area: "17 m²",
-        quartos: "-",
-        suites: "-",
-        banheiros: 1,
-        vagas: "-",
-        preco: 148979.13
-      },
-      {
-        tipo: "Apto",
-        area: "25 m²",
-        quartos: "1",
-        suites: "-",
-        banheiros: 1,
-        vagas: "-",
-        preco: null
-      },
-      {
-        tipo: "Apto",
-        area: "33 m²",
-        quartos: "2",
-        suites: "-",
-        banheiros: 1,
-        vagas: "1",
-        preco: null
-      },
-      {
-        tipo: "Apto/Penthouse",
-        area: "60 m²",
-        quartos: "1",
-        suites: "-",
-        banheiros: 1,
-        vagas: "1",
-        preco: null
-      },
-      {
-        tipo: "Apto/Duplex",
-        area: "104 m²",
-        quartos: "1",
-        suites: "-",
-        banheiros: 1,
-        vagas: "1",
-        preco: null
-      }
-    ],
-    diferenciais: [
-      { nome: 'Perto de metrô/trem'},
-      { nome: 'Perto de parque'},
-      { nome: 'Perto de academia'},
-      { nome: 'Torre única'},
-      { nome: 'Perto de mercado'},
-      { nome: 'Pet place'},
-      { nome: 'Bicicletário'},
-    ],
-    areasLazer: [
-      { nome: 'Perto de metrô/trem'},
-      { nome: 'Perto de parque'},
-      { nome: 'Perto de academia'},
-      { nome: 'Torre única'},
-      { nome: 'Perto de mercado'},
-      { nome: 'Pet place'},
-      { nome: 'Bicicletário'},
-    ],
-    descricao: "Metrocasa Pirituba - More a 600 m da estação Pirituba do metrô!",
-    views: 1315,
-    dias: 90,
-  } as DetalheEmpreendimento;
+  empreendimento!: DetalheEmpreendimento;
 
   contatoAberto = false;
+  id = '69a9f9d0c1f0792c830ae965';
+
+  constructor(private service: EmpreendimentoService) {}
+
+  ngOnInit(): void {
+    this.getEmpreendimento(this.id);
+  }
+
+  getEmpreendimento(id: string) {
+    this.service.getDetalhe(id).subscribe({
+      next: (data) => {
+        this.empreendimento = data;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
 
   abrirContato() {
     console.log('Abrir contato');

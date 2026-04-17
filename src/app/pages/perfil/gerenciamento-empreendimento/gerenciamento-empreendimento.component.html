@@ -1,0 +1,144 @@
+<div class="gerenciamento-container">
+  <div class="page-header">
+    <div class="page-title">
+      <span class="badge">{{ empreendimentos.length }} empreendimento{{ empreendimentos.length === 1 ? '' : 's' }}</span>
+    </div>
+
+    <div class="page-actions">
+      <label class="checkbox-label">
+        <input
+          tuiCheckbox
+          size="m"
+          [ngModel]="allSelected"
+          (ngModelChange)="toggleSelectAll($event)"
+          type="checkbox"
+        />
+        Selecionar todos
+      </label>
+    </div>
+  </div>
+
+  <div class="table-wrapper" *ngIf="!carregando; else loadingTemplate">
+    <table cdk-table [dataSource]="empreendimentos" class="empreendimentos-table">
+      <!-- Coluna de seleção -->
+      <ng-container cdkColumnDef="select">
+        <th cdk-header-cell *cdkHeaderCellDef></th>
+        <td cdk-cell *cdkCellDef="let empreendimento">
+          <input
+            tuiCheckbox
+            size="m"
+            type="checkbox"
+            [ngModel]="isSelected(empreendimento)"
+            (ngModelChange)="toggleSelection(empreendimento, $event)"
+          />
+        </td>
+      </ng-container>
+
+      <!-- Coluna de título -->
+      <ng-container cdkColumnDef="titulo">
+        <th cdk-header-cell *cdkHeaderCellDef>Título</th>
+        <td cdk-cell *cdkCellDef="let empreendimento">{{ empreendimento.titulo }}</td>
+      </ng-container>
+
+      <!-- Coluna de status -->
+      <ng-container cdkColumnDef="status">
+        <th cdk-header-cell *cdkHeaderCellDef>Status</th>
+        <td cdk-cell *cdkCellDef="let empreendimento">
+          <span [class]="'status-badge status-badge--' + empreendimento.status.toLowerCase().replace(' ', '-')">
+            {{ empreendimento.status }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Coluna de cidade -->
+      <ng-container cdkColumnDef="cidade">
+        <th cdk-header-cell *cdkHeaderCellDef>Cidade</th>
+        <td cdk-cell *cdkCellDef="let empreendimento">{{ empreendimento.cidade }}</td>
+      </ng-container>
+
+      <!-- Coluna de ações -->
+      <ng-container cdkColumnDef="action">
+        <th cdk-header-cell *cdkHeaderCellDef>Ação</th>
+        <td cdk-cell *cdkCellDef="let empreendimento">
+          <button class="button-action"  tuiButton appearance="secondary" size="s" type="button" (click)="abrirModalEdicao(empreendimento)">
+            <tui-icon icon="@tui.pencil"></tui-icon>
+            Editar
+          </button>
+          <button class="button-action" tuiButton appearance="accent" size="s" type="button" (click)="deletar(empreendimento)">
+            <tui-icon icon="@tui.trash"></tui-icon>
+            Deletar
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Linhas da tabela -->
+      <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <div class="empty-state" *ngIf="!empreendimentos.length">
+      <tui-icon icon="@tui.search" class="empty-icon"></tui-icon>
+      <p>Nenhum empreendimento encontrado</p>
+    </div>
+  </div>
+
+  <ng-template #loadingTemplate>
+    <div class="loading-state">
+      <tui-loader></tui-loader>
+      <p>Carregando empreendimentos...</p>
+    </div>
+  </ng-template>
+
+  <!-- Paginação -->
+  <div *ngIf="!carregando && empreendimentos.length > 0" class="pagination-section">
+    <button
+      tuiButton
+      appearance="secondary"
+      size="s"
+      [disabled]="pagina === 0"
+      (click)="paginaAnterior()"
+    >
+      <tui-icon icon="@tui.chevron-left"></tui-icon>
+      Anterior
+    </button>
+
+    <span class="page-info">
+      Página <strong>{{ pagina + 1 }}</strong> de <strong>{{ totalPaginas }}</strong>
+    </span>
+
+    <button
+      tuiButton
+      appearance="secondary"
+      size="s"
+      [disabled]="pagina >= totalPaginas - 1"
+      (click)="proximaPagina()"
+    >
+      Próxima
+      <tui-icon icon="@tui.chevron-right"></tui-icon>
+    </button>
+  </div>
+
+  <!-- Botões de ação em massa -->
+  <div class="buttons-action">
+    <button tuiButton appearance="primary" type="button" (click)="abrirModalNovo()">
+      <tui-icon icon="@tui.plus"></tui-icon>
+      Novo Empreendimento
+    </button>
+    <button tuiButton appearance="negative" type="button" [disabled]="!hasSelection()" (click)="deletarSelecionados()">
+      <tui-icon icon="@tui.trash"></tui-icon>
+      Deletar Selecionados ({{ selectedEmpreendimentos.size }})
+    </button>
+  </div>
+
+  <!-- Modal de Edição/Criação -->
+  <app-modal-empreendimento
+    [mostrarModal]="mostrarModal"
+    [modoEdicao]="modoEdicao"
+    [formulario]="formulario"
+    [statusOptions]="statusOptions"
+    [tiposImoveis]="tiposImoveis"
+    [diferenciais]="diferenciais"
+    (fecharModal)="fecharModal()"
+    (salvar)="salvar()">
+  </app-modal-empreendimento>
+</div>

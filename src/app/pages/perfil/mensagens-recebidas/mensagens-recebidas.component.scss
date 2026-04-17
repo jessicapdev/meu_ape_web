@@ -1,0 +1,154 @@
+.mensagens-recebidas {
+  padding: 16px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3f51b5;
+  font-weight: 700;
+}
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.mensagens-table {
+  width: 100%;
+  min-width: 780px;
+  border-collapse: collapse;
+}
+
+.mensagens-table th,
+.mensagens-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.mensagens-table th {
+  font-size: 0.85rem;
+  color: #5f5f6c;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.mensagens-table tr:hover {
+  background: rgba(79, 103, 251, 0.06);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.status-badge--lido {
+  background: #e7f6ea;
+  color: #237a3f;
+}
+
+.status-badge--nao-lido {
+  background: #fff2e1;
+  color: #b34e00;
+}
+
+.empty-state,
+.loading-state {
+  padding: 18px 0;
+  text-align: center;
+  color: #5f5f6c;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 16px;
+  z-index: 1000;
+}
+
+.modal-card {
+  width: min(760px, 100%);
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.16);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.modal-content {
+  display: grid;
+  gap: 12px;
+}
+
+.modal-content dt {
+  color: #5f5f6c;
+  font-weight: 700;
+}
+
+.modal-content dd {
+  margin: 0;
+  padding: 12px 14px;
+  background: #f6f7ff;
+  border-radius: 12px;
+  color: #1d1d23;
+}
+
+.modal-card button[tuiButton] {
+  min-width: 90px;
+}
+
+.buttons-action{
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}

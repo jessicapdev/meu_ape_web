@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { map, tap, catchError, filter, take } from 'rxjs/operators';
+import { map, tap, catchError, filter, take, shareReplay } from 'rxjs/operators';
 import { JwtHelperService } from './jwt-helper.service';
-import { Usuario } from '../../shared/models/usuario';
+import { Usuario } from '../../shared/models/usuario.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -44,23 +44,23 @@ export class AuthenticationService {
       return parsed as Usuario;
     } catch (error) {
       console.warn('Erro ao parsear usuário do localStorage:', error);
-      localStorage.removeItem('currentUser');
-      localStorage.removeItem('refreshToken');
+      this.clearStorage();
       return null;
     }
   }
 
   get currentUserValue(): Usuario | null {
-    return this.currentUserSubject.getValue();
+    return this.getUserFromStorage();
   }
 
   get accessToken(): string | null {
-    return this.currentUserValue?.token || null;
+    const user = this.getUserFromStorage();
+    return user?.token || null;
   }
 
   get refreshToken(): string | null {
     const raw = localStorage.getItem('refreshToken');
-    if (!raw || raw === 'undefined' || raw === 'null') {
+    if (!raw || raw === 'undefined' || raw === 'null' || raw === 'null') {
       return null;
     }
     return raw;
@@ -74,8 +74,10 @@ export class AuthenticationService {
 
   ensureValidToken(): Observable<string | null> {
     const token = this.accessToken;
+    console.log('[Auth] ensureValidToken - token obtido:', token ? 'presente' : 'null');
     
     if (!token) {
+      console.warn('[Auth] Token não encontrado');
       return of(null);
     }
 
@@ -89,11 +91,11 @@ export class AuthenticationService {
   login(email: string, senha: string): Observable<Usuario> {
     return this.http.post<Usuario>(`${environment.apiUrl}/auth/login`, { email, senha })
       .pipe(
-        tap(response => this.storeTokens(response)),
-        map(response => {
+        tap(response => {
+          this.storeTokens(response);
           this.currentUserSubject.next(response);
-          return response;
-        })
+        }),
+        map(response => response)
       );
   }
 
@@ -144,7 +146,7 @@ export class AuthenticationService {
   }
 
   private updateAccessToken(newToken: string): void {
-    const currentUser = this.currentUserValue;
+    const currentUser = this.getUserFromStorage();
     if (currentUser) {
       currentUser.token = newToken;
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -160,12 +162,16 @@ export class AuthenticationService {
         .subscribe({ error: () => {} });
     }
 
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('username');
+    this.clearStorage();
     this.currentUserSubject.next(null);
     this.tokenRefreshed$.next(null);
     this.refreshInProgress$.next(false);
+  }
+
+  private clearStorage(): void {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('username');
   }
 
   setUserName(username: string): void {

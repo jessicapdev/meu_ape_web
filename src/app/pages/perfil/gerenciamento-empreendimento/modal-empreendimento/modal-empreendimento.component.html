@@ -1,0 +1,289 @@
+  <!-- Modal de Edição/Criação -->
+  <div *ngIf="mostrarModal" class="modal-backdrop">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ modoEdicao ? 'Editar Empreendimento' : 'Novo Empreendimento' }}</h3>
+        <button tuiButton appearance="secondary" size="s" type="button" (click)="onFecharModal()">Fechar</button>
+      </div>
+
+      <div class="modal-content"> 
+        <form [formGroup]="formulario">
+          <!-- Informações Básicas -->
+          <div class="form-section">
+            <h4 class="section-title">Informações Básicas</h4>
+            <!-- Titulo -->
+            <div class="form-group" style="margin-bottom: 16px;">
+              <tui-textfield>
+                <label tuiLabel>Título *</label>
+                <input
+                  tuiTextfield
+                  type="text"
+                  formControlName="titulo"
+                  placeholder="Digite o título do empreendimento"
+                />
+              </tui-textfield>
+            </div>
+          </div>
+        </form>
+
+        <!-- Tipo do Imóvel -->
+        <div class="form-group">
+          <div class="card" tuiCard>
+            <header>
+                <h2>Tipo do Imóvel</h2>
+            </header>
+            <section class="content-list">
+              <tui-scrollbar class="box">
+                <label 
+                class="checkbox-list"
+                *ngFor="let option of tiposOptions; let index = index">
+                  <input
+                      size="m"
+                      tuiCheckbox
+                      type="checkbox"
+                      [(ngModel)]="option.checked"
+                      (ngModelChange)="onTipoImovelChange()"
+                  />
+                    {{ option.label }}
+                </label>
+              </tui-scrollbar>
+            </section>
+          </div>
+        </div>
+
+        <form [formGroup]="formulario">
+          <div class="form-section">
+            <!-- Cidade -->
+            <div class="form-group">
+              <div class="inline-form">
+                <tui-textfield>
+                  <label tuiLabel>Cidade *</label>
+                  <input
+                      tuiTextfield
+                      type="text"
+                      formControlName="cidade"
+                      placeholder="Ex: São Paulo"
+                  />
+                </tui-textfield>
+                <!-- Bairro -->
+                <tui-textfield>
+                  <label tuiLabel>Bairro *</label>
+                  <input
+                      tuiTextfield
+                      type="text"
+                      formControlName="bairro"
+                      placeholder="Ex: Carrão"
+                  />
+                </tui-textfield>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+              <!-- Descrição -->
+              <!-- <div class="form-group">
+                <tui-textfield>
+                  <label tuiLabel>Descrição</label>
+                  <textarea
+                    tuiTextfield
+                    formControlName="descricao"
+                    placeholder="Descreva o empreendimento"
+                    rows="3"
+                  ></textarea>
+                </tui-textfield>
+              </div> -->
+          </div>
+
+          <!-- Características -->
+          <div class="form-section">
+            <h4 class="section-title">Características</h4>
+
+            <div class="form-row">
+              <!-- Área Mínima -->
+              <!-- <div class="form-group">
+                <tui-textfield>
+                  <label tuiLabel>Área Mínima (m²) *</label>
+                  <input
+                    tuiTextfield
+                    type="number"
+                    formControlName="areaMin"
+                    placeholder="40"
+                  />
+                </tui-textfield>
+              </div> -->
+
+              <!-- Área Máxima -->
+              <!-- <div class="form-group">
+                <tui-textfield>
+                  <label tuiLabel>Área Máxima (m²) *</label>
+                  <input
+                    tuiTextfield
+                    type="number"
+                    formControlName="areaMax"
+                    placeholder="60"
+                  />
+                </tui-textfield>
+              </div> -->
+            </div>
+
+            <div class="form-row">
+              <!-- Banheiros -->
+              <!-- <div class="form-group">
+                <tui-textfield>
+                  <label tuiLabel>Banheiros *</label>
+                  <input
+                    tuiTextfield
+                    type="text"
+                    formControlName="banheiros"
+                    placeholder="Ex: 1,2,3"
+                  />
+                </tui-textfield>
+              </div> -->
+
+              <!-- Quartos -->
+              <!-- <div class="form-group">
+                <tui-textfield>
+                  <label tuiLabel>Quartos *</label>
+                  <input
+                    tuiTextfield
+                    type="text"
+                    formControlName="quartos"
+                    placeholder="Ex: 0,1,2"
+                  />
+                </tui-textfield>
+              </div> -->
+
+              <div class="form-group">
+                  <!-- Vagas -->
+                  <!-- <tui-textfield>
+                      <label tuiLabel>Vagas *</label>
+                      <input
+                      tuiTextfield
+                      type="text"
+                      formControlName="vagas"
+                      placeholder="Ex: 1,2,3"
+                      />
+                  </tui-textfield> -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Valores -->
+          <div class="form-section">
+            <h4 class="section-title">Valores</h4>
+
+            <div class="form-row">
+              <!-- Preço Mínimo -->
+              <!-- <div class="form-group">
+                <tui-textfield>
+                  <label tuiLabel>Preço Mínimo (R$) *</label>
+                  <input
+                    tuiTextfield
+                    type="number"
+                    formControlName="precoMin"
+                    placeholder="400000"
+                  />
+                </tui-textfield>
+              </div> -->
+
+              <!-- Preço Máximo -->
+              <!-- <div class="form-group">
+                <tui-textfield>
+                  <label tuiLabel>Preço Máximo (R$) *</label>
+                  <input
+                    tuiTextfield
+                    type="number"
+                    formControlName="precoMax"
+                    placeholder="600000"
+                  />
+                </tui-textfield>
+              </div> -->
+            </div>
+          </div>
+
+          <!-- Imagens -->
+          <div class="form-section">
+            <h4 class="section-title">Imagens</h4>
+
+            <!-- Imagens -->
+            <!-- <div class="form-row" formGroupName="imagens">
+              <div class="form-group">
+                <tui-textfield>
+                  <label tuiLabel>Banner</label>
+                  <input
+                    tuiTextfield
+                    type="text"
+                    formControlName="banner"
+                    placeholder="assets/img/banner.png"
+                  />
+                </tui-textfield>
+              </div>
+
+              <div class="form-group">
+                <tui-textfield>
+                  <label tuiLabel>Mapa</label>
+                  <input
+                    tuiTextfield
+                    type="text"
+                    formControlName="map"
+                    placeholder="assets/img/map.png"
+                  />
+                </tui-textfield>
+              </div>
+            </div> -->
+          </div>
+
+          <!-- Dados Adicionais -->
+          <div class="form-section">
+            <h4 class="section-title">Dados Adicionais</h4>
+
+            <div class="form-group">
+              <div class="card" tuiCard>
+                  <!-- Diferenciais -->
+                  <header> <h2>Diferenciais</h2> </header>
+                  <!-- <section class="content-list">
+                      <tui-scrollbar class="box">
+                          <label 
+                          class="checkbox-list"
+                          *ngFor="let option of diferenciaisOptions; let index = index">
+                              <input
+                                  size="m"
+                                  tuiCheckbox
+                                  type="checkbox"
+                                  [(ngModel)]="option.checked"
+                                  (ngModelChange)="onDiferenciaisChange()"
+                              />
+                              {{ option.label }}
+                          </label>
+                      </tui-scrollbar>
+                  </section> -->
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          tuiButton
+          appearance="secondary"
+          (click)="onFecharModal()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          tuiButton
+          appearance="primary"
+          (click)="onSalvar()"
+        >
+          {{ modoEdicao ? 'Atualizar' : 'Criar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- [disabled]="formulario.invalid" -->
+  <!-- Backdrop para modal -->
+  <div class="modal-overlay" *ngIf="mostrarModal" (click)="onFecharModal()"></div>

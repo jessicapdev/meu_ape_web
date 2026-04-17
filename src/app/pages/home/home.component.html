@@ -54,7 +54,7 @@
       class="card" (click)="navegarParaDetalhe(empreendimento)">
         <div class="card-image">
           <img 
-            [src]="empreendimento.imagem" 
+            [src]="empreendimento.imagens.banner" 
             [alt]="empreendimento.titulo"
             class="imagem-empreendimento"
           >
@@ -69,35 +69,35 @@
           </div>
           
           <p class="localizacao">
-            {{ empreendimento.cidade }} - {{ empreendimento.Bairro }}
+            {{ empreendimento.cidade }} - {{ empreendimento.bairro }}
           </p>
           
           <div class="detalhes">
             <div class="detalhe-item">
               <tui-icon icon="@tui.ruler-dimension-line"
               [style.color]="'var(--tui-text-action)'"/>
-              <span>{{ empreendimento.metragem }}</span>
+              <span>{{ empreendimento.areaMin }} - {{ empreendimento.areaMax }}m²</span>
             </div>
             <div class="detalhe-item">
               <tui-icon icon="@tui.shower-head"
               [style.color]="'var(--tui-text-action)'"/>
-              <span>{{ empreendimento.banheiros }}</span>
+              <span>{{ formatarBanheiros(empreendimento.banheiros) }}</span>
             </div>
             <div class="detalhe-item">
               <tui-icon icon="@tui.bed"
               [style.color]="'var(--tui-text-action)'"/>
-              <span>{{ empreendimento.quartos }}</span>
+              <span>{{ formatarQuartos(empreendimento.quartos) }}</span>
             </div>
             <div class="detalhe-item">
               <tui-icon icon="@tui.car"
               [style.color]="'var(--tui-text-action)'"/>
-              <span>{{ empreendimento.vagas }}</span>
+              <span>{{ formatarVagas(empreendimento.vagas) }}</span>
             </div>
           </div>
           
           <div class="valor">
             <span class="valor-label">A partir de</span>
-            <span class="valor-preco">{{ formatarValor(empreendimento.valorInicial) }}</span>
+            <span class="valor-preco">{{ formatarValor(empreendimento.precoMin) }}</span>
           </div>
         </div>
       </div>
@@ -105,10 +105,11 @@
   </div>
 
   <tui-pagination
-      [index]="index"
-      [length]="length"
-      (indexChange)="goToPage($event)"
+    [index]="index"
+    [length]="length"
+    (indexChange)="goToPage($event)"
   />
+  
 </div>
 <ng-template #contentQuartos>
   <app-modal-quartos (updateQuartos)="updateQuartos($event)"></app-modal-quartos>

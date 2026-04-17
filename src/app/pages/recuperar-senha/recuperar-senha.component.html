@@ -26,10 +26,10 @@
             />
             <tui-icon icon="@tui.mail" />
           </tui-textfield>
-          <span class="error-message" *ngIf="esqueciSenhaForm.get('email')?.errors?.['required'] && esqueciSenhaForm.get('email')?.touched">
+          <span class="error-message-input" *ngIf="esqueciSenhaForm.get('email')?.errors?.['required'] && esqueciSenhaForm.get('email')?.touched">
             Email é obrigatório
           </span>
-          <span class="error-message" *ngIf="esqueciSenhaForm.get('email')?.errors?.['email'] && esqueciSenhaForm.get('email')?.touched">
+          <span class="error-message-input" *ngIf="esqueciSenhaForm.get('email')?.errors?.['email'] && esqueciSenhaForm.get('email')?.touched">
             Email inválido
           </span>
         </div>
