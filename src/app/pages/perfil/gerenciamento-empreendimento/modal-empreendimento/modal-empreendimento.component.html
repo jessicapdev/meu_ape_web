@@ -13,14 +13,31 @@
             <h4 class="section-title">Informações Básicas</h4>
             <!-- Titulo -->
             <div class="form-group" style="margin-bottom: 16px;">
-              <tui-textfield>
+              <tui-textfield [class.error]="shouldShowError('titulo')">
                 <label tuiLabel>Título *</label>
                 <input
                   tuiTextfield
                   type="text"
                   formControlName="titulo"
                   placeholder="Digite o título do empreendimento"
+                  (blur)="formulario.get('titulo')?.markAsTouched()"
                 />
+              </tui-textfield>
+              <span class="error-message-form" *ngIf="shouldShowError('titulo')">
+                {{ getErrorMessage('titulo') }}
+              </span>
+            </div>
+
+            <!-- Descrição -->
+            <div class="form-group" style="margin-bottom: 16px;">
+                <tui-textfield>
+                  <label tuiLabel>Descrição</label>
+                  <textarea
+                      placeholder="Descreva o empreendimento"
+                      formControlName="descricao"
+                      rows="3"
+                      tuiTextarea
+                  ></textarea>
               </tui-textfield>
             </div>
           </div>
@@ -28,9 +45,9 @@
 
         <!-- Tipo do Imóvel -->
         <div class="form-group">
-          <div class="card" tuiCard>
+          <div class="card" tuiCard [class.error]="shouldShowError('tiposImoveis')">
             <header>
-                <h2>Tipo do Imóvel</h2>
+                <h2>Tipo do Imóvel *</h2>
             </header>
             <section class="content-list">
               <tui-scrollbar class="box">
@@ -42,225 +59,325 @@
                       tuiCheckbox
                       type="checkbox"
                       [(ngModel)]="option.checked"
-                      (ngModelChange)="onTipoImovelChange()"
+                      (ngModelChange)="onTiposImoveisChange()"
                   />
                     {{ option.label }}
                 </label>
               </tui-scrollbar>
             </section>
           </div>
+          <span class="error-message-form" *ngIf="shouldShowError('tiposImoveis')">
+            {{ getErrorMessage('tiposImoveis') }}
+          </span>
         </div>
 
         <form [formGroup]="formulario">
           <div class="form-section">
-            <!-- Cidade -->
-            <div class="form-group">
+            <div class="form-group">              
               <div class="inline-form">
-                <tui-textfield>
-                  <label tuiLabel>Cidade *</label>
-                  <input
-                      tuiTextfield
-                      type="text"
-                      formControlName="cidade"
-                      placeholder="Ex: São Paulo"
-                  />
-                </tui-textfield>
+                <!-- Cidade -->
+                <div>
+                  <tui-textfield [class.error]="shouldShowError('cidade')">
+                    <label tuiLabel>Cidade *</label>
+                    <input
+                        tuiTextfield
+                        type="text"
+                        formControlName="cidade"
+                        placeholder="Ex: São Paulo"
+                        (blur)="formulario.get('cidade')?.markAsTouched()"
+                    />
+                  </tui-textfield>
+                  <span class="error-message-form" *ngIf="shouldShowError('cidade')">
+                    {{ getErrorMessage('cidade') }}
+                  </span>
+                </div>
                 <!-- Bairro -->
-                <tui-textfield>
-                  <label tuiLabel>Bairro *</label>
-                  <input
-                      tuiTextfield
-                      type="text"
-                      formControlName="bairro"
-                      placeholder="Ex: Carrão"
-                  />
-                </tui-textfield>
+                <div>
+                  <tui-textfield [class.error]="shouldShowError('bairro')">
+                    <label tuiLabel>Bairro *</label>
+                    <input
+                        tuiTextfield
+                        type="text"
+                        formControlName="bairro"
+                        placeholder="Ex: Carrão"
+                        (blur)="formulario.get('bairro')?.markAsTouched()"
+                    />
+                  </tui-textfield>
+                  <span class="error-message-form" *ngIf="shouldShowError('bairro')">
+                    {{ getErrorMessage('bairro') }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-
-          <div class="form-row">
-              <!-- Descrição -->
-              <!-- <div class="form-group">
-                <tui-textfield>
-                  <label tuiLabel>Descrição</label>
-                  <textarea
-                    tuiTextfield
-                    formControlName="descricao"
-                    placeholder="Descreva o empreendimento"
-                    rows="3"
-                  ></textarea>
-                </tui-textfield>
-              </div> -->
+          <!-- Status -->
+          <div class="form-group" style="margin-bottom: 16px;">
+              <tui-textfield tuiChevron [class.error]="shouldShowError('status')">
+                <input
+                    placeholder="Escolha o status"
+                    tuiSelect
+                    formControlName="status"
+                    (blur)="formulario.get('status')?.markAsTouched()"
+                />
+                <label tuiLabel>Status *</label>
+                <tui-data-list-wrapper
+                    *tuiTextfieldDropdown
+                    new
+                    [items]="statusOptions"
+                />
+            </tui-textfield>
+            <ng-template #itemContent let-item>
+                {{ item.label }}
+            </ng-template>
+            <span class="error-message-form" *ngIf="shouldShowError('status')">
+              {{ getErrorMessage('status') }}
+            </span>
           </div>
+        </form>
+        
+        <!-- Características -->
+        <div class="form-section">
+          <h4 class="section-title">Características</h4>
 
-          <!-- Características -->
-          <div class="form-section">
-            <h4 class="section-title">Características</h4>
-
-            <div class="form-row">
+          <form [formGroup]="formulario">
+            <div class="form-row" style="margin-bottom: 16px;">
               <!-- Área Mínima -->
-              <!-- <div class="form-group">
-                <tui-textfield>
+              <div>
+                <tui-textfield [class.error]="shouldShowError('areaMin')">
                   <label tuiLabel>Área Mínima (m²) *</label>
                   <input
                     tuiTextfield
                     type="number"
                     formControlName="areaMin"
                     placeholder="40"
+                    (blur)="formulario.get('areaMin')?.markAsTouched()"
                   />
                 </tui-textfield>
-              </div> -->
+                <span class="error-message-form" *ngIf="shouldShowError('areaMin')">
+                  {{ getErrorMessage('areaMin') }}
+                </span>
+              </div>
 
               <!-- Área Máxima -->
-              <!-- <div class="form-group">
-                <tui-textfield>
+              <div>
+                <tui-textfield [class.error]="shouldShowError('areaMax')">
                   <label tuiLabel>Área Máxima (m²) *</label>
                   <input
                     tuiTextfield
                     type="number"
                     formControlName="areaMax"
                     placeholder="60"
+                    (blur)="formulario.get('areaMax')?.markAsTouched()"
                   />
                 </tui-textfield>
-              </div> -->
-            </div>
-
-            <div class="form-row">
-              <!-- Banheiros -->
-              <!-- <div class="form-group">
-                <tui-textfield>
-                  <label tuiLabel>Banheiros *</label>
-                  <input
-                    tuiTextfield
-                    type="text"
-                    formControlName="banheiros"
-                    placeholder="Ex: 1,2,3"
-                  />
-                </tui-textfield>
-              </div> -->
-
-              <!-- Quartos -->
-              <!-- <div class="form-group">
-                <tui-textfield>
-                  <label tuiLabel>Quartos *</label>
-                  <input
-                    tuiTextfield
-                    type="text"
-                    formControlName="quartos"
-                    placeholder="Ex: 0,1,2"
-                  />
-                </tui-textfield>
-              </div> -->
-
-              <div class="form-group">
-                  <!-- Vagas -->
-                  <!-- <tui-textfield>
-                      <label tuiLabel>Vagas *</label>
-                      <input
-                      tuiTextfield
-                      type="text"
-                      formControlName="vagas"
-                      placeholder="Ex: 1,2,3"
-                      />
-                  </tui-textfield> -->
+                <span class="error-message-form" *ngIf="shouldShowError('areaMax')">
+                  {{ getErrorMessage('areaMax') }}
+                </span>
               </div>
             </div>
-          </div>
+          </form>
 
-          <!-- Valores -->
-          <div class="form-section">
+          <div class="form-group">
+            <!-- Quartos -->
+            <div class="card" tuiCard style="margin-bottom: 16px;" [class.error]="shouldShowError('quartos')">
+              <header>
+                  <h2>Quartos *</h2>
+              </header>
+              <section class="content-list">
+                <label class="checkbox-options"
+                  *ngFor="let option of quartosOptions; let i = index"
+                  appearance=""
+                  size="m"
+                  tuiChip
+                  >
+                  {{ option.label }}
+                  <input
+                    appearance="outline-grayscale"
+                    tuiChip
+                    type="checkbox"
+                    [(ngModel)]="option.checked"
+                    (ngModelChange)="onQuartosChange()"
+                  />
+                </label>
+                <span class="error-message-form" *ngIf="shouldShowError('quartos')">
+                  {{ getErrorMessage('quartos') }}
+                </span>
+              </section>
+            </div>
+            
+            <!-- Banheiros -->
+            <div class="card" tuiCard style="margin-bottom: 16px;" [class.error]="shouldShowError('banheiros')">
+              <header>
+                  <h2>Banheiros *</h2>
+              </header>
+              <section class="content-list">
+                <label class="checkbox-options"
+                  *ngFor="let option of banheirosOptions; let i = index"
+                  appearance=""
+                  size="m"
+                  tuiChip
+                  >
+                  {{ option.label }}
+                  <input
+                    appearance="outline-grayscale"
+                    tuiChip
+                    type="checkbox"
+                    [(ngModel)]="option.checked"
+                    (ngModelChange)="onBanheirosChange()"
+                  />
+                </label>
+                <span class="error-message-form" *ngIf="shouldShowError('banheiros')">
+                  {{ getErrorMessage('banheiros') }}
+                </span>
+              </section>
+            </div>
+            
+            <!-- Vagas -->
+            <div class="card" tuiCard style="margin-bottom: 16px;" [class.error]="shouldShowError('vagas')">
+              <header>
+                  <h2>Vagas *</h2>
+              </header>
+              <section class="content-list">
+                <label class="checkbox-options"
+                  *ngFor="let option of vagasOptions; let i = index"
+                  appearance=""
+                  size="m"
+                  tuiChip
+                  >
+                  {{ option.label }}
+                  <input
+                    appearance="outline-grayscale"
+                    tuiChip
+                    type="checkbox"
+                    [(ngModel)]="option.checked"
+                    (ngModelChange)="onVagasChange()"
+                  />
+                </label>
+                <span class="error-message-form" *ngIf="shouldShowError('vagas')">
+                  {{ getErrorMessage('vagas') }}
+                </span>
+              </section>
+            </div>
+            
+          </div>
+        </div>
+
+        <!-- Valores -->
+         <form [formGroup]="formulario">
+          <div class="form-section" style="margin-bottom: 16px;">
             <h4 class="section-title">Valores</h4>
 
             <div class="form-row">
               <!-- Preço Mínimo -->
-              <!-- <div class="form-group">
-                <tui-textfield>
+              <div>
+                <tui-textfield [class.error]="shouldShowError('precoMin')">
                   <label tuiLabel>Preço Mínimo (R$) *</label>
                   <input
                     tuiTextfield
                     type="number"
                     formControlName="precoMin"
                     placeholder="400000"
+                    (blur)="formulario.get('precoMin')?.markAsTouched()"
                   />
                 </tui-textfield>
-              </div> -->
+                <span class="error-message-form" *ngIf="shouldShowError('precoMin')">
+                  {{ getErrorMessage('precoMin') }}
+                </span>
+              </div>
 
               <!-- Preço Máximo -->
-              <!-- <div class="form-group">
-                <tui-textfield>
+              <div>
+                <tui-textfield [class.error]="shouldShowError('precoMax')">
                   <label tuiLabel>Preço Máximo (R$) *</label>
                   <input
                     tuiTextfield
                     type="number"
                     formControlName="precoMax"
                     placeholder="600000"
+                    (blur)="formulario.get('precoMax')?.markAsTouched()"
                   />
                 </tui-textfield>
-              </div> -->
-            </div>
-          </div>
-
-          <!-- Imagens -->
-          <div class="form-section">
-            <h4 class="section-title">Imagens</h4>
-
-            <!-- Imagens -->
-            <!-- <div class="form-row" formGroupName="imagens">
-              <div class="form-group">
-                <tui-textfield>
-                  <label tuiLabel>Banner</label>
-                  <input
-                    tuiTextfield
-                    type="text"
-                    formControlName="banner"
-                    placeholder="assets/img/banner.png"
-                  />
-                </tui-textfield>
-              </div>
-
-              <div class="form-group">
-                <tui-textfield>
-                  <label tuiLabel>Mapa</label>
-                  <input
-                    tuiTextfield
-                    type="text"
-                    formControlName="map"
-                    placeholder="assets/img/map.png"
-                  />
-                </tui-textfield>
-              </div>
-            </div> -->
-          </div>
-
-          <!-- Dados Adicionais -->
-          <div class="form-section">
-            <h4 class="section-title">Dados Adicionais</h4>
-
-            <div class="form-group">
-              <div class="card" tuiCard>
-                  <!-- Diferenciais -->
-                  <header> <h2>Diferenciais</h2> </header>
-                  <!-- <section class="content-list">
-                      <tui-scrollbar class="box">
-                          <label 
-                          class="checkbox-list"
-                          *ngFor="let option of diferenciaisOptions; let index = index">
-                              <input
-                                  size="m"
-                                  tuiCheckbox
-                                  type="checkbox"
-                                  [(ngModel)]="option.checked"
-                                  (ngModelChange)="onDiferenciaisChange()"
-                              />
-                              {{ option.label }}
-                          </label>
-                      </tui-scrollbar>
-                  </section> -->
+                <span class="error-message-form" *ngIf="shouldShowError('precoMax')">
+                  {{ getErrorMessage('precoMax') }}
+                </span>
               </div>
             </div>
           </div>
         </form>
+
+        <!-- Imagens -->
+        <div class="form-section">
+          <h4 class="section-title">Imagens</h4>
+
+          <div class="form-group" style="margin-bottom: 24px;">
+            <h5 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 500;">Banner * <span class="error-message-form" *ngIf="!imagens.banner && (previewBanner.length === 0)">[obrigatório]</span></h5>
+            <app-image-picker
+              [label]="'Selecionar Banner'"
+              [multiple]="false"
+              [previewImages]="previewBanner"
+              (imageSelected)="onBannerSelected($event)"
+            ></app-image-picker>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 24px;">
+            <h5 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 500;">Mapa/Localidade * <span class="error-message-form" *ngIf="!imagens.map && (previewMap.length === 0)">[obrigatório]</span></h5>
+            <app-image-picker
+              [label]="'Selecionar Mapa'"
+              [multiple]="false"
+              [previewImages]="previewMap"
+              (imageSelected)="onMapSelected($event)"
+            ></app-image-picker>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 24px;">
+            <h5 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 500;">Plantas</h5>
+            <app-image-picker
+              [label]="'Selecionar Plantas'"
+              [multiple]="true"
+              [previewImages]="previewPlantas"
+              (imageSelected)="onPlantasSelected($event)"
+            ></app-image-picker>
+          </div>
+
+          <div class="form-group">
+            <h5 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 500;">Galeria</h5>
+            <app-image-picker
+              [label]="'Selecionar Imagens para Galeria'"
+              [multiple]="true"
+              [previewImages]="previewGaleria"
+              (imageSelected)="onGaleriaSelected($event)"
+            ></app-image-picker>
+          </div>
+        </div>
+
+        <!-- Dados Adicionais -->
+        <div class="form-section">
+          <h4 class="section-title">Dados Adicionais</h4>
+
+          <div class="form-group">
+            <div class="card" tuiCard>
+              <header>
+                  <h2>Diferenciais</h2>
+              </header>
+              <section class="content-list">
+                <tui-scrollbar class="box">
+                  <label 
+                  class="checkbox-list"
+                  *ngFor="let option of diferenciaisOptions; let index = index">
+                    <input
+                        size="m"
+                        tuiCheckbox
+                        type="checkbox"
+                        [(ngModel)]="option.checked"
+                        (ngModelChange)="onDiferenciaisChange()"
+                    />
+                      {{ option.label }}
+                  </label>
+                </tui-scrollbar>
+              </section>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="modal-footer">

@@ -1,0 +1,39 @@
+<div class="image-picker-container">
+  <button
+    type="button"
+    tuiButton
+    appearance="primary"
+    size="m"
+    (click)="openFileDialog()"
+  >
+    {{ label }}
+  </button>
+
+  <div class="preview-container" *ngIf="previewImages.length > 0">
+    <div class="preview-grid" [class.single]="!multiple">
+      <div class="preview-item" *ngFor="let image of previewImages; let i = index">
+        <img [src]="image" [alt]="'Preview ' + (i + 1)" class="preview-image" />
+        <button
+          type="button"
+          tuiButton
+          appearance="secondary"
+          size="xs"
+          (click)="removeImage(i)"
+          class="btn-remove"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+    <button
+      type="button"
+      tuiButton
+      appearance="secondary"
+      size="s"
+      (click)="clearImages()"
+      class="btn-clear"
+    >
+      Limpar Tudo
+    </button>
+  </div>
+</div>

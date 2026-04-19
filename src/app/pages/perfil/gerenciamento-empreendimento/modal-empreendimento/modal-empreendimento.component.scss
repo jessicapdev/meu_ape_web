@@ -186,3 +186,34 @@
     margin: 0;
   }
 }
+
+.checkbox-options {
+    margin: 0.2rem;
+}
+
+// Estilos para validação e erros
+.error-message {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: #d53f31;
+  font-weight: 500;
+}
+
+tui-textfield.error,
+.card.error {
+  ::ng-deep .t-textfield {
+    border-color: #d53f31 !important;
+  }
+  
+  input,
+  textarea {
+    border-color: #d53f31 !important;
+  }
+}
+
+.inline-form {
+  div {
+    flex: 1;
+  }
+}

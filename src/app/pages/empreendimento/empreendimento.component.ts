@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 import { TuiButton, TuiIcon, TuiIcons, TuiRoot, TuiTitle } from '@taiga-ui/core';
 import { TuiAccordion, TuiBadge, TuiCarousel, TuiCarouselButtons } from '@taiga-ui/kit';
@@ -42,14 +43,22 @@ export class EmpreendimentoComponent {
   endereco: string = 'Av. Paulista, 1000, São Paulo - SP, Brasil';
 
   empreendimento!: DetalheEmpreendimento;
+  id: string = '';
 
   contatoAberto = false;
-  id = '69a9f9d0c1f0792c830ae965';
 
-  constructor(private service: EmpreendimentoService) {}
+  constructor(
+    private service: EmpreendimentoService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.getEmpreendimento(this.id);
+    this.route.params.subscribe(params => {
+      this.id = params['id'];
+      if (this.id) {
+        this.getEmpreendimento(this.id);
+      }
+    });
   }
 
   getEmpreendimento(id: string) {

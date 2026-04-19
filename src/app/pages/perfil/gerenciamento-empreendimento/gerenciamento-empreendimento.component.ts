@@ -76,7 +76,7 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
 
     this.empreendimentoService.getTiposStatus().subscribe({
       next: (status) => {
-        this.statusOptions = status.map(s => ({ label: s, value: s }));
+        this.statusOptions = status;
       },
       error: (erro) => {
         console.error('Erro ao carregar tipos de status:', erro);

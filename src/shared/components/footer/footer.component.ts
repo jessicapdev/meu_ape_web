@@ -8,7 +8,6 @@ import { TuiLink, TuiSurface, TuiTitle } from '@taiga-ui/core';
   imports: [
     CommonModule,
     TuiLink,
-    TuiSurface,
     TuiTitle,
   ],
   templateUrl: './footer.component.html',
