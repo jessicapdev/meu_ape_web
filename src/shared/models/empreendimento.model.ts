@@ -1,6 +1,7 @@
 import { Apartamento } from "../../app/pages/empreendimento/models/apartamento.model";
 
 export interface Empreendimento {
+  id: string;
   titulo: string;
   status: string;
   cidade: string;

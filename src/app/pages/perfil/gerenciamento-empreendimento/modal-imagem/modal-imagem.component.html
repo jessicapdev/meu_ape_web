@@ -1,0 +1,75 @@
+<div *ngIf="mostrarModal" class="modal-backdrop">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Adicionar imagens</h3>
+        <button tuiButton appearance="secondary" size="s" type="button" (click)="onFecharModal()">Fechar</button>
+      </div>
+
+      <div class="modal-content"> 
+        <div class="form-section">
+            <div class="form-group" style="margin-bottom: 24px;">
+                <h5 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 500;">Banner * <span class="error-message-form" *ngIf="!imagens.banner && (previewBanner.length === 0)">[obrigatório]</span></h5>
+                <app-image-picker
+                    #bannerPicker
+                    [label]="'Selecionar Banner'"
+                    [multiple]="false"
+                    [previewImages]="previewBanner"
+                    (imageSelected)="onBannerSelected($event)"
+                ></app-image-picker>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 24px;">
+                <h5 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 500;">Mapa/Localidade * <span class="error-message-form" *ngIf="!imagens.map && (previewMap.length === 0)">[obrigatório]</span></h5>
+                <app-image-picker
+                    #mapPicker
+                    [label]="'Selecionar Mapa'"
+                    [multiple]="false"
+                    [previewImages]="previewMap"
+                    (imageSelected)="onMapSelected($event)"
+                ></app-image-picker>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 24px;">
+                <h5 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 500;">Plantas</h5>
+                <app-image-picker
+                    #plantasPicker
+                    [label]="'Selecionar Plantas'"
+                    [multiple]="true"
+                    [previewImages]="previewPlantas"
+                    (imageSelected)="onPlantasSelected($event)"
+                ></app-image-picker>
+            </div>
+
+            <div class="form-group">
+                <h5 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 500;">Galeria</h5>
+                <app-image-picker
+                    #galeriaPicker
+                    [label]="'Selecionar Imagens para Galeria'"
+                    [multiple]="true"
+                    [previewImages]="previewGaleria"
+                    (imageSelected)="onGaleriaSelected($event)"
+                ></app-image-picker>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          tuiButton
+          appearance="secondary"
+          (click)="onFecharModal()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          tuiButton
+          appearance="primary"
+          (click)="onSalvar()"
+        >
+          Atualizar
+        </button>
+      </div>
+    </div>
+</div>
+

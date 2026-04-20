@@ -62,7 +62,7 @@
                 </div>
                 <div class="price-section border-item">
                     <div class="price-label">Venda a partir de:</div>
-                    <div class="price-value">{{ 'BRL' | tuiCurrency }} {{ empreendimento.valorInicial }}</div>
+                    <div class="price-value">{{ 'BRL' | tuiCurrency }} {{ empreendimento.precoMin }}</div>
                     <div class="button-action">
                         <button tuiButton size="l" class="contact-btn" (click)="abrirContato()">
                             Entrar em contato
@@ -271,7 +271,7 @@
             <div class="lazer-grid">
                 <div *ngFor="let diferencial of empreendimento.diferenciais" class="lazer-item">
                     <ul class="tui-list tui-list_large text">
-                        <li class="tui-list__item">{{ diferencial.nome }}</li>
+                        <li class="tui-list__item">{{ diferencial }}</li>
                     </ul>
                 </div>
             </div>

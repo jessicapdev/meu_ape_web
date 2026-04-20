@@ -185,7 +185,7 @@
               </header>
               <section class="content-list">
                 <label class="checkbox-options"
-                  *ngFor="let option of quartosOptions; let i = index"
+                    *ngFor="let option of quartosOptions; let i = index"
                   appearance=""
                   size="m"
                   tuiChip
@@ -199,9 +199,9 @@
                     (ngModelChange)="onQuartosChange()"
                   />
                 </label>
-                <span class="error-message-form" *ngIf="shouldShowError('quartos')">
-                  {{ getErrorMessage('quartos') }}
-                </span>
+              <span class="error-message-form" *ngIf="shouldShowError('quartos')">
+                {{ getErrorMessage('quartos') }}
+              </span>
               </section>
             </div>
             
@@ -212,7 +212,7 @@
               </header>
               <section class="content-list">
                 <label class="checkbox-options"
-                  *ngFor="let option of banheirosOptions; let i = index"
+                    *ngFor="let option of banheirosOptions; let i = index"
                   appearance=""
                   size="m"
                   tuiChip
@@ -226,9 +226,9 @@
                     (ngModelChange)="onBanheirosChange()"
                   />
                 </label>
-                <span class="error-message-form" *ngIf="shouldShowError('banheiros')">
-                  {{ getErrorMessage('banheiros') }}
-                </span>
+              <span class="error-message-form" *ngIf="shouldShowError('banheiros')">
+                {{ getErrorMessage('banheiros') }}
+              </span>
               </section>
             </div>
             
@@ -239,7 +239,7 @@
               </header>
               <section class="content-list">
                 <label class="checkbox-options"
-                  *ngFor="let option of vagasOptions; let i = index"
+                    *ngFor="let option of vagasOptions; let i = index"
                   appearance=""
                   size="m"
                   tuiChip
@@ -253,9 +253,9 @@
                     (ngModelChange)="onVagasChange()"
                   />
                 </label>
-                <span class="error-message-form" *ngIf="shouldShowError('vagas')">
-                  {{ getErrorMessage('vagas') }}
-                </span>
+              <span class="error-message-form" *ngIf="shouldShowError('vagas')">
+                {{ getErrorMessage('vagas') }}
+              </span>
               </section>
             </div>
             
@@ -304,51 +304,6 @@
             </div>
           </div>
         </form>
-
-        <!-- Imagens -->
-        <div class="form-section">
-          <h4 class="section-title">Imagens</h4>
-
-          <div class="form-group" style="margin-bottom: 24px;">
-            <h5 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 500;">Banner * <span class="error-message-form" *ngIf="!imagens.banner && (previewBanner.length === 0)">[obrigatório]</span></h5>
-            <app-image-picker
-              [label]="'Selecionar Banner'"
-              [multiple]="false"
-              [previewImages]="previewBanner"
-              (imageSelected)="onBannerSelected($event)"
-            ></app-image-picker>
-          </div>
-
-          <div class="form-group" style="margin-bottom: 24px;">
-            <h5 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 500;">Mapa/Localidade * <span class="error-message-form" *ngIf="!imagens.map && (previewMap.length === 0)">[obrigatório]</span></h5>
-            <app-image-picker
-              [label]="'Selecionar Mapa'"
-              [multiple]="false"
-              [previewImages]="previewMap"
-              (imageSelected)="onMapSelected($event)"
-            ></app-image-picker>
-          </div>
-
-          <div class="form-group" style="margin-bottom: 24px;">
-            <h5 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 500;">Plantas</h5>
-            <app-image-picker
-              [label]="'Selecionar Plantas'"
-              [multiple]="true"
-              [previewImages]="previewPlantas"
-              (imageSelected)="onPlantasSelected($event)"
-            ></app-image-picker>
-          </div>
-
-          <div class="form-group">
-            <h5 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 500;">Galeria</h5>
-            <app-image-picker
-              [label]="'Selecionar Imagens para Galeria'"
-              [multiple]="true"
-              [previewImages]="previewGaleria"
-              (imageSelected)="onGaleriaSelected($event)"
-            ></app-image-picker>
-          </div>
-        </div>
 
         <!-- Dados Adicionais -->
         <div class="form-section">

@@ -80,10 +80,10 @@ export class HomeComponent implements OnInit{
   }
 
   getEmpreendimentos(): Empreendimento[] {
-    this.service.buscarComFiltros(this.filtro).subscribe({
+    this.service.getListaEmpreendimentos().subscribe({
       next: (data: any) => {
-        this.empreendimentos = data.content;
-        this.length = Math.ceil(data.totalElements/this.pageSize) || 1;
+        this.empreendimentos = data.content || [];
+        this.length = Math.ceil(data.length/this.pageSize) || 1;
       },
       error: (error: any) => {
         console.log(error);
@@ -138,7 +138,7 @@ export class HomeComponent implements OnInit{
   }
 
   navegarParaDetalhe(empreendimento: Empreendimento): void {
-    this.router.navigate(['/empreendimento']);
+    this.router.navigate(['/empreendimento', empreendimento.id]);
   }
 
   goToPage(index: number): void {

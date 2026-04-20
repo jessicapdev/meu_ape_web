@@ -19,7 +19,7 @@ export const routes: Routes = [
         component: CadastroUsuarioComponent 
     },
     { 
-        path: 'empreendimento', 
+        path: 'empreendimento/:id', 
         component: EmpreendimentoComponent 
     },
     { 

@@ -16,16 +16,18 @@ export interface DetalheEmpreendimento {
   status: string;
   cidade: string;
   bairro: string;
-  metragem: string;
+  areaMin: string;
+  areaMax: string;
   banheiros: number;
   quartos: string;
   vagas: number;
-  valorInicial: string;
+  precoMin: string;
   imagens: Imagem;
-  apartamentos: Apartamento[];
-  diferenciais: Diferencial[];
-  areasLazer: Area[];
-  descricao: string,
-  views: number,
-  dias: number,
+}
+
+export interface ListaEmpreendimento {
+  id?: string;
+  titulo: string;
+  status: string;
+  cidade: string;
 }

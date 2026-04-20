@@ -62,7 +62,15 @@
         <td cdk-cell *cdkCellDef="let empreendimento">
           <button class="button-action"  tuiButton appearance="secondary" size="s" type="button" (click)="abrirModalEdicao(empreendimento)">
             <tui-icon icon="@tui.pencil"></tui-icon>
-            Editar
+            Dados
+          </button>
+          <button class="button-action" tuiButton appearance="secondary" size="s" type="button" (click)="abrirModalEdicaoImagens(empreendimento)">
+            <tui-icon icon="@tui.pencil"></tui-icon>
+            Imagens
+          </button>
+          <button class="button-action" tuiButton appearance="secondary" size="s" type="button" (click)="abrirModalEdicaoImagens(empreendimento)">
+            <tui-icon icon="@tui.pencil"></tui-icon>
+            Apartamentos
           </button>
           <button class="button-action" tuiButton appearance="accent" size="s" type="button" (click)="deletar(empreendimento)">
             <tui-icon icon="@tui.trash"></tui-icon>
@@ -134,11 +142,19 @@
   <app-modal-empreendimento
     [mostrarModal]="mostrarModal"
     [modoEdicao]="modoEdicao"
-    [formulario]="formulario"
     [statusOptions]="statusOptions"
     [tiposImoveis]="tiposImoveis"
     [diferenciais]="diferenciais"
+    [id]="empreendimentoAtual?.id || ''"
     (fecharModal)="fecharModal()"
-    (salvar)="salvar()">
+    (salvar)="salvar($event)">
   </app-modal-empreendimento>
+
+  <app-modal-imagem
+    [mostrarModal]="mostrarModalImagem"
+    (fecharModal)="fecharModalImagem()"
+    [id]="empreendimentoAtual?.id || ''"
+    (salvar)="salvarImagem()"
+  >
+  </app-modal-imagem>
 </div>

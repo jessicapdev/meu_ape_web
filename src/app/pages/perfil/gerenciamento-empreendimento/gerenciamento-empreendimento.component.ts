@@ -5,9 +5,10 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { TuiButton, TuiDataList, TuiIcon, TuiLoader, TuiTextfield, TuiOption } from '@taiga-ui/core';
 import { TuiCheckbox, TuiSelect } from '@taiga-ui/kit';
 import { EmpreendimentoService } from '../../../../shared/service/empreendimento.service';
-import { DetalheEmpreendimento } from '../../../pages/empreendimento/models/detalhe-empreendimento.model';
+import { ListaEmpreendimento } from '../../../pages/empreendimento/models/detalhe-empreendimento.model';
 import { PageResponse } from '../../../../shared/models/page-response.model';
 import { ModalEmpreendimentoComponent } from './modal-empreendimento/modal-empreendimento.component';
+import { ModalImagemComponent } from './modal-imagem/modal-imagem.component';
 
 @Component({
   selector: 'app-gerenciamento-empreendimento',
@@ -26,16 +27,17 @@ import { ModalEmpreendimentoComponent } from './modal-empreendimento/modal-empre
     TuiCheckbox,
     TuiIcon,
     TuiLoader,
-    ModalEmpreendimentoComponent
+    ModalEmpreendimentoComponent,
+    ModalImagemComponent
   ]
 })
 export class GerenciamentoEmpreendimentoComponent implements OnInit {
-  empreendimentos: DetalheEmpreendimento[] = [];
+  empreendimentos: ListaEmpreendimento[] = [];
   carregando: boolean = false;
   mostrarModal: boolean = false;
+  mostrarModalImagem: boolean = false;
   modoEdicao: boolean = false;
-  empreendimentoAtual: DetalheEmpreendimento | null = null;
-  formulario!: FormGroup;
+  empreendimentoAtual: ListaEmpreendimento | null = null;
   pagina: number = 0;
   tamanho: number = 10;
   totalElementos: number = 0;
@@ -53,11 +55,8 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
   diferenciais: string[] = [];
 
   constructor(
-    private empreendimentoService: EmpreendimentoService,
-    private fb: FormBuilder
-  ) {
-    this.inicializarFormulario();
-  }
+    private empreendimentoService: EmpreendimentoService
+  ) {}
 
   ngOnInit(): void {
     this.carregarOpcoes();
@@ -93,37 +92,10 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
     });
   }
 
-  inicializarFormulario(): void {
-    this.formulario = this.fb.group({
-      id: [''],
-      titulo: ['', Validators.required],
-      tiposImoveis: [[], Validators.required],
-      status: ['', Validators.required],
-      cidade: ['', Validators.required],
-      bairro: ['', Validators.required],
-      areaMin: ['', Validators.required],
-      areaMax: ['', Validators.required],
-      banheiros: [[], Validators.required],
-      quartos: [[], Validators.required],
-      vagas: ['', Validators.required],
-      precoMin: ['', Validators.required],
-      precoMax: ['', Validators.required],
-      descricao: [''],
-      diferenciais: [[]],
-      apartamentos: [[]],
-      imagens: this.fb.group({
-        banner: [''],
-        map: [''],
-        plantas: [[]],
-        galeria: [[]]
-      })
-    });
-  }
-
   carregarEmpreendimentos(): void {
     this.carregando = true;
     this.empreendimentoService.listar(this.pagina, this.tamanho).subscribe({
-      next: (resposta: PageResponse<DetalheEmpreendimento>) => {
+      next: (resposta: PageResponse<ListaEmpreendimento>) => {
         this.empreendimentos = resposta.content;
         this.totalElementos = resposta.totalElements;
         this.selectedEmpreendimentos.clear();
@@ -137,11 +109,11 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
     });
   }
 
-  isSelected(empreendimento: DetalheEmpreendimento): boolean {
+  isSelected(empreendimento: ListaEmpreendimento): boolean {
     return this.selectedEmpreendimentos.has(empreendimento);
   }
 
-  toggleSelection(empreendimento: DetalheEmpreendimento, event: boolean): void {
+  toggleSelection(empreendimento: ListaEmpreendimento, event: boolean): void {
     if (event) {
       this.selectedEmpreendimentos.add(empreendimento);
     } else {
@@ -192,50 +164,34 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
   abrirModalNovo(): void {
     this.modoEdicao = false;
     this.empreendimentoAtual = null;
-    this.formulario.reset();
-    this.formulario.patchValue({
-      tipoImovel: '',
-      views: 0,
-      dias: 0,
-      banheiros: [],
-      quartos: [],
-      vagas: [],
-      diferenciais: [],
-      areasLazer: [],
-      apartamentos: [],
-      imagens: {
-        banner: '',
-        map: '',
-        plantas: [],
-        galeria: []
-      }
-    });
     this.mostrarModal = true;
   }
 
-  abrirModalEdicao(empreendimento: DetalheEmpreendimento): void {
+  abrirModalEdicao(empreendimento: ListaEmpreendimento): void {
     this.modoEdicao = true;
     this.empreendimentoAtual = empreendimento;
-    this.formulario.patchValue(empreendimento);
     this.mostrarModal = true;
+  }
+
+  abrirModalEdicaoImagens(empreendimento: ListaEmpreendimento): void {
+    this.empreendimentoAtual = empreendimento;
+    this.mostrarModalImagem = true;
   }
 
   fecharModal(): void {
     this.mostrarModal = false;
-    this.formulario.reset();
     this.empreendimentoAtual = null;
   }
 
-  salvar(): void {
-    if (this.formulario.invalid) {
-      return;
-    }
+  fecharModalImagem(): void {
+    this.mostrarModalImagem = false;
+    this.empreendimentoAtual = null;
+  }
 
-    const dados = this.formulario.value;
-
+  salvar(formData: any): void {
     if (this.modoEdicao && this.empreendimentoAtual) {
       const id = (this.empreendimentoAtual as any).id;
-      this.empreendimentoService.atualizar(id, dados).subscribe({
+      this.empreendimentoService.atualizar(id, formData).subscribe({
         next: () => {
           this.fecharModal();
           this.carregarEmpreendimentos();
@@ -245,7 +201,7 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
         }
       });
     } else {
-      this.empreendimentoService.criar(dados).subscribe({
+      this.empreendimentoService.criar(formData).subscribe({
         next: () => {
           this.fecharModal();
           this.carregarEmpreendimentos();
@@ -257,7 +213,12 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
     }
   }
 
-  deletar(empreendimento: DetalheEmpreendimento): void {
+  salvarImagem(): void {
+    this.carregarEmpreendimentos();
+    this.fecharModalImagem();
+  }
+
+  deletar(empreendimento: ListaEmpreendimento): void {
     if (confirm('Tem certeza que deseja deletar este empreendimento?')) {
       const id = (empreendimento as any).id;
       this.empreendimentoService.deletar(id).subscribe({

@@ -2,9 +2,9 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TuiButton, TuiDataList, TuiTextfield, TuiScrollbar } from '@taiga-ui/core';
-import { TuiSelect, TuiMultiSelect, TuiCheckbox, TuiTextarea, TuiDataListWrapper, TuiFilterByInputPipe, TUI_COUNTRIES, TuiChip } from '@taiga-ui/kit';
+import { TuiSelect, TuiMultiSelect, TuiCheckbox, TuiTextarea, TuiDataListWrapper, TuiChip } from '@taiga-ui/kit';
 import { FormsModule } from '@angular/forms';
-import { ImagePickerComponent } from '../../../../shared/components/image-picker/image-picker.component';
+import { EmpreendimentoService } from '../../../../../shared/service/empreendimento.service';
 
 @Component({
   selector: 'app-modal-empreendimento',
@@ -25,20 +25,20 @@ import { ImagePickerComponent } from '../../../../shared/components/image-picker
     TuiTextarea,
     TuiDataListWrapper,
     TuiChip,
-    ImagePickerComponent,
   ]
 })
-export class ModalEmpreendimentoComponent implements OnInit {
+export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
   @Input() mostrarModal: boolean = false;
   @Input() modoEdicao: boolean = false;
-  @Input() formulario!: FormGroup;
   @Input() statusOptions: String[] = [];
   @Input() tiposImoveis: string[] = [];
   @Input() diferenciais: string[] = [];
+  @Input() id: string = '';
 
   @Output() fecharModal = new EventEmitter<void>();
-  @Output() salvar = new EventEmitter<void>();
+  @Output() salvar = new EventEmitter<any>();
 
+  protected formulario!: FormGroup;
   protected tiposOptions: any[] = [];
   protected diferenciaisOptions: any[] = [];
   protected statusSelected: string | null = null;
@@ -48,7 +48,12 @@ export class ModalEmpreendimentoComponent implements OnInit {
     { label: '2', checked: false },
     { label: '3', checked: false },
     { label: '4', checked: false },
-    { label: '5+', checked: false },
+    { label: '5', checked: false },
+    { label: '6', checked: false },
+    { label: '7', checked: false },
+    { label: '8', checked: false },
+    { label: '9', checked: false },
+    { label: '10', checked: false },
   ];
   protected banheirosOptions = [
     { label: '1', checked: false },
@@ -56,7 +61,11 @@ export class ModalEmpreendimentoComponent implements OnInit {
     { label: '3', checked: false },
     { label: '4', checked: false },
     { label: '5', checked: false },
-    { label: '6+', checked: false },
+    { label: '6', checked: false },
+    { label: '7', checked: false },
+    { label: '8', checked: false },
+    { label: '9', checked: false },
+    { label: '10', checked: false },
   ];
   protected vagasOptions = [
     { label: '0', checked: false },
@@ -64,41 +73,24 @@ export class ModalEmpreendimentoComponent implements OnInit {
     { label: '2', checked: false },
     { label: '3', checked: false },
     { label: '4', checked: false },
-    { label: '5+', checked: false },
+    { label: '6', checked: false },
+    { label: '5', checked: false },
+    { label: '7', checked: false },
+    { label: '8', checked: false },
+    { label: '9', checked: false },
+    { label: '10', checked: false },
   ];
 
-  // Propriedades para gerenciar imagens
-  protected imagens = {
-    banner: '',
-    map: '',
-    plantas: [] as string[],
-    galeria: [] as string[]
-  };
-
-  protected previewBanner: string[] = [];
-  protected previewMap: string[] = [];
-  protected previewPlantas: string[] = [];
-  protected previewGaleria: string[] = [];
+  constructor(
+    private fb: FormBuilder, 
+    private empreendimentoService: EmpreendimentoService
+  ){
+    this.inicializarFormulario();
+  }
 
   ngOnInit() {
     this.initializeOptions();
     this.setupFormValidators();
-  }
-
-  private setupFormValidators() {
-    // Adiciona validadores aos campos obrigatórios se ainda não existirem
-    const requiredFields = ['titulo', 'tiposImoveis', 'status', 'cidade', 'bairro', 'areaMin', 'areaMax', 'precoMin', 'precoMax', 'quartos', 'banheiros', 'vagas'];
-    
-    requiredFields.forEach(field => {
-      const control = this.formulario.get(field);
-      if (control && !control.hasError('required')) {
-        // Se o campo não tem validador, adiciona
-        if (control.validator === null) {
-          control.setValidators([Validators.required]);
-          control.updateValueAndValidity();
-        }
-      }
-    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -113,37 +105,126 @@ export class ModalEmpreendimentoComponent implements OnInit {
     if (changes['modoEdicao'] || changes['formulario']) {
       this.updateSelectedOptions();
     }
+
+    if (changes['mostrarModal'] && this.mostrarModal && this.id && this.modoEdicao) {
+      this.getDadosPorEmpreendimento();
+    }
   }
 
+  getDadosPorEmpreendimento() { 
+    this.empreendimentoService.getDadosByEmpreendimento(this.id).subscribe({
+      next: (data: any) => {
+        this.formulario.patchValue(data);
+        this.updateCheckboxOptions(data);
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
+  }
 
-  private updateTiposOptions() {
-    if (this.tiposImoveis && this.tiposImoveis.length > 0) {
-      const selectedTipo = this.formulario?.get('tiposImoveis')?.value;
-      this.tiposOptions = this.tiposImoveis.map(tipo => ({
-        label: tipo,
-        checked: selectedTipo === tipo
+  private updateCheckboxOptions(data: any) {
+    // Atualizar quartos selecionados
+    if (data.quartos && Array.isArray(data.quartos)) {
+      this.quartosOptions = this.quartosOptions.map(opt => ({
+        ...opt,
+        checked: data.quartos.includes(Number(opt.label))
       }));
     }
+
+    // Atualizar banheiros selecionados
+    if (data.banheiros && Array.isArray(data.banheiros)) {
+      this.banheirosOptions = this.banheirosOptions.map(opt => ({
+        ...opt,
+        checked: data.banheiros.includes(Number(opt.label))
+      }));
+    }
+
+    // Atualizar vagas selecionadas
+    if (data.vagas && Array.isArray(data.vagas)) {
+      this.vagasOptions = this.vagasOptions.map(opt => ({
+        ...opt,
+        checked: data.vagas.includes(Number(opt.label))
+      }));
+    }
+
+    // Atualizar tipos de imóveis
+    if (data.tiposImoveis) {
+      this.updateTiposOptions();
+    }
+
+    // Atualizar diferenciais
+    if (data.diferenciais) {
+      this.updateDiferenciaisOptions();
+    }
+  }
+
+  private setupFormValidators() {
+    if (!this.formulario) return;
+    
+    const requiredFields = ['titulo', 'tiposImoveis', 'status', 'cidade', 'bairro', 'areaMin', 'areaMax', 'precoMin', 'precoMax', 'quartos', 'banheiros', 'vagas'];
+    requiredFields.forEach(field => {
+      const control = this.formulario.get(field);
+      if (control && !control.hasError('required')) {
+        if (control.validator === null) {
+          control.setValidators([Validators.required]);
+          control.updateValueAndValidity();
+        }
+      }
+    });
+  }
+
+  inicializarFormulario(): void {
+    this.formulario = this.fb.group({
+      id: [''],
+      titulo: ['', Validators.required],
+      tiposImoveis: [[], Validators.required],
+      status: ['', Validators.required],
+      cidade: ['', Validators.required],
+      bairro: ['', Validators.required],
+      areaMin: ['', Validators.required],
+      areaMax: ['', Validators.required],
+      banheiros: [[], Validators.required],
+      quartos: [[], Validators.required],
+      vagas: [[], Validators.required],
+      precoMin: ['', Validators.required],
+      precoMax: ['', Validators.required],
+      descricao: [''],
+      diferenciais: [[]],
+    });
+  }
+
+  private updateTiposOptions() {
+    if (!this.formulario || !this.tiposImoveis || this.tiposImoveis.length === 0) return;
+    
+    const selectedTipos = this.formulario?.get('tiposImoveis')?.value || [];
+    this.tiposOptions = this.tiposImoveis.map(tipo => ({
+      label: tipo,
+      checked: Array.isArray(selectedTipos) ? selectedTipos.includes(tipo) : selectedTipos === tipo
+    }));
   }
 
   private updateDiferenciaisOptions() {
-    if (this.diferenciais && this.diferenciais.length > 0) {
-      const selectedDiferenciais = this.formulario?.get('diferenciais')?.value || [];
-      this.diferenciaisOptions = this.diferenciais.map(dif => ({
-        label: dif,
-        checked: selectedDiferenciais.includes(dif)
-      }));
-    }
+    if (!this.formulario || !this.diferenciais || this.diferenciais.length === 0) return;
+    
+    const selectedDiferenciais = this.formulario?.get('diferenciais')?.value || [];
+    this.diferenciaisOptions = this.diferenciais.map(dif => ({
+      label: dif,
+      checked: selectedDiferenciais.includes(dif)
+    }));
   }
 
   private updateSelectedOptions() {
-    if (this.modoEdicao && this.formulario) {
-      this.updateTiposOptions();
-      this.updateDiferenciaisOptions();
-      this.updateStatusFromForm();
-    }
+    if (!this.formulario || !this.modoEdicao) return;
+    
+    this.updateTiposOptions();
+    this.updateDiferenciaisOptions();
+    this.updateStatusFromForm();
   }
+
   private updateStatusFromForm() {
+    if (!this.formulario) return;
+    
     const currentStatus = this.formulario.get('status')?.value;
     if (currentStatus) {
       // Aqui poderíamos emitir um evento para o modal-status marcar o status correto
@@ -153,14 +234,16 @@ export class ModalEmpreendimentoComponent implements OnInit {
   }
 
   private initializeOptions() {
-    if (this.tiposImoveis && this.tiposImoveis.length > 0) {
+    if (!this.tiposImoveis || !this.diferenciais) return;
+    
+    if (this.tiposImoveis.length > 0) {
       this.tiposOptions = this.tiposImoveis.map(tipo => ({
         label: tipo,
         checked: false
       }));
     }
 
-    if (this.diferenciais && this.diferenciais.length > 0) {
+    if (this.diferenciais.length > 0) {
       this.diferenciaisOptions = this.diferenciais.map(dif => ({
         label: dif,
         checked: false
@@ -169,6 +252,8 @@ export class ModalEmpreendimentoComponent implements OnInit {
   }
 
   onTiposImoveisChange() {
+    if (!this.formulario) return;
+    
     const selectedTipos = this.tiposOptions
       .filter(option => option.checked)
       .map(option => option.label);
@@ -178,6 +263,8 @@ export class ModalEmpreendimentoComponent implements OnInit {
   }
 
   onDiferenciaisChange() {
+    if (!this.formulario) return;
+    
     const selectedDiferenciais = this.diferenciaisOptions
       .filter(option => option.checked)
       .map(option => option.label);
@@ -187,6 +274,8 @@ export class ModalEmpreendimentoComponent implements OnInit {
   }
 
   onQuartosChange() {
+    if (!this.formulario) return;
+    
     const selectedQuartos = this.quartosOptions
       .filter(option => option.checked)
       .map(option => option.label);
@@ -195,6 +284,8 @@ export class ModalEmpreendimentoComponent implements OnInit {
   }
 
   onBanheirosChange() {
+    if (!this.formulario) return;
+    
     const selectedBanheiros = this.banheirosOptions
       .filter(option => option.checked)
       .map(option => option.label);
@@ -203,6 +294,8 @@ export class ModalEmpreendimentoComponent implements OnInit {
   }
 
   onVagasChange() {
+    if (!this.formulario) return;
+    
     const selectedVagas = this.vagasOptions
       .filter(option => option.checked)
       .map(option => option.label);
@@ -211,6 +304,8 @@ export class ModalEmpreendimentoComponent implements OnInit {
   }
 
   updateStatus(selectedStatuses: any[]) {
+    if (!this.formulario) return;
+    
     if (selectedStatuses && selectedStatuses.length > 0) {
       const selectedStatus = selectedStatuses[0];
       this.formulario.patchValue({ status: selectedStatus });
@@ -223,79 +318,54 @@ export class ModalEmpreendimentoComponent implements OnInit {
     return s1 && s2 ? s1.value === s2.value : s1 === s2;
   }
 
-  // Funções para gerenciar imagens
-  onBannerSelected(imagemBase64: string | string[]) {
-    if (typeof imagemBase64 === 'string') {
-      this.imagens.banner = imagemBase64;
-      this.previewBanner = imagemBase64 ? [imagemBase64] : [];
-    }
-  }
-
-  onMapSelected(imagemBase64: string | string[]) {
-    if (typeof imagemBase64 === 'string') {
-      this.imagens.map = imagemBase64;
-      this.previewMap = imagemBase64 ? [imagemBase64] : [];
-    }
-  }
-
-  onPlantasSelected(imagensBase64: string | string[]) {
-    if (Array.isArray(imagensBase64)) {
-      this.imagens.plantas = imagensBase64;
-      this.previewPlantas = imagensBase64;
-    }
-  }
-
-  onGaleriaSelected(imagensBase64: string | string[]) {
-    if (Array.isArray(imagensBase64)) {
-      this.imagens.galeria = imagensBase64;
-      this.previewGaleria = imagensBase64;
-    }
-  }
-
-  // Função para obter as imagens formatadas
-  getImagensFormatadas() {
-    return {
-      banner: this.imagens.banner,
-      map: this.imagens.map,
-      plantas: this.imagens.plantas,
-      galeria: this.imagens.galeria
-    };
-  }
-
-  // Função para limpar todas as imagens
-  clearAllImages() {
-    this.imagens = {
-      banner: '',
-      map: '',
-      plantas: [],
-      galeria: []
-    };
-    this.previewBanner = [];
-    this.previewMap = [];
-    this.previewPlantas = [];
-    this.previewGaleria = [];
+  isFormValid(): boolean {
+    if (!this.formulario) return false;
+    
+    const requiredFields = [
+      'titulo', 
+      'tiposImoveis', 
+      'status', 
+      'cidade', 
+      'bairro', 
+      'areaMin', 
+      'areaMax', 
+      'precoMin', 
+      'precoMax', 
+      'quartos', 
+      'banheiros', 
+      'vagas'
+    ];
+    const fieldsValid = requiredFields.every(field => {
+      const control = this.formulario.get(field);
+      if (Array.isArray(control?.value)) {
+        return control?.value.length > 0;
+      }
+      return control?.valid;
+    });
+    return fieldsValid;
   }
 
   // Funções para validação e tratamento de erros
   isFieldInvalid(fieldName: string): boolean {
+    if (!this.formulario) return false;
     const field = this.formulario.get(fieldName);
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
   shouldShowError(fieldName: string): boolean {
+    if (!this.formulario) return false;
     const field = this.formulario.get(fieldName);
     if (!field) return false;
     
-    // Para arrays (banheiros, quartos, vagas)
     if (Array.isArray(field.value)) {
       return !!(field.dirty || field.touched) && field.value.length === 0;
     }
     
-    // Para campos normais
     return !!(field.dirty || field.touched) && !field.valid;
   }
 
   getErrorMessage(fieldName: string): string {
+    if (!this.formulario) return '';
     const field = this.formulario.get(fieldName);
     if (!field) return '';
     
@@ -313,25 +383,11 @@ export class ModalEmpreendimentoComponent implements OnInit {
   }
 
   markAllFieldsAsTouched() {
+    if (!this.formulario) return;
+    
     Object.keys(this.formulario.controls).forEach(key => {
       this.formulario.get(key)?.markAsTouched();
     });
-  }
-
-  isFormValid(): boolean {
-    // Validação customizada: quartos, banheiros, vagas, banner e map não podem estar vazios
-    const requiredFields = ['titulo', 'tiposImoveis', 'status', 'cidade', 'bairro', 'areaMin', 'areaMax', 'precoMin', 'precoMax', 'quartos', 'banheiros', 'vagas'];
-    const requiredImages = !!(this.imagens.banner && this.imagens.map);
-    
-    const fieldsValid = requiredFields.every(field => {
-      const control = this.formulario.get(field);
-      if (Array.isArray(control?.value)) {
-        return control?.value.length > 0;
-      }
-      return control?.valid;
-    });
-
-    return fieldsValid && requiredImages;
   }
 
   onFecharModal(){
@@ -339,9 +395,9 @@ export class ModalEmpreendimentoComponent implements OnInit {
   }
 
   onSalvar(){
-    // Marca todos os campos como tocados para exibir erros
+    if (!this.formulario) return;
+    
     this.markAllFieldsAsTouched();
-
     if (!this.isFormValid()) {
       console.error('Formulário inválido. Preencha todos os campos obrigatórios.');
       return;
@@ -363,9 +419,8 @@ export class ModalEmpreendimentoComponent implements OnInit {
       descricao: this.formulario.get('descricao')?.value || null,
       diferenciais: this.formulario.get('diferenciais')?.value || [],
       apartamentos: [],
-      imagens: this.getImagensFormatadas()
     };
 
-    this.salvar.emit();
+    this.salvar.emit(formData);
   }
 }
