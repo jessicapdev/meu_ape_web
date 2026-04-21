@@ -3,6 +3,11 @@
   padding: 20px;
   width: 100%;
   justify-self: center;
+  height: 100%;
+}
+
+.loader-container{
+  min-height: 500px;
 }
 
 .title-home{
@@ -153,4 +158,33 @@
   color: var(--tui-text-primary);
   font-size: 18px;
   font-weight: 700;
+}
+
+.container-badges {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; 
+}
+
+:host ::ng-deep tui-badge {
+  &.Em.construção { 
+    background: #6b1063 !important; 
+    color: #fff !important;
+  }
+  
+  &.Pronto { 
+    background: #18628d !important; 
+    color: #fff !important;
+  }
+  
+  &.Lançamento { 
+    background: #2e7d32 !important; 
+    color: #fff !important;
+  }
+  
+  &.Pre.lançamento { 
+    background: rgb(172, 100, 6) !important; 
+    color: #fff !important;
+  }
 }

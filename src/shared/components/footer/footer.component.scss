@@ -35,11 +35,10 @@
     color: var(--tui-text-01);
     font-size: 16px;
     font-weight: 600;
-    margin: 0 0 16px 0;
+    margin: 0 0 5px 0;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     position: relative;
-    padding-bottom: 8px;
 
     &::after {
       content: '';
@@ -55,7 +54,7 @@
   .footer-list {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0 0 20px 0;
   }
 
   .footer-item {
@@ -89,7 +88,7 @@
 /* Linha Divisória */
 .footer-divider {
   height: 1px;
-  background-color: var(--tui-base-03);
+  background-color: rgb(177, 177, 177);;
   margin: 10px 0;
   width: 100%;
 }

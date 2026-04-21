@@ -40,6 +40,22 @@
                   ></textarea>
               </tui-textfield>
             </div>
+            <!-- Endereço -->
+            <div class="form-group" style="margin-bottom: 16px;">
+              <tui-textfield [class.error]="shouldShowError('endereco')">
+                <label tuiLabel>Endereço *</label>
+                <input
+                  tuiTextfield
+                  type="text"
+                  formControlName="endereco"
+                  placeholder="Insira o endereço completo do empreendimento"
+                  (blur)="formulario.get('endereco')?.markAsTouched()"
+                />
+              </tui-textfield>
+              <span class="error-message-form" *ngIf="shouldShowError('endereco')">
+                {{ getErrorMessage('endereco') }}
+              </span>
+            </div>
           </div>
         </form>
 
@@ -112,26 +128,52 @@
           </div>
           <!-- Status -->
           <div class="form-group" style="margin-bottom: 16px;">
-              <tui-textfield tuiChevron [class.error]="shouldShowError('status')">
-                <input
-                    placeholder="Escolha o status"
-                    tuiSelect
-                    formControlName="status"
-                    (blur)="formulario.get('status')?.markAsTouched()"
-                />
-                <label tuiLabel>Status *</label>
-                <tui-data-list-wrapper
-                    *tuiTextfieldDropdown
-                    new
-                    [items]="statusOptions"
-                />
-            </tui-textfield>
-            <ng-template #itemContent let-item>
-                {{ item.label }}
-            </ng-template>
-            <span class="error-message-form" *ngIf="shouldShowError('status')">
-              {{ getErrorMessage('status') }}
-            </span>
+            <div class="inline-form">
+              <div>
+                <tui-textfield tuiChevron [class.error]="shouldShowError('status')">
+                  <input
+                      placeholder="Escolha o status"
+                      tuiSelect
+                      formControlName="status"
+                      (blur)="formulario.get('status')?.markAsTouched()"
+                  />
+                  <label tuiLabel>Status *</label>
+                  <tui-data-list-wrapper
+                      *tuiTextfieldDropdown
+                      new
+                      [items]="statusOptions"
+                  />
+                </tui-textfield>
+                <ng-template #itemContent let-item>
+                    {{ item.label }}
+                </ng-template>
+                <span class="error-message-form" *ngIf="shouldShowError('status')">
+                  {{ getErrorMessage('status') }}
+                </span>
+              </div>
+              <div>
+                <tui-textfield tuiChevron [class.error]="shouldShowError('construtora')">
+                  <input
+                      placeholder="Escolha a construtora"
+                      tuiSelect
+                      formControlName="construtora"
+                      (blur)="formulario.get('construtora')?.markAsTouched()"
+                  />
+                  <label tuiLabel>Construtora *</label>
+                  <tui-data-list-wrapper
+                      *tuiTextfieldDropdown
+                      new
+                      [items]="construtoraOptions"
+                  />
+                </tui-textfield>
+                <ng-template #itemContent let-item>
+                    {{ item.label }}
+                </ng-template>
+                <span class="error-message-form" *ngIf="shouldShowError('construtora')">
+                  {{ getErrorMessage('construtora') }}
+                </span>
+              </div>
+            </div>
           </div>
         </form>
         

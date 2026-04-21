@@ -5,7 +5,7 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { TuiButton, TuiDataList, TuiIcon, TuiLoader, TuiTextfield, TuiOption } from '@taiga-ui/core';
 import { TuiCheckbox, TuiSelect } from '@taiga-ui/kit';
 import { EmpreendimentoService } from '../../../../shared/service/empreendimento.service';
-import { ListaEmpreendimento } from '../../../pages/empreendimento/models/detalhe-empreendimento.model';
+import { EmpreendimentoPerfil } from '../../../pages/empreendimento/models/detalhe-empreendimento.model';
 import { PageResponse } from '../../../../shared/models/page-response.model';
 import { ModalEmpreendimentoComponent } from './modal-empreendimento/modal-empreendimento.component';
 import { ModalImagemComponent } from './modal-imagem/modal-imagem.component';
@@ -32,12 +32,12 @@ import { ModalImagemComponent } from './modal-imagem/modal-imagem.component';
   ]
 })
 export class GerenciamentoEmpreendimentoComponent implements OnInit {
-  empreendimentos: ListaEmpreendimento[] = [];
+  empreendimentos: EmpreendimentoPerfil[] = [];
   carregando: boolean = false;
   mostrarModal: boolean = false;
   mostrarModalImagem: boolean = false;
   modoEdicao: boolean = false;
-  empreendimentoAtual: ListaEmpreendimento | null = null;
+  empreendimentoAtual: EmpreendimentoPerfil | null = null;
   pagina: number = 0;
   tamanho: number = 10;
   totalElementos: number = 0;
@@ -52,6 +52,7 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
   // Opções carregadas da API
   tiposImoveis: string[] = [];
   statusOptions: any[] = [];
+  construtoraOptions: any[] = [];
   diferenciais: string[] = [];
 
   constructor(
@@ -82,6 +83,15 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
       }
     });
 
+    this.empreendimentoService.getConstrutoras().subscribe({
+      next: (construtoras) => {
+        this.construtoraOptions = construtoras;
+      },
+      error: (erro) => {
+        console.error('Erro ao carregar construtoras:', erro);
+      }
+    });
+
     this.empreendimentoService.getDiferenciais().subscribe({
       next: (diferenciais) => {
         this.diferenciais = diferenciais;
@@ -95,7 +105,7 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
   carregarEmpreendimentos(): void {
     this.carregando = true;
     this.empreendimentoService.listar(this.pagina, this.tamanho).subscribe({
-      next: (resposta: PageResponse<ListaEmpreendimento>) => {
+      next: (resposta: PageResponse<EmpreendimentoPerfil>) => {
         this.empreendimentos = resposta.content;
         this.totalElementos = resposta.totalElements;
         this.selectedEmpreendimentos.clear();
@@ -109,11 +119,11 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
     });
   }
 
-  isSelected(empreendimento: ListaEmpreendimento): boolean {
+  isSelected(empreendimento: EmpreendimentoPerfil): boolean {
     return this.selectedEmpreendimentos.has(empreendimento);
   }
 
-  toggleSelection(empreendimento: ListaEmpreendimento, event: boolean): void {
+  toggleSelection(empreendimento: EmpreendimentoPerfil, event: boolean): void {
     if (event) {
       this.selectedEmpreendimentos.add(empreendimento);
     } else {
@@ -167,13 +177,13 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
     this.mostrarModal = true;
   }
 
-  abrirModalEdicao(empreendimento: ListaEmpreendimento): void {
+  abrirModalEdicao(empreendimento: EmpreendimentoPerfil): void {
     this.modoEdicao = true;
     this.empreendimentoAtual = empreendimento;
     this.mostrarModal = true;
   }
 
-  abrirModalEdicaoImagens(empreendimento: ListaEmpreendimento): void {
+  abrirModalEdicaoImagens(empreendimento: EmpreendimentoPerfil): void {
     this.empreendimentoAtual = empreendimento;
     this.mostrarModalImagem = true;
   }
@@ -218,7 +228,7 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
     this.fecharModalImagem();
   }
 
-  deletar(empreendimento: ListaEmpreendimento): void {
+  deletar(empreendimento: EmpreendimentoPerfil): void {
     if (confirm('Tem certeza que deseja deletar este empreendimento?')) {
       const id = (empreendimento as any).id;
       this.empreendimentoService.deletar(id).subscribe({

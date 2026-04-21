@@ -31,6 +31,7 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
   @Input() mostrarModal: boolean = false;
   @Input() modoEdicao: boolean = false;
   @Input() statusOptions: String[] = [];
+  @Input() construtoraOptions: String[] = [];
   @Input() tiposImoveis: string[] = [];
   @Input() diferenciais: string[] = [];
   @Input() id: string = '';
@@ -41,7 +42,6 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
   protected formulario!: FormGroup;
   protected tiposOptions: any[] = [];
   protected diferenciaisOptions: any[] = [];
-  protected statusSelected: string | null = null;
   protected quartosOptions = [
     { label: '0', checked: false },
     { label: '1', checked: false },
@@ -162,7 +162,7 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
   private setupFormValidators() {
     if (!this.formulario) return;
     
-    const requiredFields = ['titulo', 'tiposImoveis', 'status', 'cidade', 'bairro', 'areaMin', 'areaMax', 'precoMin', 'precoMax', 'quartos', 'banheiros', 'vagas'];
+    const requiredFields = ['titulo', 'tiposImoveis', 'status', 'construtora', 'endereco', 'cidade', 'bairro', 'areaMin', 'areaMax', 'precoMin', 'precoMax', 'quartos', 'banheiros', 'vagas'];
     requiredFields.forEach(field => {
       const control = this.formulario.get(field);
       if (control && !control.hasError('required')) {
@@ -180,6 +180,8 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
       titulo: ['', Validators.required],
       tiposImoveis: [[], Validators.required],
       status: ['', Validators.required],
+      construtora : ['', Validators.required],
+      endereco: ['', Validators.required],
       cidade: ['', Validators.required],
       bairro: ['', Validators.required],
       areaMin: ['', Validators.required],
@@ -219,19 +221,8 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
     
     this.updateTiposOptions();
     this.updateDiferenciaisOptions();
-    this.updateStatusFromForm();
   }
 
-  private updateStatusFromForm() {
-    if (!this.formulario) return;
-    
-    const currentStatus = this.formulario.get('status')?.value;
-    if (currentStatus) {
-      // Aqui poderíamos emitir um evento para o modal-status marcar o status correto
-      // Mas como o modal-status gerencia seu próprio estado, isso pode ser feito
-      // através de uma propriedade de entrada ou método público
-    }
-  }
 
   private initializeOptions() {
     if (!this.tiposImoveis || !this.diferenciais) return;
@@ -314,8 +305,15 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
     }
   }
 
-  compareStatus(s1: any, s2: any): boolean {
-    return s1 && s2 ? s1.value === s2.value : s1 === s2;
+  updateConstrutora(selectedConstrutoras: any[]) {
+    if (!this.formulario) return;
+    
+    if (selectedConstrutoras && selectedConstrutoras.length > 0) {
+      const selectedConstrutora = selectedConstrutoras[0];
+      this.formulario.patchValue({ construtora: selectedConstrutora });
+    } else {
+      this.formulario.patchValue({ construtora: null });
+    }
   }
 
   isFormValid(): boolean {
@@ -324,7 +322,9 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
     const requiredFields = [
       'titulo', 
       'tiposImoveis', 
-      'status', 
+      'status',
+      'construtora', 
+      'endereco',
       'cidade', 
       'bairro', 
       'areaMin', 
@@ -407,6 +407,8 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
       titulo: this.formulario.get('titulo')?.value || null,
       tiposImoveis: this.formulario.get('tiposImoveis')?.value || null,
       status: this.formulario.get('status')?.value || null,
+      construtora: this.formulario.get('construtora')?.value || null,
+      endereco: this.formulario.get('endereco')?.value || null,
       cidade: this.formulario.get('cidade')?.value || null,
       bairro: this.formulario.get('bairro')?.value || null,
       areaMin: this.formulario.get('areaMin')?.value || null,

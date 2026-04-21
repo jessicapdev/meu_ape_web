@@ -6,6 +6,7 @@ export interface Empreendimento {
   status: string;
   cidade: string;
   bairro: string;
+  construtora: string;
   areaMin: number;
   areaMax: number;
   banheiros: number[];

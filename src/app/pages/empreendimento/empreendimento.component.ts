@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
-import { TuiButton, TuiIcon, TuiIcons, TuiRoot, TuiTitle } from '@taiga-ui/core';
+import { TuiButton, TuiIcon, TuiIcons, TuiLoader, TuiRoot, TuiTitle } from '@taiga-ui/core';
 import { TuiAccordion, TuiBadge, TuiCarousel, TuiCarouselButtons } from '@taiga-ui/kit';
 import { DetalheEmpreendimento } from './models/detalhe-empreendimento.model';
 import { RouterLink } from '@angular/router';
@@ -11,6 +11,7 @@ import { TuiCard } from '@taiga-ui/layout';
 import { TuiItem } from '@taiga-ui/cdk/directives/item';
 import { Empreendimento } from '../../../shared/models/empreendimento.model';
 import { EmpreendimentoService } from '../../../shared/service/empreendimento.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-empreendimento',
@@ -31,25 +32,23 @@ import { EmpreendimentoService } from '../../../shared/service/empreendimento.se
     TuiAccordion,
     TuiCarousel,
     TuiCarouselButtons,
-    TuiCurrencyPipe,
+    TuiLoader,
     RouterLink,
   ],
   templateUrl: './empreendimento.component.html',
   styleUrl: './empreendimento.component.scss'
 })
 export class EmpreendimentoComponent {
-  imageUrl: string = 'https://via.placeholder.com/600x400/3F51B5/FFFFFF?text=Localização+do+Endereço';
-  altText: string = 'Imagem do local do endereço';
-  endereco: string = 'Av. Paulista, 1000, São Paulo - SP, Brasil';
-
+  endereco: string = '';
   empreendimento!: DetalheEmpreendimento;
   id: string = '';
-
   contatoAberto = false;
+  loading = true;
 
   constructor(
     private service: EmpreendimentoService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -62,9 +61,14 @@ export class EmpreendimentoComponent {
   }
 
   getEmpreendimento(id: string) {
-    this.service.getDetalhe(id).subscribe({
+    this.service.getDetalhe(id)
+    .pipe(
+      finalize(() => this.loading = false)
+    )
+    .subscribe({
       next: (data) => {
         this.empreendimento = data;
+        this.endereco = `${this.empreendimento.endereco}, ${this.empreendimento.bairro}, ${this.empreendimento.cidade}`;
       },
       error: (error) => {
         console.log(error);
@@ -73,8 +77,7 @@ export class EmpreendimentoComponent {
   }
 
   abrirContato() {
-    console.log('Abrir contato');
-    this.contatoAberto = true;
+    this.router.navigate(['/contato']);
   }
 
   agendarVisita() {
@@ -88,5 +91,12 @@ export class EmpreendimentoComponent {
 
   redirecionarParaGoogleMaps(): void {
     window.open(this.getGoogleMapsUrl(), '_blank');
+  }
+
+  formatarValor(valor: number): string {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(valor);
   }
 }
