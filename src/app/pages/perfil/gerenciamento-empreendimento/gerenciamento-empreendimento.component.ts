@@ -9,6 +9,7 @@ import { EmpreendimentoPerfil } from '../../../pages/empreendimento/models/detal
 import { PageResponse } from '../../../../shared/models/page-response.model';
 import { ModalEmpreendimentoComponent } from './modal-empreendimento/modal-empreendimento.component';
 import { ModalImagemComponent } from './modal-imagem/modal-imagem.component';
+import { ModalApartamentosComponent } from './modal-apartamentos/modal-apartamentos.component';
 
 @Component({
   selector: 'app-gerenciamento-empreendimento',
@@ -28,7 +29,8 @@ import { ModalImagemComponent } from './modal-imagem/modal-imagem.component';
     TuiIcon,
     TuiLoader,
     ModalEmpreendimentoComponent,
-    ModalImagemComponent
+    ModalImagemComponent,
+    ModalApartamentosComponent
   ]
 })
 export class GerenciamentoEmpreendimentoComponent implements OnInit {
@@ -36,6 +38,7 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
   carregando: boolean = false;
   mostrarModal: boolean = false;
   mostrarModalImagem: boolean = false;
+  mostrarModalApartamentos: boolean = false;
   modoEdicao: boolean = false;
   empreendimentoAtual: EmpreendimentoPerfil | null = null;
   pagina: number = 0;
@@ -54,6 +57,7 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
   statusOptions: any[] = [];
   construtoraOptions: any[] = [];
   diferenciais: string[] = [];
+  
 
   constructor(
     private empreendimentoService: EmpreendimentoService
@@ -188,6 +192,11 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
     this.mostrarModalImagem = true;
   }
 
+  abrirModalEdicaoApartamentos(empreendimento: EmpreendimentoPerfil): void {
+    this.empreendimentoAtual = empreendimento;
+    this.mostrarModalApartamentos = true;
+  }
+
   fecharModal(): void {
     this.mostrarModal = false;
     this.empreendimentoAtual = null;
@@ -197,6 +206,12 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
     this.mostrarModalImagem = false;
     this.empreendimentoAtual = null;
   }
+
+  fecharModalApartamentos(): void {
+    this.mostrarModalApartamentos = false;
+    this.empreendimentoAtual = null;
+  }
+
 
   salvar(formData: any): void {
     if (this.modoEdicao && this.empreendimentoAtual) {
@@ -226,6 +241,11 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
   salvarImagem(): void {
     this.carregarEmpreendimentos();
     this.fecharModalImagem();
+  }
+
+  salvarApartamentos(): void {
+    this.carregarEmpreendimentos();
+    this.fecharModalApartamentos();
   }
 
   deletar(empreendimento: EmpreendimentoPerfil): void {

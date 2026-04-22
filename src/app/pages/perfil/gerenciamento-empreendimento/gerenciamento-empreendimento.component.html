@@ -68,7 +68,7 @@
             <tui-icon icon="@tui.pencil"></tui-icon>
             Imagens
           </button>
-          <button class="button-action" tuiButton appearance="secondary" size="s" type="button" (click)="abrirModalEdicaoImagens(empreendimento)">
+          <button class="button-action" tuiButton appearance="secondary" size="s" type="button" (click)="abrirModalEdicaoApartamentos(empreendimento)">
             <tui-icon icon="@tui.pencil"></tui-icon>
             Apartamentos
           </button>
@@ -158,4 +158,13 @@
     (salvar)="salvarImagem()"
   >
   </app-modal-imagem>
+
+  <app-modal-apartamentos
+    [mostrarModal]="mostrarModalApartamentos"
+    (fecharModal)="fecharModalApartamentos()"
+    [id]="empreendimentoAtual?.id || ''" 
+    (salvar)="salvarApartamentos()"
+    [tiposOptions]="tiposImoveis"
+  >
+  </app-modal-apartamentos>
 </div>

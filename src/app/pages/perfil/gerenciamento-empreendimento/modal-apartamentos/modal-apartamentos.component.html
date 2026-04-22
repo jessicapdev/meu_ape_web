@@ -1,3 +1,49 @@
-<p>
-  modal-apartamentos works!
-</p>
+
+<div *ngIf="mostrarModal" class="modal-backdrop">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Atualizar apartamentos</h3>
+      <button tuiButton appearance="secondary" size="s" type="button" (click)="onFecharModal()">Fechar</button>
+    </div>
+
+    <div class="modal-content"> 
+      <form [formGroup]="formulario">
+        <!-- Informações Básicas -->
+        <div class="form-section">
+          <!-- Tipo -->
+          <div class="form-group">
+            <tui-textfield tuiChevron [class.error]="shouldShowError('tipoImovel')">
+                  <input
+                      placeholder="Escolha o tipo do imóvel"
+                      tuiSelect
+                      formControlName="tipoImovel"
+                      (blur)="formulario.get('tipoImovel')?.markAsTouched()"
+                  />
+                  <label tuiLabel>Tipo do imóvel *</label>
+                  <tui-data-list-wrapper
+                      *tuiTextfieldDropdown
+                      new
+                      [items]="tiposOptions"
+                  />
+                </tui-textfield>
+            <span class="error-message-form" *ngIf="shouldShowError('tiposImoveis')">
+              {{ getErrorMessage('tiposImoveis') }}
+            </span>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        tuiButton
+        appearance="primary"
+        (click)="onSalvar()"
+        [disabled]="formulario.invalid"
+      >
+        Salvar
+      </button>
+    </div>
+  </div>
+</div> 
