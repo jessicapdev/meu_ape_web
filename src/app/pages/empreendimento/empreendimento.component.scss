@@ -391,12 +391,17 @@ $black-10: #1a1a1a;
       height: 2rem;
       width: 2rem;
       border-radius: 9999px;
-      background-color: $primary-color;
-      animation: popColor 500ms ease-out forwards;
+      background-color: $bg-gray;
+      transition: background-color 300ms;
 
       span {
         font-weight: bold;
         color: $white;
+      }
+
+      &--active {
+        background-color: $primary-color;
+        animation: popColor 500ms ease-out forwards;
       }
     }
 
@@ -610,6 +615,21 @@ td{
   width: 100%;
   height: 700px; 
   object-fit: cover;    
+  object-position: center; 
+  display: block;        
+}
+
+.item-plantas{
+  width: 100%;
+  height: 700px; 
+  display: block;
+  background-color: var(--tui-base-02); /* Cor de fundo para preencher espaços vazios caso a imagem seja proporcionalmente menor */
+}
+
+.image-plantas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;    
   object-position: center; 
   display: block;        
 }

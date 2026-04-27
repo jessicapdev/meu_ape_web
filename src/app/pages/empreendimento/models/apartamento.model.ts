@@ -1,4 +1,5 @@
 export interface Apartamento {
+  id: string;
   tipo: string;
   area: string;
   quartos: string;

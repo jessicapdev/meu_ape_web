@@ -19,8 +19,8 @@ export class EmpreendimentoService {
   //   return this.http.post<PageResponse<DetalheEmpreendimento>>(`${this.apiUrl}/buscar`, filtro);
   // }
 
-  getListaEmpreendimentos(): Observable<EmpreendimentoHome[]> {
-    return this.http.get<EmpreendimentoHome[]>(`${this.apiUrl}/home`);
+  getListaEmpreendimentos(filtro: EmpreendimentoFiltro): Observable<EmpreendimentoHome[]> {
+    return this.http.post<EmpreendimentoHome[]>(`${this.apiUrl}/buscar`, filtro);
   }
 
   getDetalhe(id: string): Observable<DetalheEmpreendimento> {
@@ -73,5 +73,17 @@ export class EmpreendimentoService {
 
   getDadosByEmpreendimento(id: string): Observable<any> {
     return this.http.get<Imagem>(`${this.apiUrl}/${id}/dados`);
+  }
+
+  getApartamentosByEmpreendimento(id: string): Observable<any> {
+    return this.http.get<Imagem>(`${this.apiUrl}/${id}/apartamento`);
+  }
+
+  salvarApartamentos(id: string, apartamentos: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/apartamento`, apartamentos);
+  }
+
+  deletarApartamento(idEmpreendimento: string, idApartamento: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${idEmpreendimento}/apartamento/${idApartamento}`);
   }
 }

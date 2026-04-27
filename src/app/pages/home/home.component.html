@@ -7,18 +7,25 @@
   textContent="Carregando empreendimentos..."
 >
 
-  <div class="body-container" *ngIf="empreendimentos.length > 0 && !loading">
+  <div class="body-container">
     <div class="content-home">
-      <form [formGroup]="incialSearchForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="incialSearchForm" (ngSubmit)="buscarEmpreendimento()">
         <div class="filtro-in-line">
           <tui-textfield class="filtro-item">
             <label tuiLabel>Bairro, cidade ou empreendimento</label>
             <input
               placeholder="Onde deseja morar?"
               tuiTextfield
-              formControlName="local"
+              formControlName="search"
             />
           </tui-textfield>
+          <button
+            tuiButton
+            type="button"
+            (click)="buscarEmpreendimento()"
+          >
+            Pesquisar
+          </button>
           <button
             tuiButton
             tuiChevron
@@ -57,93 +64,106 @@
     </div>
 
     <!-- empreendimentos.component.html -->
-    <div class="empreendimentos-container">
-      <div class="cards-grid">
-        <div *ngFor="let empreendimento of empreendimentos" 
-        class="card" (click)="navegarParaDetalhe(empreendimento)">
-          <div class="card-image">
-            <img 
-              [src]="empreendimento?.imagens?.banner" 
-              [alt]="empreendimento.titulo"
-              class="imagem-empreendimento"
-            >
-          </div>
-          <div class="card-content">
-            <div class="container-badges" >
-                <tui-badge 
-                  appearance="primary"
-                  [ngClass]="empreendimento.status"
-                >
-                  {{ empreendimento.status }}
+    <div *ngIf="empreendimentos.length > 0 && !loading">
+      <div class="empreendimentos-container">
+        <div class="cards-grid">
+          <div *ngFor="let empreendimento of empreendimentos" 
+          class="card" (click)="navegarParaDetalhe(empreendimento)">
+            <div class="card-image">
+              <img 
+                [src]="empreendimento?.imagens?.banner" 
+                [alt]="empreendimento.titulo"
+                class="imagem-empreendimento"
+              >
+            </div>
+            <div class="card-content">
+              <div class="container-badges" >
+                  <tui-badge 
+                    appearance="primary"
+                    [ngClass]="empreendimento.status"
+                  >
+                    {{ empreendimento.status }}
+                  </tui-badge>
+                <tui-badge appearance="secondary" *ngIf="empreendimento.construtora">
+                  {{ empreendimento.construtora }}
                 </tui-badge>
-              <tui-badge appearance="secondary" *ngIf="empreendimento.construtora">
-                {{ empreendimento.construtora }}
-              </tui-badge>
-            </div>
+              </div>
 
-            <div class="header-title">
-              {{ empreendimento.titulo }}
-            </div>
-            
-            <p class="localizacao">
-              {{ empreendimento.cidade }} - {{ empreendimento.bairro }}
-            </p>
-            
-            <div class="detalhes">
-              <div class="detalhe-item">
-                <tui-icon icon="@tui.ruler-dimension-line"
-                [style.color]="'var(--tui-text-action)'"/>
-                <span>{{ empreendimento.areaMin }} - {{ empreendimento.areaMax }}m²</span>
+              <div class="header-title">
+                {{ empreendimento.titulo }}
               </div>
-              <div class="detalhe-item">
-                <tui-icon icon="@tui.shower-head"
-                [style.color]="'var(--tui-text-action)'"/>
-                <span>{{ formatarBanheiros(empreendimento.banheiros) }}</span>
+              
+              <p class="localizacao">
+                {{ empreendimento.cidade }} - {{ empreendimento.bairro }}
+              </p>
+              
+              <div class="detalhes">
+                <div class="detalhe-item">
+                  <tui-icon icon="@tui.ruler-dimension-line"
+                  [style.color]="'var(--tui-text-action)'"/>
+                  <span>{{ empreendimento.areaMin }} - {{ empreendimento.areaMax }}m²</span>
+                </div>
+                <div class="detalhe-item">
+                  <tui-icon icon="@tui.shower-head"
+                  [style.color]="'var(--tui-text-action)'"/>
+                  <span>{{ formatarBanheiros(empreendimento.banheiros) }}</span>
+                </div>
+                <div class="detalhe-item">
+                  <tui-icon icon="@tui.bed"
+                  [style.color]="'var(--tui-text-action)'"/>
+                  <span>{{ formatarQuartos(empreendimento.quartos) }}</span>
+                </div>
+                <div class="detalhe-item">
+                  <tui-icon icon="@tui.car"
+                  [style.color]="'var(--tui-text-action)'"/>
+                  <span>{{ formatarVagas(empreendimento.vagas) }}</span>
+                </div>
               </div>
-              <div class="detalhe-item">
-                <tui-icon icon="@tui.bed"
-                [style.color]="'var(--tui-text-action)'"/>
-                <span>{{ formatarQuartos(empreendimento.quartos) }}</span>
+              
+              <div class="valor">
+                <span class="valor-label">A partir de</span>
+                <span class="valor-preco">{{ formatarValor(empreendimento.precoMin) }}</span>
               </div>
-              <div class="detalhe-item">
-                <tui-icon icon="@tui.car"
-                [style.color]="'var(--tui-text-action)'"/>
-                <span>{{ formatarVagas(empreendimento.vagas) }}</span>
-              </div>
-            </div>
-            
-            <div class="valor">
-              <span class="valor-label">A partir de</span>
-              <span class="valor-preco">{{ formatarValor(empreendimento.precoMin) }}</span>
             </div>
           </div>
         </div>
       </div>
+
+      <tui-pagination
+        [index]="index"
+        [length]="length"
+        (indexChange)="goToPage($event)"
+      />
+      </div>
     </div>
 
-    <tui-pagination
-      [index]="index"
-      [length]="length"
-      (indexChange)="goToPage($event)"
-    />
-  </div>
-
-  <ng-template class="body-container" *ngIf="empreendimentos.length === 0 && !loading">
+  <div class="body-container" *ngIf="empreendimentos.length === 0 && !loading">
     <div class="content-home">
       <h2 class="title-home">Nenhum empreendimento encontrado</h2>
     </div>  
-  </ng-template>  
+  </div>  
   
 </tui-loader>
 
 <ng-template #contentQuartos>
-  <app-modal-quartos (updateQuartos)="updateQuartos($event)"></app-modal-quartos>
+  <app-modal-quartos 
+  [quartosOptions]="quartosOptions" 
+  (updateQuartos)="updateQuartos($event)"></app-modal-quartos>
 </ng-template>
 <ng-template #contentStatus>
-  <app-modal-status (updateStatus)="updateStatus($event)"></app-modal-status>
+  <app-modal-status 
+  [statusOptions]="statusOptions"
+  (updateStatus)="updateStatus($event)"></app-modal-status>
 </ng-template>
 <ng-template #contentPreco>
-  <app-modal-preco (updatePreco)="updatePreco($event)"></app-modal-preco>
+  <app-modal-preco 
+  [precoForm]="precoForm" 
+  (updatePreco)="updatePreco($event)"
+  ></app-modal-preco>
 </ng-template>
 
-<app-modal-filtrar #filtrarDialog></app-modal-filtrar>
+<app-modal-filtrar 
+[filtroOptions]="filtro"
+(updateFiltro)="updateFiltrar($event)"
+#filtrarDialog>
+</app-modal-filtrar>

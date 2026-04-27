@@ -39,6 +39,7 @@ export class PerfilComponent implements OnInit {
   protected get pattern(): string | null {
     return this.isIos ? '+[0-9-]{1,20}' : null;
   }
+  protected isAdmin: boolean = false;
   error: { show: boolean, message: string } = { show: false, message: '' };
   success: { show: boolean, message: string } = { show: false, message: '' };
   profileForm: FormGroup;
@@ -67,6 +68,11 @@ export class PerfilComponent implements OnInit {
   ngOnInit(): void {
     this.loadLogoImage();
     this.getDadosUsuario()
+    this.isAdmin = this.checarRoles();
+  }
+
+  private checarRoles(): boolean {
+    return this.service.isAuthenticated() && this.service.hasRole('ROLE_ADMIN');
   }
 
   onFileSelected(event: Event): void {
@@ -143,6 +149,11 @@ export class PerfilComponent implements OnInit {
   }
 
   mudarAba(item: any): void {
+    const abasRestritas = ['Mensagens Recebidas', 'Empreendimentos'];
+    if (abasRestritas.includes(item.label) && !this.isAdmin) {
+      return;
+    }
+
     switch (item.label) {
       case 'Mensagens Recebidas':
         this.currentTab = 'mensagens-recebidas';

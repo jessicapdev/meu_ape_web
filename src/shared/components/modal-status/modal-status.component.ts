@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, NO_ERRORS_SCHEMA, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Input, NO_ERRORS_SCHEMA, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TuiButton } from '@taiga-ui/core';
@@ -22,13 +22,9 @@ import { TuiChip } from '@taiga-ui/kit';
 })
 export class ModalStatusComponent {
   @Output() updateStatus = new EventEmitter<any>();
+  @Input() statusOptions: any[] = [];
 
-  protected listStatus: any;
-  statusOptions = [
-    { label: 'Pronto para morar', checked: false },
-    { label: 'Em construção', checked: false },
-    { label: 'Lançamento', checked: false }
-  ];
+  
 
   constructor() {}
 
@@ -39,11 +35,12 @@ export class ModalStatusComponent {
   }
 
   aplicar(): void {
-    this.listStatus = this.selectedStatus;
-    this.updateStatus.emit(this.listStatus);
+    this.updateStatus.emit(this.selectedStatus);
   }
 
-  get selectedStatus(): any {
-    return this.statusOptions.filter(status => status.checked);
+  get selectedStatus(): string[] {
+    return this.statusOptions
+      .filter(status => status.checked)
+      .map(status => status.label);
   }
 }

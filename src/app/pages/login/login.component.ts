@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { TuiButton, TuiError, TuiIcon, TuiTextfield } from '@taiga-ui/core';
+import { TuiButton, TuiError, TuiIcon, TuiNotification, TuiTextfield } from '@taiga-ui/core';
 import { TuiButtonLoading, TuiPassword } from '@taiga-ui/kit';
 import { AuthenticationService } from '../../core/authentication.service';
 import { first } from 'rxjs';
 import { TuiValidationError } from '@taiga-ui/cdk';
+import { AlertMessageComponent } from '../../../shared/components/alert-message/alert-message.component';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,8 @@ import { TuiValidationError } from '@taiga-ui/cdk';
     TuiTextfield,
     TuiPassword,
     TuiIcon,
-    TuiError
+    TuiError,
+    AlertMessageComponent
   ],
   providers: [
     AuthenticationService
@@ -39,6 +41,7 @@ export class LoginComponent implements OnInit {
   protected returnUrl = '';
   protected error = new TuiValidationError('Erro ao fazer login.');
   protected loginError = false;
+  protected success: { show: boolean, message: string } = { show: false, message: '' };
 
   constructor(
     private fb: FormBuilder,
@@ -64,6 +67,13 @@ export class LoginComponent implements OnInit {
       this.loginForm.patchValue({ email: emailSalvo });
       this.lembrarMe = true;
     }
+
+    this.route.queryParams.subscribe(params => {
+      if (params['registrado'] === 'true') {
+        this.success.show = true;
+        this.success.message = 'Cadastro realizado com sucesso! Faça login para continuar';
+      }
+    });
   }
 
   toggleLembrarMe(): void {

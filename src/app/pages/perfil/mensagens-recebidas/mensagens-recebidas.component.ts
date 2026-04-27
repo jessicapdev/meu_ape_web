@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { forkJoin, Observable, of } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CdkTableModule } from '@angular/cdk/table';
 import { TuiButton } from '@taiga-ui/core';
-import { TuiCheckbox } from '@taiga-ui/kit';
+import { TuiCheckbox, TuiPagination } from '@taiga-ui/kit';
 import { Contato } from '../../../../shared/models/contato.model';
 import { ContatoService } from '../../../../shared/service/contato.service';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PageResponse } from '../../../../shared/models/page-response.model';
 
 @Component({
   selector: 'app-mensagens-recebidas',
@@ -18,7 +19,8 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule, 
     ReactiveFormsModule,
     TuiButton, 
-    TuiCheckbox
+    TuiCheckbox,
+    TuiPagination
   ],
   templateUrl: './mensagens-recebidas.component.html',
   styleUrls: ['./mensagens-recebidas.component.scss'],
@@ -30,6 +32,10 @@ export class MensagensRecebidasComponent implements OnInit {
   selectedContact: Contato | null = null;
   showDetailModal = false;
   loading = false;
+  paginaAtual = 0;
+  tamanho = 10;
+  totalPaginas = 0;
+  totalElementos = 0;
 
   constructor(private contatoService: ContatoService) {}
 
@@ -39,13 +45,15 @@ export class MensagensRecebidasComponent implements OnInit {
 
   loadContatos(): void {
     this.loading = true;
-    this.contatoService.getContatos()
-      .pipe(catchError(() => of(this.contatos)))
-      .subscribe((contatos: Contato[]) => {
-        this.contatos = contatos.map((contato) => ({
+    this.contatoService.getContatos(this.paginaAtual, this.tamanho)
+      .pipe(catchError(() => of(this.contatos = [])))
+      .subscribe((resposta: any) => {
+        this.contatos = resposta.content.map((contato: Contato) => ({
           ...contato,
           lido: contato.lido ?? false,
         }));
+        this.totalPaginas = resposta.totalPages;
+        this.totalElementos = resposta.totalElements;
         this.loading = false;
       });
   }
@@ -94,7 +102,7 @@ export class MensagensRecebidasComponent implements OnInit {
 
     forkJoin(
       selected.map((contato) =>
-        this.contatoService.updateContato(contato.id as string, { lido: value }).pipe(
+        this.contatoService.updateContato(contato.id as string, value).pipe(
           catchError(() => of(null))
         )
       )
@@ -134,5 +142,11 @@ export class MensagensRecebidasComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  onPageChange(index: number): void {
+    this.paginaAtual = index;
+    this.selectedIds.clear(); // Limpa seleções ao mudar de página para evitar confusão
+    this.loadContatos();
   }
 }

@@ -18,8 +18,11 @@ export class TokenInterceptor implements HttpInterceptor {
   private readonly PUBLIC_URLS = [
     '/auth/login',
     '/auth/refresh',
-    '/auth/register',
-    '/public/'
+    '/auth/recuperar',
+    '/api/empreendimentos/buscar',
+    '/detalhe', 
+    '/usuarios/criar-conta',
+    '/contatos' 
   ];
 
   constructor(
@@ -29,25 +32,20 @@ export class TokenInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     
-    // Ignora URLs públicas
-    if (this.isPublicUrl(request.url)) {
+    if (this.isPublicUrl(request)) {
       return next.handle(request);
     }
 
-    // ESTRATÉGIA PROATIVA: Garante token válido ANTES de enviar
     return this.authService.ensureValidToken().pipe(
       switchMap(validToken => {
         
-        // Não autenticado e não conseguiu refresh
         if (!validToken) {
           this.router.navigate(['/login']);
           return throwError(() => new Error('Authentication required'));
         }
 
-        // Adiciona token à requisição
         const authRequest = this.addAuthHeader(request, validToken);
         
-        // ESTRATÉGIA REATIVA: Se ainda assim receber 401, tenta refresh novamente
         return next.handle(authRequest).pipe(
           catchError(error => this.handleHttpError(error, request, next))
         );
@@ -75,7 +73,6 @@ export class TokenInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     
-    // Apenas trata erro 401 e não é retry de refresh
     if (error.status === 401 && !this.isRefreshUrl(request.url)) {
       
       return this.authService.refreshAccessToken().pipe(
@@ -101,8 +98,18 @@ export class TokenInterceptor implements HttpInterceptor {
     return throwError(() => error);
   }
 
-  private isPublicUrl(url: string): boolean {
-    return this.PUBLIC_URLS.some(publicUrl => url.includes(publicUrl));
+  private isPublicUrl(request: HttpRequest<any>): boolean {
+    const url = request.url;
+    const method = request.method;
+
+    const isWhitelisted = this.PUBLIC_URLS.some(publicUrl => url.includes(publicUrl));
+    if (isWhitelisted) return true;
+
+    // Cadastro de usuário e Envio de contato (Ambos são POST públicos)
+    // Verificamos o método para não liberar acidentalmente o perfil ou listagens privadas
+    const isPublicPost = method === 'POST' && (url.endsWith('/usuarios') || url.endsWith('/contatos'));
+
+    return isPublicPost;
   }
 
   private isRefreshUrl(url: string): boolean {

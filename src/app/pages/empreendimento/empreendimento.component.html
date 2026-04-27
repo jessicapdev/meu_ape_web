@@ -142,43 +142,21 @@
                 </div>
                 
                 <div class="timeline-container">
-                    <div class="step">
-                        <div class="step__number">
-                        <span>1</span>
+                    <div class="step" *ngFor="let step of timeline; let last = last; let i = index">
+                        <div class="step__number" [class.step__number--active]="step.completado">
+                            <span>{{ step.ordem }}</span>
                         </div>
-                        <div class="step__line step__line--filled"></div>
+
+                        <div *ngIf="!last" 
+                            class="step__line" 
+                            [class.step__line--filled]="step.completado && timeline[i + 1]?.completado">
+                        </div>
+
                         <div class="step__content">
-                        <span class="title">Breve Lançamento</span>
-                        <span class="date" style="color: transparent;">-</span>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step__number">
-                        <span>2</span>
-                        </div>
-                        <div class="step__line step__line--filled"></div>
-                        <div class="step__content">
-                        <span class="title">Lançamento</span>
-                        <span class="date">Maio 2021</span>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step__number">
-                        <span>3</span>
-                        </div>
-                        <div class="step__line step__line--filled"></div>
-                        <div class="step__content">
-                        <span class="title">Em Construção</span>
-                        <span class="date" style="color: transparent;">-</span>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step__number">
-                        <span>4</span>
-                        </div>
-                        <div class="step__content">
-                        <span class="title">Pronto</span>
-                        <span class="date">Dezembro 2023</span>
+                            <span class="title">{{ step.titulo }}</span>
+                            <span class="date" [style.color]="step.data ? 'inherit' : 'transparent'">
+                                {{ step.data || '-' }}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -209,9 +187,9 @@
                                         <span class="preco" *ngIf="apto.preco; else preco">
                                             {{ apto.preco | number:'1.2-2' }}
                                         </span>
-                                        <ng-template #preco>-</ng-template>
+                                        <ng-template #preco>Sob consulta</ng-template>
                                     </td>
-                                    <td tuiTd>{{ apto.area }}</td>
+                                    <td tuiTd>{{ apto.area }}m²</td>
                                     <td tuiTd>{{ apto.quartos }}</td>
                                     <td tuiTd>{{ apto.suites }}</td>
                                     <td tuiTd>{{ apto.banheiros }}</td>
@@ -240,8 +218,8 @@
                         #carousel
                         class="carousel">
                             <ng-container *ngFor="let planta of empreendimento.imagens.plantas">
-                                <div *tuiItem class="item">
-                                    <img class="image-galeria" [src]="planta">
+                                <div *tuiItem class="item-plantas">
+                                    <img class="image-plantas" [src]="planta">
                                 </div>
                             </ng-container>
                         </tui-carousel>

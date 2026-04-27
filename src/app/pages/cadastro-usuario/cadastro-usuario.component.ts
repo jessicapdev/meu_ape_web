@@ -56,12 +56,11 @@ export class CadastroUsuarioComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+  salvarUsuario(): void {
     if (this.cadastroForm.valid && this.senhasCoincidem()) {
-      console.log('Cadastro válido:', this.cadastroForm.value);
       this.service.saveUsuario(this.cadastroForm.value).subscribe({
         next: () => {
-          this.router.navigate(['/login']);
+          this.router.navigate(['/login'], { queryParams: { registrado: 'true' } });
         },
         error: error => {
           console.log(error);

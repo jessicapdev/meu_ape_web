@@ -1,49 +1,127 @@
-
-<div *ngIf="mostrarModal" class="modal-backdrop">
+<div *ngIf="mostrarModal" class="modal-backdrop" (click)="onFecharModal()">
   <div class="modal-card" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>Atualizar apartamentos</h3>
+      <h3>Apartamentos - {{ empreendimento.titulo }}</h3>
       <button tuiButton appearance="secondary" size="s" type="button" (click)="onFecharModal()">Fechar</button>
     </div>
 
-    <div class="modal-content"> 
-      <form [formGroup]="formulario">
-        <!-- Informações Básicas -->
-        <div class="form-section">
-          <!-- Tipo -->
+    <div class="modal-content">
+
+      <!-- Tabela de Apartamentos -->
+      <div class="table-container" *ngIf="apartamentos.length > 0; else emptyState">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Área (m²)</th>
+              <th>Quartos</th>
+              <th>Suítes</th>
+              <th>Banheiros</th>
+              <th>Vagas</th>
+              <th>Preço</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let apt of apartamentos">
+              <td>{{ apt.tipo }}</td>
+              <td>{{ apt.area | number:'1.2-2' }} m²</td>
+              <td>{{ apt.quartos }}</td>
+              <td>{{ apt.suites }}</td>
+              <td>{{ apt.banheiros }}</td>
+              <td>{{ apt.vagas }}</td>
+              <td>{{ (apt.preco | currency:'BRL':'symbol':'1.2-2') || 'sob consulta' }}</td>
+              <td>
+                <button 
+                  tuiButton 
+                  appearance="negative" 
+                  size="xs" 
+                  type="button" 
+                  (click)="onDeletar(apt.id)">
+                  Deletar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #emptyState>
+        <p class="empty-state">Nenhum apartamento cadastrado.</p>
+      </ng-template>
+
+      <div class="table-actions" *ngIf="!mostrarFormAdicionar">
+        <button tuiButton appearance="primary" type="button" (click)="toggleFormAdicionar()">
+          Adicionar Apartamento
+        </button>
+      </div>
+
+      <!-- Formulário de Adição -->
+      <form *ngIf="mostrarFormAdicionar" [formGroup]="formulario" class="add-form">
+        <div class="form-grid">
           <div class="form-group">
-            <tui-textfield tuiChevron [class.error]="shouldShowError('tipoImovel')">
-                  <input
-                      placeholder="Escolha o tipo do imóvel"
-                      tuiSelect
-                      formControlName="tipoImovel"
-                      (blur)="formulario.get('tipoImovel')?.markAsTouched()"
-                  />
-                  <label tuiLabel>Tipo do imóvel *</label>
-                  <tui-data-list-wrapper
-                      *tuiTextfieldDropdown
-                      new
-                      [items]="tiposOptions"
-                  />
-                </tui-textfield>
-            <span class="error-message-form" *ngIf="shouldShowError('tiposImoveis')">
-              {{ getErrorMessage('tiposImoveis') }}
-            </span>
+            <tui-textfield tuiChevron [class.error]="shouldShowError('tipo')">
+              <input placeholder="Escolha o tipo" tuiSelect formControlName="tipo" />
+              <label tuiLabel>Tipo do imóvel *</label>
+              <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="tiposOptions" />
+            </tui-textfield>
+            <span class="error-message-form" *ngIf="shouldShowError('tipo')">{{ getErrorMessage('tipo') }}</span>
           </div>
+
+          <div class="form-group">
+            <tui-textfield [class.error]="shouldShowError('area')">
+              <input tuiTextfield type="number" step="0.01" formControlName="area" placeholder="Ex: 75.5" />
+              <label tuiLabel>Área (m²) *</label>
+            </tui-textfield>
+            <span class="error-message-form" *ngIf="shouldShowError('area')">{{ getErrorMessage('area') }}</span>
+          </div>
+
+          <div class="form-group">
+            <tui-textfield [class.error]="shouldShowError('quartos')">
+              <input tuiTextfield type="number" step="1" formControlName="quartos" placeholder="0" />
+              <label tuiLabel>Quartos *</label>
+            </tui-textfield>
+            <span class="error-message-form" *ngIf="shouldShowError('quartos')">{{ getErrorMessage('quartos') }}</span>
+          </div>
+
+          <div class="form-group">
+            <tui-textfield [class.error]="shouldShowError('suites')">
+              <input tuiTextfield type="number" step="1" formControlName="suites" placeholder="0" />
+              <label tuiLabel>Suítes *</label>
+            </tui-textfield>
+            <span class="error-message-form" *ngIf="shouldShowError('suites')">{{ getErrorMessage('suites') }}</span>
+          </div>
+
+          <div class="form-group">
+            <tui-textfield [class.error]="shouldShowError('banheiros')">
+              <input tuiTextfield type="number" step="1" formControlName="banheiros" placeholder="0" />
+              <label tuiLabel>Banheiros *</label>
+            </tui-textfield>
+            <span class="error-message-form" *ngIf="shouldShowError('banheiros')">{{ getErrorMessage('banheiros') }}</span>
+          </div>
+
+          <div class="form-group">
+            <tui-textfield [class.error]="shouldShowError('vagas')">
+              <input tuiTextfield type="number" step="1" formControlName="vagas" placeholder="0" />
+              <label tuiLabel>Vagas *</label>
+            </tui-textfield>
+            <span class="error-message-form" *ngIf="shouldShowError('vagas')">{{ getErrorMessage('vagas') }}</span>
+          </div>
+
+          <div class="form-group">
+            <tui-textfield [class.error]="shouldShowError('preco')">
+              <input tuiTextfield type="number" step="0.01" formControlName="preco" placeholder="0.00" />
+              <label tuiLabel>Preço (R$) *</label>
+            </tui-textfield>
+            <span class="error-message-form" *ngIf="shouldShowError('preco')">{{ getErrorMessage('preco') }}</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button tuiButton appearance="secondary" type="button" (click)="toggleFormAdicionar()">Cancelar</button>
+          <button tuiButton appearance="primary" type="button" [disabled]="formulario.invalid" (click)="onSalvar()">Salvar Apartamento</button>
         </div>
       </form>
     </div>
-
-    <div class="modal-footer">
-      <button
-        type="button"
-        tuiButton
-        appearance="primary"
-        (click)="onSalvar()"
-        [disabled]="formulario.invalid"
-      >
-        Salvar
-      </button>
-    </div>
   </div>
-</div> 
+</div>

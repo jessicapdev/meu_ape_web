@@ -1,7 +1,7 @@
 <div *ngIf="mostrarModal" class="modal-backdrop">
     <div class="modal-card" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>Adicionar imagens</h3>
+        <h3>Adicionar imagens - {{ empreendimento.titulo }}</h3>
         <button tuiButton appearance="secondary" size="s" type="button" (click)="onFecharModal()">Fechar</button>
       </div>
 

@@ -99,31 +99,11 @@
 
   <!-- Paginação -->
   <div *ngIf="!carregando && empreendimentos.length > 0" class="pagination-section">
-    <button
-      tuiButton
-      appearance="secondary"
-      size="s"
-      [disabled]="pagina === 0"
-      (click)="paginaAnterior()"
-    >
-      <tui-icon icon="@tui.chevron-left"></tui-icon>
-      Anterior
-    </button>
-
-    <span class="page-info">
-      Página <strong>{{ pagina + 1 }}</strong> de <strong>{{ totalPaginas }}</strong>
-    </span>
-
-    <button
-      tuiButton
-      appearance="secondary"
-      size="s"
-      [disabled]="pagina >= totalPaginas - 1"
-      (click)="proximaPagina()"
-    >
-      Próxima
-      <tui-icon icon="@tui.chevron-right"></tui-icon>
-    </button>
+    <tui-pagination
+      [index]="pagina"
+      [length]="totalPaginas"
+      (indexChange)="goToPage($event)"
+    />
   </div>
 
   <!-- Botões de ação em massa -->
@@ -146,7 +126,7 @@
     [construtoraOptions]="construtoraOptions"
     [tiposImoveis]="tiposImoveis"
     [diferenciais]="diferenciais"
-    [id]="empreendimentoAtual?.id || ''"
+    [id]="empreendimentoAtual.id || ''"
     (fecharModal)="fecharModal()"
     (salvar)="salvar($event)">
   </app-modal-empreendimento>
@@ -154,7 +134,8 @@
   <app-modal-imagem
     [mostrarModal]="mostrarModalImagem"
     (fecharModal)="fecharModalImagem()"
-    [id]="empreendimentoAtual?.id || ''"
+    [empreendimento]="empreendimentoAtual"
+    [id]="empreendimentoAtual.id || ''"
     (salvar)="salvarImagem()"
   >
   </app-modal-imagem>
@@ -162,7 +143,7 @@
   <app-modal-apartamentos
     [mostrarModal]="mostrarModalApartamentos"
     (fecharModal)="fecharModalApartamentos()"
-    [id]="empreendimentoAtual?.id || ''" 
+    [empreendimento]="empreendimentoAtual"
     (salvar)="salvarApartamentos()"
     [tiposOptions]="tiposImoveis"
   >

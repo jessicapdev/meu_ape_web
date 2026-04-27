@@ -44,6 +44,12 @@ export class EmpreendimentoComponent {
   id: string = '';
   contatoAberto = false;
   loading = true;
+  timeline = [
+    { "ordem": 1, "titulo": "Breve Lançamento", "data": null, "completado": true },
+    { "ordem": 2, "titulo": "Lançamento", "data": "Maio 2021", "completado": true },
+    { "ordem": 3, "titulo": "Em Construção", "data": null, "completado": true },
+    { "ordem": 4, "titulo": "Pronto", "data": "Dezembro 2023", "completado": false }
+  ]
 
   constructor(
     private service: EmpreendimentoService,

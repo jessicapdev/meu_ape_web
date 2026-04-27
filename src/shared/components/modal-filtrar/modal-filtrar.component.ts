@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Input, NO_ERRORS_SCHEMA, Output } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiAppearance, TuiButton, TuiDialog, TuiScrollbar, TuiTextfield, TuiTitle } from '@taiga-ui/core';
 import { TuiCheckbox, TuiChip, TuiInputNumber } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
+import { EmpreendimentoFiltro } from '../../models/empreendimento-filtro.model';
 
 @Component({
   selector: 'app-modal-filtrar',
@@ -34,33 +35,32 @@ import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 })
 
 export class ModalFiltrarComponent {
+  @Input() filtroOptions!: EmpreendimentoFiltro;
+  @Output() updateFiltro = new EventEmitter<any>();
+
   open = false;
   protected inicial: number | null = null;
   protected final: number | null = null;
 
   protected filtrarForm = new FormGroup({
-    areaMinima: new FormControl(''),
-    areaMaxima: new FormControl('')
-  })
-
-  protected tiposForm = new FormGroup({
-    tipo: new FormControl('')
+    areaMinima: new FormControl(undefined),
+    areaMaxima: new FormControl(undefined)
   })
 
   protected banheirosOptions = [
-    { label: '1', checked: false },
-    { label: '2', checked: false },
-    { label: '3', checked: false },
-    { label: '4', checked: false },
-    { label: '5+', checked: false },
+    { label: 1, checked: false },
+    { label: 2, checked: false },
+    { label: 3, checked: false },
+    { label: 4, checked: false },
+    { label: 5, checked: false },
   ];
 
   protected vagasOptions = [
-    { label: '1', checked: false },
-    { label: '2', checked: false },
-    { label: '3', checked: false },
-    { label: '4', checked: false },
-    { label: '5+', checked: false },
+    { label: 1, checked: false },
+    { label: 2, checked: false },
+    { label: 3, checked: false },
+    { label: 4, checked: false },
+    { label: 5, checked: false },
   ];
 
   protected tiposOptions = [
@@ -106,9 +106,24 @@ export class ModalFiltrarComponent {
   constructor() {}
 
   limparFiltro(): void {
+    this.filtrarForm.reset();
+    this.vagasOptions.forEach(opt => opt.checked = false);
+    this.banheirosOptions.forEach(opt => opt.checked = false);
+    this.tiposOptions.forEach(opt => opt.checked = false);
+    this.diferenciaisOptions.forEach(opt => opt.checked = false);
   }
 
   aplicar(): void {
+    const filtroCompilado = {
+      areaMin: Number(this.filtrarForm.get('areaMinima')?.value) || undefined,
+      areaMax: Number(this.filtrarForm.get('areaMaxima')?.value) || undefined,
+      vagas: this.vagasOptions.filter(o => o.checked).map(o => o.label),
+      banheiros: this.banheirosOptions.filter(o => o.checked).map(o => o.label),
+      tiposImoveis: this.tiposOptions.filter(o => o.checked).map(o => o.label),
+      diferenciais: this.diferenciaisOptions.filter(o => o.checked).map(o => o.label)
+    };
+
+    this.updateFiltro.emit(filtroCompilado);
     this.open = false;
   }
 

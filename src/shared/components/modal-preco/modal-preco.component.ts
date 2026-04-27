@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, NO_ERRORS_SCHEMA, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Input, NO_ERRORS_SCHEMA, Output } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiButton, TuiTextfield } from '@taiga-ui/core';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
@@ -27,22 +27,18 @@ import { TuiInputNumber } from '@taiga-ui/kit';
 
 export class ModalPrecoComponent {
   @Output() updatePreco = new EventEmitter<any>();
-
-  protected listPreco: any;
-  protected precoForm = new FormGroup({
-    inicial: new FormControl(null),
-    final: new FormControl(null)
-  })
+  @Input() precoForm!: FormGroup;
 
   constructor() {}
 
   limparFiltro(): void {
-    this.precoForm.reset();
+    this.precoForm?.reset();
   }
 
   aplicar(): void {
-    this.listPreco = this.precoForm.value;
-    this.updatePreco.emit(this.listPreco);
+    if (this.precoForm) {
+      this.updatePreco.emit(this.precoForm.value);
+    }
   }
 
 }

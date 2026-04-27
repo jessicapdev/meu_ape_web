@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CdkTableModule } from '@angular/cdk/table';
 import { TuiButton, TuiDataList, TuiIcon, TuiLoader, TuiTextfield, TuiOption } from '@taiga-ui/core';
-import { TuiCheckbox, TuiSelect } from '@taiga-ui/kit';
+import { TuiCheckbox, TuiPagination, TuiSelect } from '@taiga-ui/kit';
 import { EmpreendimentoService } from '../../../../shared/service/empreendimento.service';
 import { EmpreendimentoPerfil } from '../../../pages/empreendimento/models/detalhe-empreendimento.model';
 import { PageResponse } from '../../../../shared/models/page-response.model';
@@ -28,6 +28,7 @@ import { ModalApartamentosComponent } from './modal-apartamentos/modal-apartamen
     TuiCheckbox,
     TuiIcon,
     TuiLoader,
+    TuiPagination,
     ModalEmpreendimentoComponent,
     ModalImagemComponent,
     ModalApartamentosComponent
@@ -40,25 +41,21 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
   mostrarModalImagem: boolean = false;
   mostrarModalApartamentos: boolean = false;
   modoEdicao: boolean = false;
-  empreendimentoAtual: EmpreendimentoPerfil | null = null;
+  empreendimentoAtual: EmpreendimentoPerfil = {} as EmpreendimentoPerfil
   pagina: number = 0;
   tamanho: number = 10;
   totalElementos: number = 0;
-
-  // Seleção múltipla
   selectedEmpreendimentos: Set<any> = new Set();
   allSelected: boolean = false;
 
-  // Colunas da tabela
   displayedColumns: string[] = ['select', 'titulo', 'status', 'cidade', 'action'];
 
-  // Opções carregadas da API
   tiposImoveis: string[] = [];
   statusOptions: any[] = [];
   construtoraOptions: any[] = [];
   diferenciais: string[] = [];
+  totalPaginas: number = 0;
   
-
   constructor(
     private empreendimentoService: EmpreendimentoService
   ) {}
@@ -112,6 +109,7 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
       next: (resposta: PageResponse<EmpreendimentoPerfil>) => {
         this.empreendimentos = resposta.content;
         this.totalElementos = resposta.totalElements;
+        this.totalPaginas = resposta.totalPages;
         this.selectedEmpreendimentos.clear();
         this.allSelected = false;
         this.carregando = false;
@@ -177,7 +175,7 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
 
   abrirModalNovo(): void {
     this.modoEdicao = false;
-    this.empreendimentoAtual = null;
+    this.empreendimentoAtual = {} as EmpreendimentoPerfil;
     this.mostrarModal = true;
   }
 
@@ -199,19 +197,18 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
 
   fecharModal(): void {
     this.mostrarModal = false;
-    this.empreendimentoAtual = null;
+    this.empreendimentoAtual = {} as EmpreendimentoPerfil;
   }
 
   fecharModalImagem(): void {
     this.mostrarModalImagem = false;
-    this.empreendimentoAtual = null;
+    this.empreendimentoAtual = {} as EmpreendimentoPerfil;
   }
 
   fecharModalApartamentos(): void {
     this.mostrarModalApartamentos = false;
-    this.empreendimentoAtual = null;
+    this.empreendimentoAtual = {} as EmpreendimentoPerfil;
   }
-
 
   salvar(formData: any): void {
     if (this.modoEdicao && this.empreendimentoAtual) {
@@ -262,21 +259,8 @@ export class GerenciamentoEmpreendimentoComponent implements OnInit {
     }
   }
 
-  proximaPagina(): void {
-    if ((this.pagina + 1) * this.tamanho < this.totalElementos) {
-      this.pagina++;
-      this.carregarEmpreendimentos();
-    }
-  }
-
-  paginaAnterior(): void {
-    if (this.pagina > 0) {
-      this.pagina--;
-      this.carregarEmpreendimentos();
-    }
-  }
-
-  get totalPaginas(): number {
-    return Math.ceil(this.totalElementos / this.tamanho);
+  goToPage(index: number): void {
+    this.pagina = index;
+    this.carregarEmpreendimentos();
   }
 }

@@ -60,15 +60,46 @@ export class HomeComponent implements OnInit{
   protected index = 0;
   protected pageSize = 8;
   protected empreendimentos: EmpreendimentoHome[] = [];
+  protected quartosOptions: any[] = [
+    { label: 'Studio', checked: false },
+    { label: '1', checked: false },
+    { label: '2', checked: false },
+    { label: '3', checked: false },
+    { label: '4', checked: false },
+    { label: '5', checked: false },
+  ];
+  protected statusOptions: any[] = [
+    { label: 'Pre lançamento', checked: false },
+    { label: 'Pronto', checked: false },
+    { label: 'Em construção', checked: false },
+    { label: 'Lançamento', checked: false }
+  ];
+  protected precoForm = new FormGroup({
+    inicial: new FormControl(null),
+    final: new FormControl(null)
+  });
+
   protected filtro: EmpreendimentoFiltro = {
+    search: '',
+    quartos: [],
+    precoMin: undefined,
+    precoMax: undefined,
+    status: [],
+    areaMin: undefined,
+    areaMax: undefined,
+    banheiros: [],
+    vagas: [],
+    tiposImoveis: [],
+    diferenciais: [],
     page: 0,
     size: 8,
-    tiposImoveis: [],
-    diferenciais: []
+    sortBy: '',
+    sortDirection: 'ASC'
   };
+
   protected incialSearchForm = new FormGroup({
-    local: new FormControl('')
-  })
+    search: new FormControl('')
+  });
 
   constructor(
     private router: Router,
@@ -79,20 +110,16 @@ export class HomeComponent implements OnInit{
     this.getEmpreendimentos()
   }
 
-  onSubmit(){
-    console.log(this.incialSearchForm.value);
-  }
-
   getEmpreendimentos(): EmpreendimentoHome[] {
     this.loading = true;
-    this.service.getListaEmpreendimentos()
+    this.service.getListaEmpreendimentos(this.filtro)
       .pipe(
         finalize(() => this.loading = false)
       )
       .subscribe({
         next: (data: any) => {
           this.empreendimentos = data.content || [];
-          this.length = Math.ceil(data.length / this.pageSize) || 1;
+          this.length = this.empreendimentos.length > 0 ? data.totalPages : 1;
         },
         error: (error: any) => {
           console.log(error);
@@ -130,15 +157,35 @@ export class HomeComponent implements OnInit{
   }
 
   updateQuartos(event: any){
+    this.filtro.quartos = event;
+    this.getEmpreendimentos();
+    this.index = 0;
+    this.filtro.page = 0;
     this.openDropQuartos = false;
   }
   
   updateStatus(event: any){
+    this.filtro.status = event;
+    this.getEmpreendimentos();
+    this.index = 0;
+    this.filtro.page = 0;
     this.openDropStatus = false;
   }
 
   updatePreco(event: any){
+    this.filtro.precoMin = event.inicial;
+    this.filtro.precoMax = event.final;
+    this.index = 0;
+    this.filtro.page = 0;
+    this.getEmpreendimentos();
     this.openDropPreco = false;
+  }
+
+  updateFiltrar(event: any){
+    this.filtro = { ...this.filtro, ...event };
+    this.index = 0;
+    this.filtro.page = 0;
+    this.getEmpreendimentos();
   }
 
   openFiltrar(){
@@ -152,6 +199,14 @@ export class HomeComponent implements OnInit{
   goToPage(index: number): void {
     this.index = index;
     this.filtro.page = index;
+    this.getEmpreendimentos();
+  }
+
+  buscarEmpreendimento(): void {
+    const search = this.incialSearchForm.get('search')?.value || '';
+    this.filtro.search = search;
+    this.index = 0;
+    this.filtro.page = 0;
     this.getEmpreendimentos();
   }
 

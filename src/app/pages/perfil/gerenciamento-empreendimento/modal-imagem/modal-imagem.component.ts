@@ -2,8 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChange
 import { CommonModule } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 import { EmpreendimentoService } from '../../../../../shared/service/empreendimento.service';
-import { ImagePickerComponent } from '../../../../shared/components/image-picker/image-picker.component';
+import { ImagePickerComponent } from '../../../../../shared/components/image-picker/image-picker.component';
 import { TuiButton } from '@taiga-ui/core';
+import { EmpreendimentoPerfil } from '../../../empreendimento/models/detalhe-empreendimento.model';
 
 @Component({
   selector: 'app-modal-imagem',
@@ -21,6 +22,7 @@ export class ModalImagemComponent implements OnInit, OnChanges {
   @Input() mostrarModal: boolean = false;
   @Input() formulario!: FormGroup;
   @Input() id!: string;
+  @Input() empreendimento: EmpreendimentoPerfil = {} as EmpreendimentoPerfil;
 
   @Output() fecharModal = new EventEmitter<void>();
   @Output() salvar = new EventEmitter<any>();
@@ -181,5 +183,4 @@ export class ModalImagemComponent implements OnInit, OnChanges {
       }
     });
   }
-
 }

@@ -1,6 +1,6 @@
 <!-- profile.component.html - versão corrigida -->
 <div class="profile-container">
-    <app-sidebar (menuItemClicked)="mudarAba($event)"></app-sidebar>
+    <app-sidebar [isAdmin]="isAdmin" (menuItemClicked)="mudarAba($event)"></app-sidebar>
     
   <div class="profile-form">
     <!-- Seção de Dados Pessoais -->

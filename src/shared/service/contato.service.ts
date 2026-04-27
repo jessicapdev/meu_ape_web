@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Contato } from '../models/contato.model';
+import { PageResponse } from '../models/page-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +15,12 @@ export class ContatoService {
     return this.http.post(`${environment.apiUrl}/contatos`, contato);
   }
 
-  getContatos(): Observable<Contato[]> {
-    return this.http.get<Contato[]>(`${environment.apiUrl}/contatos`);
+  getContatos(pagina: number = 0, tamanho: number = 10): Observable<PageResponse<Contato>> {
+    return this.http.get<PageResponse<Contato>>(`${environment.apiUrl}/contatos/listar?page=${pagina}&size=${tamanho}`);
   }
 
-  updateContato(id: string, contato: Partial<Contato>): Observable<any> {
-    return this.http.put(`${environment.apiUrl}/contatos/status/${id}`, contato);
+  updateContato(id: string, status: boolean): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/contatos/status/${id}`, status);
   }
 
   updateStatusContato(id: string, lido: Boolean): Observable<any> {

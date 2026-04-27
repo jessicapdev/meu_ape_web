@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, NO_ERRORS_SCHEMA, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Input, NO_ERRORS_SCHEMA, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TuiButton } from '@taiga-ui/core';
@@ -23,16 +23,7 @@ import { TuiChip } from '@taiga-ui/kit';
 })
 export class ModalQuartosComponent {
   @Output() updateQuartos = new EventEmitter<any>();
-
-  protected listQuartos: any;
-  protected quartosOptions = [
-    { label: 'Studio', checked: false },
-    { label: '1', checked: false },
-    { label: '2', checked: false },
-    { label: '3', checked: false },
-    { label: '4', checked: false },
-    { label: '5+', checked: false },
-  ];
+  @Input() quartosOptions: any[] = [];
 
   constructor() {}
 
@@ -42,13 +33,13 @@ export class ModalQuartosComponent {
     })
   }
 
-  get selectedQuartos(): any {
-    return this.quartosOptions.filter(quarto => quarto.checked);
+  get selectedQuartos(): number[] {
+    return this.quartosOptions
+      .filter(quarto => quarto.checked)
+      .map(quarto => quarto.label === 'Studio' ? 0 : Number(quarto.label));
   }
 
   aplicar(): void {
-    this.listQuartos = this.selectedQuartos;
-    this.updateQuartos.emit(this.listQuartos);
+    this.updateQuartos.emit(this.selectedQuartos);
   }
-
 }

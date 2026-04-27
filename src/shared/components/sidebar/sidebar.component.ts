@@ -22,8 +22,9 @@ import {
 })
 export class SidebarComponent {
   @Output() menuItemClicked = new EventEmitter<void>();
+  @Input() isAdmin: boolean = false;
 
-  menuItems = [
+  private readonly allItems = [
      {
       label: 'Perfil',
       icon: '@tui.user',
@@ -37,6 +38,12 @@ export class SidebarComponent {
       icon: '@tui.building',
     }
   ];
+
+  get menuItems() {
+    return this.allItems.filter(item => 
+      this.isAdmin || !['Mensagens Recebidas', 'Empreendimentos'].includes(item.label)
+    );
+  }
 
   onMenuItemClick(item: any): void {
     this.menuItemClicked.emit(item);

@@ -11,11 +11,11 @@ export class UsuarioService {
   constructor(private http: HttpClient) { }
 
   saveUsuario(body: any){
-    return this.http.post<Usuario>(`${environment.apiUrl}/usuarios`, body);
+    return this.http.post<Usuario>(`${environment.apiUrl}/usuarios/criar-conta`, body);
   }
 
   updateUsuario(body: any){
-    return this.http.put<Usuario>(`${environment.apiUrl}/usuarios/criar-conta`, body);
+    return this.http.put<Usuario>(`${environment.apiUrl}/usuarios`, body);
   }
 
   getUsuario(){

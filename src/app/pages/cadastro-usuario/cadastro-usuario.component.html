@@ -5,7 +5,7 @@
       <h1 class="titulo">Crie sua conta</h1>
     </div>
 
-    <form [formGroup]="cadastroForm" (ngSubmit)="onSubmit()" class="cadastro-form">
+    <form [formGroup]="cadastroForm" class="cadastro-form">
       <div class="form-section">
         <h3 class="section-title">Dados de acesso</h3>
         
@@ -130,6 +130,7 @@
           size="m"
           appearance="primary"
           [disabled]="!cadastroForm.valid || !senhasCoincidem()"
+          (click)="salvarUsuario()"
         >
           <tui-icon icon="@tui.user-plus" />
           Criar Conta

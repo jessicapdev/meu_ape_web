@@ -36,14 +36,12 @@ export class AuthenticationService {
       }
 
       const parsed = JSON.parse(raw);
-      
       if (!parsed || typeof parsed !== 'object') {
         return null;
       }
 
       return parsed as Usuario;
     } catch (error) {
-      console.warn('Erro ao parsear usuário do localStorage:', error);
       this.clearStorage();
       return null;
     }
@@ -74,7 +72,6 @@ export class AuthenticationService {
 
   ensureValidToken(): Observable<string | null> {
     const token = this.accessToken;
-    console.log('[Auth] ensureValidToken - token obtido:', token ? 'presente' : 'null');
     
     if (!token) {
       console.warn('[Auth] Token não encontrado');
@@ -177,4 +174,16 @@ export class AuthenticationService {
   setUserName(username: string): void {
     localStorage.setItem('username', username);
   }
+
+  getUserRoles(): string[] {
+    const token = this.accessToken;
+    if (!token) return [];
+    const decoded = this.jwtHelper.decodeToken(token);
+    return decoded?.roles || decoded?.authorities || [];
+  }
+
+  hasRole(role: string): boolean {
+    return this.getUserRoles().includes(role);
+  }
+
 }

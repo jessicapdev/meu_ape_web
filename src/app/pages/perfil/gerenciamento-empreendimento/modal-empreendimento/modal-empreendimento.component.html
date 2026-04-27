@@ -175,6 +175,29 @@
               </div>
             </div>
           </div>
+
+          <!-- <div class="form-group" style="margin-bottom: 16px;">
+            <div formArrayName="steps" class="timeline-form-list">
+              <div *ngFor="let step of steps.controls; let i = index" [formGroupName]="i" class="timeline-row">
+                <div class="step-identity">
+                  <span class="ordem-badge">{{ i + 1 }}</span>
+                  <span class="step-title-text">{{ titulosFixos[i] }}</span>
+                </div>
+                
+                <div class="step-fields">
+                  <tui-textfield class="field-date">
+                    <label tuiLabel>Mês/Ano (Ex: Mai 2021)</label>
+                    <input tuiTextfield formControlName="data" placeholder="Opcional" />
+                  </tui-textfield>
+
+                  <label class="checkbox-label">
+                    <input tuiCheckbox type="checkbox" formControlName="completado" />
+                    Concluído
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div> -->
         </form>
         
         <!-- Características -->

@@ -1,6 +1,7 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { AuthenticationService } from './authentication.service';
 
 @Injectable({
@@ -11,18 +12,12 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
-            if (err.status === 401) {
-                // auto logout if 401 response returned from api
-                this.authenticationService.logout();
-                location.reload();
+            if (err.status !== 401) {
+                const error = err.error?.message || err.statusText || 'Erro inesperado';
+                return throwError(() => error);
             }
-
-            const error = err.error.message || err.statusText;
-            return throwError(error);
+            
+            return throwError(() => err);
         }))
     }
 }
-function catchError(arg0: (err: any) => any): import("rxjs").OperatorFunction<HttpEvent<any>, HttpEvent<any>> {
-  throw new Error('Function not implemented.');
-}
-

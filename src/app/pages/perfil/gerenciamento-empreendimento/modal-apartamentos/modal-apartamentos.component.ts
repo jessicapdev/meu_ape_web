@@ -3,6 +3,9 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiButton, TuiDataList, TuiDropdown, TuiTextfield } from '@taiga-ui/core';
 import { TuiChevron, TuiDataListWrapper, TuiMultiSelect, TuiSelect } from '@taiga-ui/kit';
+import { Apartamento } from '../../../empreendimento/models/apartamento.model';
+import { EmpreendimentoService } from '../../../../../shared/service/empreendimento.service';
+import { EmpreendimentoPerfil } from '../../../empreendimento/models/detalhe-empreendimento.model';
 
 @Component({
   selector: 'app-modal-apartamentos',
@@ -27,72 +30,107 @@ import { TuiChevron, TuiDataListWrapper, TuiMultiSelect, TuiSelect } from '@taig
 })
 export class ModalApartamentosComponent implements OnInit {
   @Input() mostrarModal: boolean = false;
-  @Input() id!: string;
+  @Input() empreendimento: EmpreendimentoPerfil = {} as EmpreendimentoPerfil;
   @Input() tiposOptions: string[] = [];
+  @Input() apartamentos: Apartamento[] = [];
 
   @Output() fecharModal = new EventEmitter<void>();
   @Output() salvar = new EventEmitter<any>();
+  @Output() deletar = new EventEmitter<{ idEmpreendimento: string; idApartamento: string }>();
 
-  protected formulario!: FormGroup;
+  formulario!: FormGroup;
+  mostrarFormAdicionar = false;
 
-  constructor(private fb: FormBuilder) { 
+  constructor(
+    private fb: FormBuilder,
+    private empreendimentoService: EmpreendimentoService
+  ) {
     this.inicializarFormulario();
   }
 
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['mostrarModal'] && this.mostrarModal && this.empreendimento.id) {
+      this.getApartamentos();
+    }
   }
 
-  inicializarFormulario(): void {
-    this.formulario = this.fb.group({
-      id: [''],
-      tipoImovel: ['', Validators.required],
-      area: ['', Validators.required],
-      numeroBanheiro: ['', Validators.required],
-      numeroQuarto: ['', Validators.required],
-      numeroSuite: ['', Validators.required],
-      numeroVaga: ['', Validators.required],
-      precoInicial: ['', Validators.required],
-      planta: ['']
+  private getApartamentos(): void { 
+    this.empreendimentoService.getApartamentosByEmpreendimento(this.empreendimento.id || '').subscribe({
+      next: (apartamentos: Apartamento[]) => {
+        this.apartamentos = apartamentos;
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
     });
   }
 
-  onFecharModal(){
+  ngOnInit(): void {}
+
+  private inicializarFormulario(): void {
+    this.formulario = this.fb.group({
+      id: [''],
+      tipo: ['', Validators.required],
+      area: [null, [Validators.required, Validators.min(0)]],
+      quartos: [null, [Validators.required, Validators.min(0)]],
+      suites: [null, [Validators.required, Validators.min(0)]],
+      banheiros: [null, [Validators.required, Validators.min(0)]],
+      vagas: [null, [Validators.required, Validators.min(0)]],
+      preco: [null]
+    });
+  }
+
+  toggleFormAdicionar(): void {
+    this.mostrarFormAdicionar = !this.mostrarFormAdicionar;
+    if (this.mostrarFormAdicionar) {
+      this.formulario.reset();
+      this.formulario.markAsPristine();
+      this.formulario.markAsUntouched();
+    }
+  }
+
+  onSalvar(): void {
+    if (this.formulario.valid) {
+      this.empreendimentoService.salvarApartamentos(this.empreendimento.id || '', this.formulario.value).subscribe({
+        next: () => {
+          this.getApartamentos();
+          this.formulario.reset();
+          this.toggleFormAdicionar();
+        },
+        error: (error: any) => {
+          console.log(error);
+        }
+      });
+    } else {
+      this.formulario.markAllAsTouched(); 
+      this.toggleFormAdicionar();
+    }
+  }
+
+  onDeletar(idApartamento: string): void {
+    this.empreendimentoService.deletarApartamento(this.empreendimento.id || '', idApartamento).subscribe({
+      next: () => {
+        this.getApartamentos();
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
+  }
+
+  onFecharModal(): void {
     this.fecharModal.emit();
   }
 
-  onSalvar(){
-    this.salvar.emit();
-  }
-
   shouldShowError(fieldName: string): boolean {
-    if (!this.formulario) return false;
-    const field = this.formulario.get(fieldName);
-    if (!field) return false;
-    
-    if (Array.isArray(field.value)) {
-      return !!(field.dirty || field.touched) && field.value.length === 0;
-    }
-    
-    return !!(field.dirty || field.touched) && !field.valid;
+    const control = this.formulario.get(fieldName);
+    return !!(control?.touched && control?.invalid);
   }
 
   getErrorMessage(fieldName: string): string {
-    const field = this.formulario.get(fieldName);
-    if (!field) return '';
-    
-    if (field.errors?.['required']) {
-      return 'Campo obrigatório';
-    }
-    
-    if (field.errors?.['minlength']) {
-      const requiredLength = field.errors['minlength'].requiredLength;
-      return `Mínimo de ${requiredLength} caracteres`;
-    }
-    
-    if (field.errors?.['pattern']) {
-      return 'Formato inválido';
-    }
-    
-    return 'Campo inválido';
+    const control = this.formulario.get(fieldName);
+    if (control?.errors?.['required']) return 'Campo obrigatório';
+    if (control?.errors?.['min']) return 'Valor deve ser maior ou igual a 0';
+    return 'Valor inválido';
   }
 }

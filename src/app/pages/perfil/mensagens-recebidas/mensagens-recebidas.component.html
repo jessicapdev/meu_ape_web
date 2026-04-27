@@ -1,7 +1,7 @@
 <div class="mensagens-recebidas">
   <div class="page-header">
     <div class="page-title">
-      <span class="badge">{{ contatos.length }} mensagem{{ contatos.length === 1 ? '' : 'ens' }}</span>
+      <span class="badge">{{ totalElementos }} {{ contatos.length === 1 ? 'mensagem' : 'mensagens' }}</span>
     </div>
 
     <div class="page-actions">
@@ -73,6 +73,14 @@
     <div class="empty-state" *ngIf="!contatos.length">
       Nenhuma mensagem recebida.
     </div>
+
+    <div class="pagination-container" *ngIf="contatos.length > 0">
+      <tui-pagination
+        [index]="paginaAtual"
+        [length]="totalPaginas"
+        (indexChange)="onPageChange($event)"
+      ></tui-pagination>
+     </div>
   </div>
 
   <ng-template #loadingTemplate>
