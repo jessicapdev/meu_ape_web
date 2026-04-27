@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { TuiButton, TuiDataList, TuiTextfield, TuiScrollbar } from '@taiga-ui/core';
 import { TuiSelect, TuiMultiSelect, TuiCheckbox, TuiTextarea, TuiDataListWrapper, TuiChip } from '@taiga-ui/kit';
 import { FormsModule } from '@angular/forms';
@@ -80,6 +80,7 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
     { label: '9', checked: false },
     { label: '10', checked: false },
   ];
+  protected titulosFixos = ['Breve Lançamento', 'Lançamento', 'Em Construção', 'Pronto']
 
   constructor(
     private fb: FormBuilder, 
@@ -111,6 +112,10 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
     }
   }
 
+  get steps(): FormArray {
+    return this.formulario.get('steps') as FormArray;
+  }
+
   getDadosPorEmpreendimento() { 
     this.empreendimentoService.getDadosByEmpreendimento(this.id).subscribe({
       next: (data: any) => {
@@ -124,7 +129,6 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
   }
 
   private updateCheckboxOptions(data: any) {
-    // Atualizar quartos selecionados
     if (data.quartos && Array.isArray(data.quartos)) {
       this.quartosOptions = this.quartosOptions.map(opt => ({
         ...opt,
@@ -132,7 +136,6 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
       }));
     }
 
-    // Atualizar banheiros selecionados
     if (data.banheiros && Array.isArray(data.banheiros)) {
       this.banheirosOptions = this.banheirosOptions.map(opt => ({
         ...opt,
@@ -140,7 +143,6 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
       }));
     }
 
-    // Atualizar vagas selecionadas
     if (data.vagas && Array.isArray(data.vagas)) {
       this.vagasOptions = this.vagasOptions.map(opt => ({
         ...opt,
@@ -148,12 +150,10 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
       }));
     }
 
-    // Atualizar tipos de imóveis
     if (data.tiposImoveis) {
       this.updateTiposOptions();
     }
 
-    // Atualizar diferenciais
     if (data.diferenciais) {
       this.updateDiferenciaisOptions();
     }
@@ -180,6 +180,14 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
       titulo: ['', Validators.required],
       tiposImoveis: [[], Validators.required],
       status: ['', Validators.required],
+      steps: this.fb.array(this.titulosFixos.map((titulo, index) => 
+        this.fb.group({
+          ordem: [index + 1],
+          titulo: [titulo],
+          data: [null],
+          completado: [false]
+        })
+      )),
       construtora : ['', Validators.required],
       endereco: ['', Validators.required],
       cidade: ['', Validators.required],
@@ -420,6 +428,7 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
       precoMax: this.formulario.get('precoMax')?.value || null,
       descricao: this.formulario.get('descricao')?.value || null,
       diferenciais: this.formulario.get('diferenciais')?.value || [],
+      steps: this.formulario.get('steps')?.value || [],
       apartamentos: [],
     };
 
