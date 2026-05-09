@@ -12,6 +12,7 @@ import { TuiItem } from '@taiga-ui/cdk/directives/item';
 import { Empreendimento } from '../../../shared/models/empreendimento.model';
 import { EmpreendimentoService } from '../../../shared/service/empreendimento.service';
 import { finalize } from 'rxjs';
+import { Timeline } from './models/timeline.model';
 
 @Component({
   selector: 'app-empreendimento',
@@ -32,24 +33,25 @@ import { finalize } from 'rxjs';
     TuiAccordion,
     TuiCarousel,
     TuiCarouselButtons,
-    TuiLoader,
-    RouterLink,
+    TuiLoader
   ],
   templateUrl: './empreendimento.component.html',
   styleUrl: './empreendimento.component.scss'
 })
 export class EmpreendimentoComponent {
+  private readonly API_URL = 'http://localhost:8080/api/empreendimentos';
+
   endereco: string = '';
   empreendimento!: DetalheEmpreendimento;
   id: string = '';
   contatoAberto = false;
   loading = true;
-  timeline = [
-    { "ordem": 1, "titulo": "Breve Lançamento", "data": null, "completado": true },
-    { "ordem": 2, "titulo": "Lançamento", "data": "Maio 2021", "completado": true },
-    { "ordem": 3, "titulo": "Em Construção", "data": null, "completado": true },
-    { "ordem": 4, "titulo": "Pronto", "data": "Dezembro 2023", "completado": false }
-  ]
+  timeline: Timeline[] = [
+      { "ordem": 1, "titulo": "Breve Lançamento", "data": null, "completado": false},
+      { "ordem": 2, "titulo": "Lançamento", "data": null, "completado": false },
+      { "ordem": 3, "titulo": "Em Construção", "data": null, "completado": false },
+      { "ordem": 4, "titulo": "Pronto", "data": null, "completado": false }
+  ];
 
   constructor(
     private service: EmpreendimentoService,
@@ -66,6 +68,10 @@ export class EmpreendimentoComponent {
     });
   }
 
+  public montarUrl(id: string): string {
+    return `${this.API_URL}/${id}/imagens`;
+  }
+
   getEmpreendimento(id: string) {
     this.service.getDetalhe(id)
     .pipe(
@@ -75,6 +81,7 @@ export class EmpreendimentoComponent {
       next: (data) => {
         this.empreendimento = data;
         this.endereco = `${this.empreendimento.endereco}, ${this.empreendimento.bairro}, ${this.empreendimento.cidade}`;
+        this.timeline = this.empreendimento.timeline || this.timeline;
       },
       error: (error) => {
         console.log(error);

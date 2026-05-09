@@ -63,7 +63,7 @@ export class EmpreendimentoService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  atualizarImagem(id: string, imagens: Imagem): Observable<Imagem> {
+  atualizarImagem(id: string, imagens: FormData): Observable<Imagem> {
     return this.http.put<Imagem>(`${this.apiUrl}/${id}/imagens`, imagens);
   }
 

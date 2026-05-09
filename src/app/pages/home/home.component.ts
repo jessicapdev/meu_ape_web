@@ -48,6 +48,9 @@ import { EmpreendimentoHome } from '../empreendimento/models/detalhe-empreendime
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class HomeComponent implements OnInit{
+
+  private readonly API_URL = 'http://localhost:8080/api/empreendimentos';
+
   @ViewChild('filtrarDialog', { static: true })
   filtrarDialog!: ModalFiltrarComponent;
 
@@ -108,6 +111,10 @@ export class HomeComponent implements OnInit{
 
   ngOnInit(): void {
     this.getEmpreendimentos()
+  }
+
+  public montarUrl(id: string): string {
+    return `${this.API_URL}/${id}/imagens`;
   }
 
   getEmpreendimentos(): EmpreendimentoHome[] {

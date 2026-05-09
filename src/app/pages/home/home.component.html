@@ -71,7 +71,7 @@
           class="card" (click)="navegarParaDetalhe(empreendimento)">
             <div class="card-image">
               <img 
-                [src]="empreendimento?.imagens?.banner" 
+                [src]="montarUrl(empreendimento.imagens.banner)" 
                 [alt]="empreendimento.titulo"
                 class="imagem-empreendimento"
               >

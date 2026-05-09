@@ -1,33 +1,14 @@
 # Documentação de Validação - Modal Empreendimento
 
-## Estrutura do JSON gerado
+## Estrutura do Envio (FormData)
 
-Quando o usuário preenche o formulário e clica em "Criar/Atualizar", o seguinte JSON é gerado:
+Ao salvar as imagens, o sistema utiliza `FormData` para otimizar o envio, convertendo todas as imagens para o formato **WebP** no cliente para reduzir o payload.
 
-```json
-{
-    "titulo": "Nome do Empreendimento",
-    "tiposImoveis": "Tipo selecionado",
-    "status": { "label": "Ativo", "value": "ativo" },
-    "cidade": "São Paulo",
-    "bairro": "Carrão",
-    "areaMin": 40,
-    "areaMax": 60,
-    "banheiros": ["1", "2", "3"],
-    "quartos": ["Studio", "1", "2"],
-    "vagas": ["1", "2"],
-    "precoMin": 400000,
-    "precoMax": 600000,
-    "descricao": "Descrição opcional",
-    "diferenciais": ["Piscina", "Academia"],
-    "apartamentos": [],
-    "imagens": {
-        "banner": "data:image/png;base64,...",
-        "map": "data:image/png;base64,...",
-        "plantas": ["data:image/png;base64,..."],
-        "galeria": ["data:image/png;base64,..."]
-    }
-}
+Campos de arquivo enviados no `FormData`:
+- `banner`: Arquivo WebP
+- `map`: Arquivo WebP
+- `plantas`: Múltiplos arquivos WebP
+- `galeria`: Múltiplos arquivos WebP
 ```
 
 ## Campos Obrigatórios
@@ -47,6 +28,13 @@ Os seguintes campos são **OBRIGATÓRIOS** e devem ser preenchidos:
 - ✅ **precoMax** - Preço máximo
 - ✅ **imagens.banner** - Imagem de banner
 - ✅ **imagens.map** - Imagem de mapa
+
+### 🛡️ Segurança e Restrições de Arquivos
+- **Tamanho Máximo:** Cada imagem não deve exceder 5MB.
+- **Formatos Aceitos:** `.jpg`, `.jpeg`, `.png` (Validar via MIME type: `image/jpeg`, `image/png`).
+- **Sanitização:** Todos os campos de texto (título, descrição) devem ser limpos para evitar ataques de XSS antes da persistência.
+- **Otimização:** Recomenda-se o redimensionamento das imagens no frontend (max 1920px) antes da conversão para Base64 para reduzir o consumo de banda.
+- **Ambiente:** `console.log(json)` deve ser removido ou desabilitado em ambiente de produção.
 
 ## Campos Opcionais
 
@@ -80,7 +68,7 @@ Checkbox sem seleção      → "Campo obrigatório"
   1. Todos os campos são marcados como `touched` (para exibir erros)
   2. Validação é executada
   3. Se há erros, mensagem é exibida no console
-  4. Se está tudo ok, o JSON é gerado e pode ser enviado ao servidor
+  4. Se está tudo ok, o JSON é gerado e enviado via serviço HTTP (evitar logs do objeto completo em produção).
 
 ## Como Usar No Componente Pai
 

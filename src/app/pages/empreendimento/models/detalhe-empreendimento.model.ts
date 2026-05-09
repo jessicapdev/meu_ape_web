@@ -1,12 +1,13 @@
 import { Apartamento } from "./apartamento.model";
 import { Area } from "./area.model";
 import { Diferencial } from "./diferencial.model";
+import { Timeline } from "./timeline.model";
 
 export interface Imagem {
   banner: string;
   map: string;
-  plantas?: string[];
-  galeria?: string[];
+  plantas: string[];
+  galeria: string[];
 }
 
 export interface DetalheEmpreendimento {
@@ -26,6 +27,7 @@ export interface DetalheEmpreendimento {
   precoMin: number;
   precoMax: number;
   imagens: Imagem;
+  timeline: Timeline[];
   apartamentos: Apartamento[];
   diferenciais: String[];
   tiposImoveis: string[];
@@ -54,4 +56,5 @@ export interface EmpreendimentoPerfil {
   status: string;
   construtora: string;
   cidade: string;
+  imagens: Imagem;
 }

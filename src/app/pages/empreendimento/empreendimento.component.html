@@ -8,9 +8,7 @@
     >
         <div class="empreendimento-page" *ngIf="empreendimento">
         <div class="imagem-container">
-            <a routerLink="/fotos">
-                <img [src]="empreendimento.imagens.banner" [alt]="empreendimento.titulo">
-            </a>
+            <img [src]="montarUrl(empreendimento.imagens.banner)" [alt]="empreendimento.titulo">
         </div>
 
         <!-- Informações principais -->
@@ -121,7 +119,7 @@
                     class="carousel">
                         <ng-container *ngFor="let imagem of empreendimento.imagens.galeria">
                             <div *tuiItem class="item">
-                                <img class="image-galeria" [src]="imagem" [alt]="empreendimento.titulo">
+                                <img class="image-galeria" [src]="montarUrl(imagem)" [alt]="empreendimento.titulo">
                             </div>
                         </ng-container>
                     </tui-carousel>
@@ -219,7 +217,7 @@
                         class="carousel">
                             <ng-container *ngFor="let planta of empreendimento.imagens.plantas">
                                 <div *tuiItem class="item-plantas">
-                                    <img class="image-plantas" [src]="planta">
+                                    <img class="image-plantas" [src]="montarUrl(planta)">
                                 </div>
                             </ng-container>
                         </tui-carousel>
@@ -263,7 +261,7 @@
                     >
                         <!-- Imagem com fallback do Taiga UI -->
                         <div class="image-wrapper">
-                            <img class="image-galeria" [src]="empreendimento.imagens.map" [alt]="empreendimento.titulo">
+                            <img class="image-galeria" [src]="montarUrl(empreendimento.imagens.map)" [alt]="empreendimento.titulo">
                             <div class="overlay">
                                 <span>Ver no Google Maps</span>
                             </div>

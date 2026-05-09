@@ -112,8 +112,8 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
     }
   }
 
-  get steps(): FormArray {
-    return this.formulario.get('steps') as FormArray;
+  get timeline(): FormArray {
+    return this.formulario.get('timeline') as FormArray;
   }
 
   getDadosPorEmpreendimento() { 
@@ -180,7 +180,7 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
       titulo: ['', Validators.required],
       tiposImoveis: [[], Validators.required],
       status: ['', Validators.required],
-      steps: this.fb.array(this.titulosFixos.map((titulo, index) => 
+      timeline: this.fb.array(this.titulosFixos.map((titulo, index) => 
         this.fb.group({
           ordem: [index + 1],
           titulo: [titulo],
@@ -428,10 +428,11 @@ export class ModalEmpreendimentoComponent implements OnInit, OnChanges {
       precoMax: this.formulario.get('precoMax')?.value || null,
       descricao: this.formulario.get('descricao')?.value || null,
       diferenciais: this.formulario.get('diferenciais')?.value || [],
-      steps: this.formulario.get('steps')?.value || [],
+      timeline: this.formulario.get('timeline')?.value || [],
       apartamentos: [],
     };
 
     this.salvar.emit(formData);
+    this.inicializarFormulario();
   }
 }

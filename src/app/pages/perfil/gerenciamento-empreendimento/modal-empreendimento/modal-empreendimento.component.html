@@ -178,27 +178,49 @@
 
           <!-- Seção de Timeline -->
           <div class="form-section">
-            <h4 class="section-title">Timeline do Empreendimento</h4>
-            <div class="form-group" style="margin-bottom: 16px;">
-              <div formArrayName="steps" class="timeline-form-list">
-                <div *ngFor="let step of steps.controls; let i = index" [formGroupName]="i" class="timeline-row">
-                  <div class="step-identity">
-                    <span class="ordem-badge">{{ i + 1 }}</span>
-                    <span class="step-title-text">{{ titulosFixos[i] }}</span>
-                  </div>
-                  
-                  <div class="step-fields">
-                    <tui-textfield class="field-date">
-                      <label tuiLabel>Mês/Ano (Ex: Mai 2021)</label>
-                      <input tuiTextfield formControlName="data" placeholder="Opcional" />
-                    </tui-textfield>
+            <h4 class="tui-text_h4 section-title">Timeline do Empreendimento</h4>
 
-                    <label class="checkbox-label">
-                      <input tuiCheckbox type="checkbox" formControlName="completado" size="m" />
-                      Concluído
-                    </label>
+            <div class="timeline-container">
+              <div formArrayName="timeline" class="timeline-grid">
+                @for (step of timeline.controls; track $index; let i = $index) {
+                  <div [formGroupName]="i" class="timeline-card">
+                    
+                    <!-- Cabeçalho do Card -->
+                    <div class="card-header">
+                      <span class="step-title">{{ titulosFixos[i] }}</span>
+                    </div>
+
+                    <!-- Campo de Data Centralizado -->
+                    <div class="card-body">
+                      <tui-textfield 
+                        appearance="textfield" 
+                        class="date-field"
+                      >
+                        <input
+                          tuiTextfield
+                          formControlName="data"
+                          placeholder="Mês Ano"
+                          class="date-input-text"
+                        />
+                      </tui-textfield>
+                    </div>
+
+                    <!-- Checkbox de Conclusão -->
+                    <div class="card-footer">
+                      <label tuiLabel>
+                        <input
+                          tuiCheckbox
+                          type="checkbox"
+                          formControlName="completado"
+                          size="m"
+                          class="tui-space_right-2"
+                        />
+                        <span class="status-text">Concluído</span>
+                      </label>
+                    </div>
+                    
                   </div>
-                </div>
+                }
               </div>
             </div>
           </div>

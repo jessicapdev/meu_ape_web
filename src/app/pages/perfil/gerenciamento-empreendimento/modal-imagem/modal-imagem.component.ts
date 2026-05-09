@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 import { EmpreendimentoService } from '../../../../../shared/service/empreendimento.service';
@@ -11,14 +11,9 @@ import { EmpreendimentoPerfil } from '../../../empreendimento/models/detalhe-emp
   templateUrl: './modal-imagem.component.html',
   styleUrls: ['./modal-imagem.component.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    ImagePickerComponent,
-    TuiButton
-  ]
+  imports: [CommonModule, ImagePickerComponent, TuiButton]
 })
 export class ModalImagemComponent implements OnInit, OnChanges {
-
   @Input() mostrarModal: boolean = false;
   @Input() formulario!: FormGroup;
   @Input() id!: string;
@@ -27,160 +22,112 @@ export class ModalImagemComponent implements OnInit, OnChanges {
   @Output() fecharModal = new EventEmitter<void>();
   @Output() salvar = new EventEmitter<any>();
 
-  @ViewChild('bannerPicker') bannerPicker!: ImagePickerComponent;
-  @ViewChild('mapPicker') mapPicker!: ImagePickerComponent;
-  @ViewChild('plantasPicker') plantasPicker!: ImagePickerComponent;
-  @ViewChild('galeriaPicker') galeriaPicker!: ImagePickerComponent;
+  // Armazena as URLs de preview (Seja do Backend ou Base64 local)
+  public previews: Record<'banner' | 'map' | 'plantas' | 'galeria', string[]> = {
+    banner: [],
+    map: [],
+    plantas: [],
+    galeria: []
+  }
 
-  protected imagens = {
-    banner: '',
-    map: '',
+  public novosArquivos = {
+    banner: null as Blob | null,
+    map: null as Blob | null,
+    plantas: [] as Blob[],
+    galeria: [] as Blob[]
+  };
+
+  public idsExistentes = {
+    banner: null as string | null,
+    map: null as string | null,
     plantas: [] as string[],
     galeria: [] as string[]
   };
 
-  protected previewBanner: string[] = [];
-  protected previewMap: string[] = [];
-  protected previewPlantas: string[] = [];
-  protected previewGaleria: string[] = [];
+  private readonly API_URL = 'http://localhost:8080/api/empreendimentos';
 
-  constructor(private empreendimentoService: EmpreendimentoService) { }
+  constructor(private empreendimentoService: EmpreendimentoService) {}
 
-  ngOnInit() {
-    // Inicialização, carregamento das imagens será feito em ngOnChanges
-  }
+  ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['mostrarModal'] && this.mostrarModal && this.id) {
-      this.getImagensByEmpreendimento();
+      this.carregarDadosIniciais();
     }
   }
 
-  getImagensByEmpreendimento() {
-    this.empreendimentoService.getImagensByEmpreendimento(this.id).subscribe(imagens => {
-      const { banner, map, plantas, galeria } = imagens?.imagens || {};
-      this.imagens.banner = banner || '';
-      this.imagens.map = map || '';
-      this.imagens.plantas = plantas || [];
-      this.imagens.galeria = galeria || [];
-      this.previewBanner = banner ? [banner] : [];
-      this.previewMap = map ? [map] : [];
-      this.previewPlantas = [...(plantas || [])];
-      this.previewGaleria = [...(galeria || [])];
-    });   
+  private carregarDadosIniciais() {
+    this.previews.banner = [this.montarUrl(this.empreendimento.imagens.banner)];
+    this.previews.map = [this.montarUrl(this.empreendimento.imagens.map)];
+    this.previews.plantas = this.empreendimento.imagens.plantas.map(id => this.montarUrl(id));
+    this.previews.galeria = this.empreendimento.imagens.galeria.map(id => this.montarUrl(id));
   }
 
-  onBannerSelected(imagemBase64: string | string[]) {
-    if (typeof imagemBase64 === 'string') {
-      this.imagens.banner = imagemBase64;
-      this.previewBanner = imagemBase64 ? [imagemBase64] : [];
-    }
+  private montarUrl(id: string): string {
+    return `${this.API_URL}/${id}/imagens`;
   }
 
-  onMapSelected(imagemBase64: string | string[]) {
-    if (typeof imagemBase64 === 'string') {
-      this.imagens.map = imagemBase64;
-      this.previewMap = imagemBase64 ? [imagemBase64] : [];
-    }
-  }
-
-  onPlantasSelected(imagensBase64: string | string[]) {
-    if (Array.isArray(imagensBase64)) {
-      if (imagensBase64.length === 0) {
-        // Se receber array vazio, é uma limpeza do componente filho
-        this.imagens.plantas = [];
-        this.previewPlantas = [];
-      } else {
-        // Verificar se são novas imagens ou se é o resultado de uma remoção
-        // Se o tamanho mudou, pode ser remoção ou adição
-        const novasImagens = imagensBase64.filter(img => !this.imagens.plantas.includes(img));
-        if (novasImagens.length > 0) {
-          // Adicionando novas imagens
-          this.imagens.plantas = [...this.imagens.plantas, ...novasImagens];
-          this.previewPlantas = [...this.previewPlantas, ...novasImagens];
-        } else {
-          // Removendo imagens (quando clica em remover no preview)
-          this.imagens.plantas = imagensBase64;
-          this.previewPlantas = imagensBase64;
-        }
+  async handleSelection(tipo: 'banner' | 'map' | 'plantas' | 'galeria', data: string | string[]) {
+    if (Array.isArray(data)) {
+      this.previews[tipo] = data; 
+      const novos = await Promise.all(data.filter(d => d.startsWith('data:')).map(b64 => this.convertBase64ToWebP(b64)));
+      (this.novosArquivos[tipo] as Blob[]) = novos;
+    } else {
+      this.previews[tipo] = data ? [data] : [];
+      if (data.startsWith('data:')) {
+        const novo = await this.convertBase64ToWebP(data);
+        (this.novosArquivos[tipo] as Blob | null) = novo;
       }
     }
   }
 
-  onGaleriaSelected(imagensBase64: string | string[]) {
-    if (Array.isArray(imagensBase64)) {
-      if (imagensBase64.length === 0) {
-        // Se receber array vazio, é uma limpeza do componente filho
-        this.imagens.galeria = [];
-        this.previewGaleria = [];
-      } else {
-        // Verificar se são novas imagens ou se é o resultado de uma remoção
-        const novasImagens = imagensBase64.filter(img => !this.imagens.galeria.includes(img));
-        if (novasImagens.length > 0) {
-          // Adicionando novas imagens
-          this.imagens.galeria = [...this.imagens.galeria, ...novasImagens];
-          this.previewGaleria = [...this.previewGaleria, ...novasImagens];
-        } else {
-          // Removendo imagens (quando clica em remover no preview)
-          this.imagens.galeria = imagensBase64;
-          this.previewGaleria = imagensBase64;
-        }
+  public isFormValid(): boolean {
+    if (!this.previews.banner || !this.previews.map) return false;
+    return this.previews.banner.length > 0 && this.previews.map.length > 0;
+  }
+
+
+  public async convertBase64ToWebP(base64: string): Promise<Blob> {
+    if (base64.startsWith('http')) return null as any; 
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext('2d')?.drawImage(img, 0, 0);
+        canvas.toBlob(blob => blob ? resolve(blob) : reject(), 'image/webp', 0.85);
+      };
+      img.src = base64;
+    });
+  }
+
+  onSalvar() {
+    const formData = new FormData();
+    if (this.novosArquivos.banner) formData.append('banner', this.novosArquivos.banner, 'banner.webp');
+    if (this.novosArquivos.map) formData.append('mapa', this.novosArquivos.map, 'mapa.webp');
+    
+    this.novosArquivos.plantas.forEach((b, i) => b && formData.append('plantas', b, `p_${i}.webp`));
+    this.novosArquivos.galeria.forEach((b, i) => b && formData.append('galeria', b, `g_${i}.webp`));
+
+    formData.append('configuracao', JSON.stringify({
+      manterBanner: !this.novosArquivos.banner, 
+      manterMap: !this.novosArquivos.map,
+      idsMantidosPlantas: this.idsExistentes.plantas.filter(id => this.previews.plantas.includes(this.montarUrl(id))),
+      idsMantidosGaleria: this.idsExistentes.galeria.filter(id => this.previews.galeria.includes(this.montarUrl(id)))
+    }));
+
+    this.empreendimentoService.atualizarImagem(this.id, formData).subscribe({
+      next: () => {
+        this.salvar.emit();
+        this.fecharModal.emit();
       }
-    }
-  }
-
-  getImagensFormatadas() {
-    return {
-      banner: this.imagens.banner,
-      map: this.imagens.map,
-      plantas: this.imagens.plantas,
-      galeria: this.imagens.galeria
-    };
-  }
-
-  clearAllImages() {
-    this.imagens = {
-      banner: '',
-      map: '',
-      plantas: [],
-      galeria: []
-    };
-    this.previewBanner = [];
-    this.previewMap = [];
-    this.previewPlantas = [];
-    this.previewGaleria = [];
-
-    // Limpar os componentes filhos
-    if (this.bannerPicker) this.bannerPicker.clearImages();
-    if (this.mapPicker) this.mapPicker.clearImages();
-    if (this.plantasPicker) this.plantasPicker.clearImages();
-    if (this.galeriaPicker) this.galeriaPicker.clearImages();
-  }
-
-  isFormValid(): boolean {
-    const requiredImages = !!(this.imagens.banner && this.imagens.map);
-    return requiredImages;
+    });
   }
 
   onFecharModal(){
     this.fecharModal.emit();
   }
 
-  onSalvar(){
-    if (!this.isFormValid()) {
-      console.error('Formulário inválido. Preencha todos os campos obrigatórios.');
-      return;
-    }
-
-    const formData = this.getImagensFormatadas();
-    this.empreendimentoService.atualizarImagem(this.id, formData).subscribe({
-      next: () => {
-        this.clearAllImages();
-        this.salvar.emit(formData);
-      },
-      error: (erro: any) => {
-        console.error('Erro ao atualizar imagens:', erro);
-      }
-    });
-  }
 }

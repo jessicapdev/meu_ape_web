@@ -18,7 +18,7 @@
 }
 
 .modal-card {
-  width: min(760px, 100%);
+  width: min(840px, 100%);
   max-height: 90vh;
   background: #ffffff;
   border-radius: 20px;
@@ -215,5 +215,62 @@ tui-textfield.error,
 .inline-form {
   div {
     flex: 1;
+  }
+}
+
+.timeline-grid {
+  display: flex;
+  flex-direction: row; 
+  gap: 12px;           
+  width: 100%;        
+  box-sizing: border-box;
+}
+
+.timeline-card {
+  flex: 1; 
+  min-width: 0;  
+  border: 1px solid #d1d9e6;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+
+  .step-index {
+    font-size: 10px;
+    color: #666;
+    margin-bottom: 2px;
+  }
+
+  .step-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #000;
+  }
+}
+
+.card-body {
+  margin-bottom: 16px;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+
+  .status-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
   }
 }
