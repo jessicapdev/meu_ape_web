@@ -44,8 +44,6 @@ export class ModalImagemComponent implements OnInit, OnChanges {
     galeria: [] as string[]
   };
 
-  private readonly API_URL = 'http://localhost:8080/api/empreendimentos';
-
   constructor(private empreendimentoService: EmpreendimentoService) {}
 
   ngOnInit() {}

@@ -9,7 +9,6 @@ import { ModalFiltrarComponent } from '../../../shared/components/modal-filtrar/
 import { TuiBadge, TuiCarousel, TuiChevron, TuiPagination } from '@taiga-ui/kit';
 import { TuiActiveZone } from '@taiga-ui/cdk/directives/active-zone';
 import { Router } from '@angular/router';
-import { Empreendimento } from '../../../shared/models/empreendimento.model';
 import { EmpreendimentoService } from '../../../shared/service/empreendimento.service';
 import { EmpreendimentoFiltro } from '../../../shared/models/empreendimento-filtro.model';
 import { finalize } from 'rxjs';
@@ -48,9 +47,6 @@ import { EmpreendimentoHome } from '../empreendimento/models/detalhe-empreendime
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class HomeComponent implements OnInit{
-
-  private readonly API_URL = 'http://localhost:8080/api/empreendimentos';
-
   @ViewChild('filtrarDialog', { static: true })
   filtrarDialog!: ModalFiltrarComponent;
 

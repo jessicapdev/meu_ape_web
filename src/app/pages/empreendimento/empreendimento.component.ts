@@ -1,15 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 import { TuiButton, TuiIcon, TuiIcons, TuiLoader, TuiRoot, TuiTitle } from '@taiga-ui/core';
 import { TuiAccordion, TuiBadge, TuiCarousel, TuiCarouselButtons } from '@taiga-ui/kit';
 import { DetalheEmpreendimento } from './models/detalhe-empreendimento.model';
-import { RouterLink } from '@angular/router';
 import { TuiTable, TuiTableControl} from '@taiga-ui/addon-table';
 import { TuiCard } from '@taiga-ui/layout';
 import { TuiItem } from '@taiga-ui/cdk/directives/item';
-import { Empreendimento } from '../../../shared/models/empreendimento.model';
 import { EmpreendimentoService } from '../../../shared/service/empreendimento.service';
 import { finalize } from 'rxjs';
 import { Timeline } from './models/timeline.model';
@@ -39,7 +36,6 @@ import { Timeline } from './models/timeline.model';
   styleUrl: './empreendimento.component.scss'
 })
 export class EmpreendimentoComponent {
-  private readonly API_URL = 'http://localhost:8080/api/empreendimentos';
 
   endereco: string = '';
   empreendimento!: DetalheEmpreendimento;

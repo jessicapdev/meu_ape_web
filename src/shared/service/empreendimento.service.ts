@@ -5,85 +5,86 @@ import { PageResponse } from '../models/page-response.model';
 import { DetalheEmpreendimento, EmpreendimentoHome, EmpreendimentoPerfil, Imagem } from '../../app/pages/empreendimento/models/detalhe-empreendimento.model';
 import { Observable } from 'rxjs';
 import { Empreendimento } from '../models/empreendimento.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmpreendimentoService {
-  private apiUrl = 'http://localhost:8080/api/empreendimentos';
+  private readonly API_URL = `${environment.apiUrl}/api/empreendimentos`;
 
   constructor(private http: HttpClient) {}
 
   // Busca paginada com filtros
   // buscarComFiltros(filtro: EmpreendimentoFiltro): Observable<PageResponse<DetalheEmpreendimento>> {
-  //   return this.http.post<PageResponse<DetalheEmpreendimento>>(`${this.apiUrl}/buscar`, filtro);
+  //   return this.http.post<PageResponse<DetalheEmpreendimento>>(`${this.API_URL}/buscar`, filtro);
   // }
 
   getListaEmpreendimentos(filtro: EmpreendimentoFiltro): Observable<EmpreendimentoHome[]> {
-    return this.http.post<EmpreendimentoHome[]>(`${this.apiUrl}/buscar`, filtro);
+    return this.http.post<EmpreendimentoHome[]>(`${this.API_URL}/buscar`, filtro);
   }
 
   getDetalhe(id: string): Observable<DetalheEmpreendimento> {
-    return this.http.get<DetalheEmpreendimento>(`${this.apiUrl}/${id}/detalhe`);
+    return this.http.get<DetalheEmpreendimento>(`${this.API_URL}/${id}/detalhe`);
   }
 
   getTiposImoveis(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.apiUrl}/opcoes/tipos-imoveis`);
+    return this.http.get<string[]>(`${this.API_URL}/opcoes/tipos-imoveis`);
   }
 
   getTiposStatus(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.apiUrl}/opcoes/tipos-status`);
+    return this.http.get<string[]>(`${this.API_URL}/opcoes/tipos-status`);
   }
 
   getConstrutoras(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.apiUrl}/opcoes/construtoras`);
+    return this.http.get<string[]>(`${this.API_URL}/opcoes/construtoras`);
   }
 
   getDiferenciais(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.apiUrl}/opcoes/diferenciais`);
+    return this.http.get<string[]>(`${this.API_URL}/opcoes/diferenciais`);
   }
 
   getQuartos(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.apiUrl}/opcoes/quartos`);
+    return this.http.get<string[]>(`${this.API_URL}/opcoes/quartos`);
   }
 
   criar(empreendimento: DetalheEmpreendimento): Observable<DetalheEmpreendimento> {
-    return this.http.post<DetalheEmpreendimento>(this.apiUrl, empreendimento);
+    return this.http.post<DetalheEmpreendimento>(this.API_URL, empreendimento);
   }
 
   atualizar(id: string, empreendimento: DetalheEmpreendimento): Observable<DetalheEmpreendimento> {
-    return this.http.put<DetalheEmpreendimento>(`${this.apiUrl}/${id}`, empreendimento);
+    return this.http.put<DetalheEmpreendimento>(`${this.API_URL}/${id}`, empreendimento);
   }
 
   listar(pagina: number = 0, tamanho: number = 10): Observable<PageResponse<EmpreendimentoPerfil>> {
-    return this.http.get<PageResponse<EmpreendimentoPerfil>>(`${this.apiUrl}/perfil?page=${pagina}&size=${tamanho}`);
+    return this.http.get<PageResponse<EmpreendimentoPerfil>>(`${this.API_URL}/perfil?page=${pagina}&size=${tamanho}`);
   }
 
   deletar(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
 
   atualizarImagem(id: string, imagens: FormData): Observable<Imagem> {
-    return this.http.put<Imagem>(`${this.apiUrl}/${id}/imagens`, imagens);
+    return this.http.put<Imagem>(`${this.API_URL}/${id}/imagens`, imagens);
   }
 
   getImagensByEmpreendimento(id: string): Observable<any> {
-    return this.http.get<Imagem>(`${this.apiUrl}/${id}/imagens`);
+    return this.http.get<Imagem>(`${this.API_URL}/${id}/imagens`);
   }
 
   getDadosByEmpreendimento(id: string): Observable<any> {
-    return this.http.get<Imagem>(`${this.apiUrl}/${id}/dados`);
+    return this.http.get<Imagem>(`${this.API_URL}/${id}/dados`);
   }
 
   getApartamentosByEmpreendimento(id: string): Observable<any> {
-    return this.http.get<Imagem>(`${this.apiUrl}/${id}/apartamento`);
+    return this.http.get<Imagem>(`${this.API_URL}/${id}/apartamento`);
   }
 
   salvarApartamentos(id: string, apartamentos: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}/apartamento`, apartamentos);
+    return this.http.put(`${this.API_URL}/${id}/apartamento`, apartamentos);
   }
 
   deletarApartamento(idEmpreendimento: string, idApartamento: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${idEmpreendimento}/apartamento/${idApartamento}`);
+    return this.http.delete<void>(`${this.API_URL}/${idEmpreendimento}/apartamento/${idApartamento}`);
   }
 }
