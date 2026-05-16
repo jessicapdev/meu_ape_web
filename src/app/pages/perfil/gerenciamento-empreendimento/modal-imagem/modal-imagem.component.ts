@@ -5,6 +5,7 @@ import { EmpreendimentoService } from '../../../../../shared/service/empreendime
 import { ImagePickerComponent } from '../../../../../shared/components/image-picker/image-picker.component';
 import { TuiButton } from '@taiga-ui/core';
 import { EmpreendimentoPerfil } from '../../../empreendimento/models/detalhe-empreendimento.model';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-modal-imagem',
@@ -43,6 +44,8 @@ export class ModalImagemComponent implements OnInit, OnChanges {
     plantas: [] as string[],
     galeria: [] as string[]
   };
+
+  private readonly API_URL = `${environment.apiUrl}/empreendimentos`;
 
   constructor(private empreendimentoService: EmpreendimentoService) {}
 

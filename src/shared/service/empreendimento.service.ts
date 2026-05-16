@@ -11,7 +11,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class EmpreendimentoService {
-  private readonly API_URL = `${environment.apiUrl}/api/empreendimentos`;
+  private readonly API_URL = `${environment.apiUrl}/empreendimentos`;
 
   constructor(private http: HttpClient) {}
 

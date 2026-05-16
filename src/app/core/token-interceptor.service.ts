@@ -19,8 +19,8 @@ export class TokenInterceptor implements HttpInterceptor {
     '/auth/login',
     '/auth/refresh',
     '/auth/recuperar',
-    '/api/empreendimentos/buscar',
-    '/detalhe', 
+    '/empreendimentos/buscar',
+    '/empreendimentos/', // Captura detalhe e imagens
     '/usuarios/criar-conta',
     '/contatos' 
   ];
@@ -102,12 +102,20 @@ export class TokenInterceptor implements HttpInterceptor {
     const url = request.url;
     const method = request.method;
 
+    // Endpoints que SEMPRE requerem autenticação
+    if (url.includes('/opcoes/') || url.includes('/perfil')) {
+      return false;
+    }
+
     const isWhitelisted = this.PUBLIC_URLS.some(publicUrl => url.includes(publicUrl));
     if (isWhitelisted) return true;
 
     // Cadastro de usuário e Envio de contato (Ambos são POST públicos)
     // Verificamos o método para não liberar acidentalmente o perfil ou listagens privadas
-    const isPublicPost = method === 'POST' && (url.endsWith('/usuarios') || url.endsWith('/contatos'));
+    const isPublicPost = method === 'POST' && (
+      url.includes('/usuarios/criar-conta') || 
+      url.includes('/contatos')
+    );
 
     return isPublicPost;
   }

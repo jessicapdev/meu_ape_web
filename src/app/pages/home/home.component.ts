@@ -13,6 +13,7 @@ import { EmpreendimentoService } from '../../../shared/service/empreendimento.se
 import { EmpreendimentoFiltro } from '../../../shared/models/empreendimento-filtro.model';
 import { finalize } from 'rxjs';
 import { EmpreendimentoHome } from '../empreendimento/models/detalhe-empreendimento.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -47,6 +48,9 @@ import { EmpreendimentoHome } from '../empreendimento/models/detalhe-empreendime
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class HomeComponent implements OnInit{
+
+  private readonly API_URL = `${environment.apiUrl}/empreendimentos`;
+
   @ViewChild('filtrarDialog', { static: true })
   filtrarDialog!: ModalFiltrarComponent;
 
