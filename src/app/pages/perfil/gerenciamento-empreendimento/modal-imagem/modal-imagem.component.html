@@ -45,8 +45,14 @@
           <app-image-picker
             [label]="'Selecionar Plantas'"
             [multiple]="true"
+            [enableTitle]="true"
+            [enableDescription]="true"
             [previewImages]="previews.plantas"
-            (imageSelected)="handleSelection('plantas', $event)">
+            [imageTitles]="titles.plantas"
+            [imageDescriptions]="descriptions.plantas"
+            (imageSelected)="handleSelection('plantas', $event)"
+            (titlesChanged)="handleTitlesChange('plantas', $event)"
+            (descriptionsChanged)="handleDescriptionsChange('plantas', $event)">
           </app-image-picker>
         </div>
 
@@ -55,8 +61,11 @@
           <app-image-picker
             [label]="'Selecionar Imagens para Galeria'"
             [multiple]="true"
+            [enableDescription]="true"
             [previewImages]="previews.galeria"
-            (imageSelected)="handleSelection('galeria', $event)">
+            [imageDescriptions]="descriptions.galeria"
+            (imageSelected)="handleSelection('galeria', $event)"
+            (descriptionsChanged)="handleDescriptionsChange('galeria', $event)">
           </app-image-picker>
         </div>
 

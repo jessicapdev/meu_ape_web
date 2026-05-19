@@ -10,7 +10,7 @@
   </button>
 
   <div class="preview-container" *ngIf="previewImages.length > 0">
-    <div class="preview-grid" [class.single]="!multiple">
+    <div class="preview-grid" [class.single]="!multiple" [class.double]="multiple">
       <div class="preview-item" *ngFor="let image of previewImages; let i = index">
         <img [src]="image" [alt]="'Preview ' + (i + 1)" class="preview-image" />
         <button
@@ -23,6 +23,25 @@
         >
           ✕
         </button>
+        <div *ngIf="enableTitle" class="title-field">
+          <input
+            type="text"
+            placeholder="Título *"
+            [(ngModel)]="imageTitles[i]"
+            (change)="updateTitle(i, imageTitles[i])"
+            class="title-input"
+            required
+          />
+        </div>
+        <div *ngIf="enableDescription" class="description-field">
+          <input
+            type="text"
+            placeholder="Descrição (opcional)"
+            [(ngModel)]="imageDescriptions[i]"
+            (change)="updateDescription(i, imageDescriptions[i])"
+            class="description-input"
+          />
+        </div>
       </div>
     </div>
     <button

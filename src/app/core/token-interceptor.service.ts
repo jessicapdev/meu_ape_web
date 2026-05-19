@@ -103,7 +103,13 @@ export class TokenInterceptor implements HttpInterceptor {
     const method = request.method;
 
     // Endpoints que SEMPRE requerem autenticação
-    if (url.includes('/opcoes/') || url.includes('/perfil')) {
+    if (url.includes('/opcoes/') || url.includes('/perfil') || url.includes('/apartamento') 
+      || url.includes('/dados'))  {
+      return false;
+    }
+
+    // Empreendimentos com método PUT requerem autenticação
+    if (method === 'PUT' && url.includes('/empreendimentos/')) {
       return false;
     }
 

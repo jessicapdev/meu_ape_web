@@ -4,10 +4,16 @@ import { Diferencial } from "./diferencial.model";
 import { Timeline } from "./timeline.model";
 
 export interface Imagem {
-  banner: string;
-  map: string;
-  plantas: string[];
-  galeria: string[];
+  banner: ImagemItem;
+  map: ImagemItem;
+  plantas: ImagemItem[];
+  galeria: ImagemItem[];
+}
+
+export interface ImagemItem {
+  fileId: string;
+  titulo: string;
+  descricao: string;
 }
 
 export interface DetalheEmpreendimento {
@@ -46,7 +52,7 @@ export interface EmpreendimentoHome {
   quartos: number[];
   vagas: number[];
   precoMin: number;
-  imagens: { banner: string };
+  imagens: { banner: ImagemItem };
 }
 
 

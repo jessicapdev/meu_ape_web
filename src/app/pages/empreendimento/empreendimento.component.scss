@@ -195,6 +195,14 @@
   }
 }
 
+.text-secundary-img{
+  font-size: 1rem;
+  color: black;
+  padding: 2px;
+  place-self: center;
+}
+    
+
 .info-grid {
   display: flex;
   place-content: space-evenly;
@@ -621,7 +629,6 @@ td{
 
 .item-plantas{
   width: 100%;
-  height: 700px; 
   display: block;
   background-color: var(--tui-base-02); /* Cor de fundo para preencher espaços vazios caso a imagem seja proporcionalmente menor */
 }

@@ -1,19 +1,26 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TuiButton } from '@taiga-ui/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-image-picker',
   templateUrl: './image-picker.component.html',
   styleUrls: ['./image-picker.component.scss'],
   standalone: true,
-  imports: [CommonModule, TuiButton]
+  imports: [CommonModule, TuiButton, FormsModule]
 })
 export class ImagePickerComponent {
   @Input() label: string = 'Selecionar Imagem';
   @Input() multiple: boolean = false;
   @Input() previewImages: string[] = [];
+  @Input() enableDescription: boolean = false;
+  @Input() enableTitle: boolean = false;
+  @Input() imageDescriptions: Record<number, string> = {};
+  @Input() imageTitles: Record<number, string> = {};
   @Output() imageSelected = new EventEmitter<string | string[]>();
+  @Output() descriptionsChanged = new EventEmitter<Record<number, string>>();
+  @Output() titlesChanged = new EventEmitter<Record<number, string>>();
 
   fileInput: HTMLInputElement | null = null;
 
@@ -67,11 +74,52 @@ export class ImagePickerComponent {
 
   removeImage(index: number) {
     this.previewImages.splice(index, 1);
+    // Remove a descrição associada
+    delete this.imageDescriptions[index];
+    // Remove o título associado
+    delete this.imageTitles[index];
+    // Reindexar descrições e títulos após remoção
+    const reindexedDescriptions: Record<number, string> = {};
+    const reindexedTitles: Record<number, string> = {};
+    Object.entries(this.imageDescriptions).forEach(([key, value]) => {
+      const oldIndex = parseInt(key);
+      if (oldIndex > index) {
+        reindexedDescriptions[oldIndex - 1] = value;
+      } else if (oldIndex < index) {
+        reindexedDescriptions[oldIndex] = value;
+      }
+    });
+    Object.entries(this.imageTitles).forEach(([key, value]) => {
+      const oldIndex = parseInt(key);
+      if (oldIndex > index) {
+        reindexedTitles[oldIndex - 1] = value;
+      } else if (oldIndex < index) {
+        reindexedTitles[oldIndex] = value;
+      }
+    });
+    this.imageDescriptions = reindexedDescriptions;
+    this.imageTitles = reindexedTitles;
     this.imageSelected.emit(this.multiple ? this.previewImages : this.previewImages[0] || '');
+    this.descriptionsChanged.emit(this.imageDescriptions);
+    this.titlesChanged.emit(this.imageTitles);
   }
 
   clearImages() {
     this.previewImages = [];
+    this.imageDescriptions = {};
+    this.imageTitles = {};
     this.imageSelected.emit(this.multiple ? [] : '');
+    this.descriptionsChanged.emit(this.imageDescriptions);
+    this.titlesChanged.emit(this.imageTitles);
+  }
+
+  updateDescription(index: number, description: string) {
+    this.imageDescriptions[index] = description;
+    this.descriptionsChanged.emit(this.imageDescriptions);
+  }
+
+  updateTitle(index: number, title: string) {
+    this.imageTitles[index] = title;
+    this.titlesChanged.emit(this.imageTitles);
   }
 }
